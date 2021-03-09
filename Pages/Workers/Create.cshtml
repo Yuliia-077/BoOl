@@ -1,0 +1,79 @@
+﻿@page
+@model BoOl.Pages.Workers.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row">
+    <h4 class="col-10">Додати нового працівника</h4>
+    <a asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Worker.LastName" class="control-label">Прізвище</label>
+                <input asp-for="Worker.LastName" class="form-control" />
+                <span asp-validation-for="Worker.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.FirstName" class="control-label">Ім'я</label>
+                <input asp-for="Worker.FirstName" class="form-control" />
+                <span asp-validation-for="Worker.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.MiddleName" class="control-label">По-батькові</label>
+                <input asp-for="Worker.MiddleName" class="form-control" />
+                <span asp-validation-for="Worker.MiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.PhoneNumber" class="control-label">Номер телефону</label>
+                <input asp-for="Worker.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Worker.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.DateOfBirth" class="control-label">Дата народження</label>
+                <input asp-for="Worker.DateOfBirth" class="form-control" />
+                <span asp-validation-for="Worker.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.Address" class="control-label">Адреса</label>
+                <input asp-for="Worker.Address" class="form-control" />
+                <span asp-validation-for="Worker.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.Education" class="control-label">Освіта</label>
+                <input asp-for="Worker.Education" class="form-control" />
+                <span asp-validation-for="Worker.Education" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.DateOfEmployment" class="control-label">Дата прийому на роботу</label>
+                <input asp-for="Worker.DateOfEmployment" class="form-control" />
+                <span asp-validation-for="Worker.DateOfEmployment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.DateOfQuit" class="control-label">Дата звільнення</label>
+                <input asp-for="Worker.DateOfQuit" class="form-control" />
+                <span asp-validation-for="Worker.DateOfQuit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Worker.PositionId" class="control-label">Посада</label>
+                <select asp-for="Worker.PositionId" class ="form-control" asp-items="ViewBag.PositionId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

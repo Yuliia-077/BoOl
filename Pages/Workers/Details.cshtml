@@ -1,0 +1,80 @@
+﻿@page
+@model BoOl.Pages.Workers.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <div class="row">
+        <h4 class="col-10">@Html.DisplayFor(model => model.Worker.LastName) @Html.DisplayFor(model => model.Worker.FirstName)</h4>
+        <div class="col-2">
+            <a asp-page="./Edit" asp-route-id="@Model.Worker.Id"><i class="far fa-edit"></i></a> |
+            <a asp-page="./Delete" asp-route-id="@Model.Worker.Id"><i class="far fa-trash-alt"></i></a>|
+            <a asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Прізвище
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            Ім'я
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+           По-батькові
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.MiddleName)
+        </dd>
+        <dt class="col-sm-2">
+            Номер телефону
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            Дата народженя
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.DateOfBirth)
+        </dd>
+        <dt class="col-sm-2">
+            Адреса
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Address)
+        </dd>
+        <dt class="col-sm-2">
+           Освіта
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Education)
+        </dd>
+        <dt class="col-sm-2">
+            Дата прийому на роботу
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.DateOfEmployment)
+        </dd>
+        <dt class="col-sm-2">
+           Дата звільнення
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.DateOfQuit)
+        </dd>
+        <dt class="col-sm-2">
+            Посада
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Position.Name)
+        </dd>
+    </dl>
+</div>

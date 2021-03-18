@@ -1,0 +1,73 @@
+﻿@page
+@model BoOl.Pages.Storages.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Storage</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.Manufacturer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.Manufacturer)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.PurchasePrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.PurchasePrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.WholesalePrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.WholesalePrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.RetailPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.RetailPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.DateOfArrival)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.DateOfArrival)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.Model)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.Model.Manufacturer)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Storage.Worker)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Storage.Worker.Address)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Storage.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

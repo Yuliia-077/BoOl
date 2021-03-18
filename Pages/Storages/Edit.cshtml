@@ -1,0 +1,75 @@
+﻿@page
+@model BoOl.Pages.Storages.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Storage</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Storage.Id" />
+            <div class="form-group">
+                <label asp-for="Storage.Name" class="control-label"></label>
+                <input asp-for="Storage.Name" class="form-control" />
+                <span asp-validation-for="Storage.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.Manufacturer" class="control-label"></label>
+                <input asp-for="Storage.Manufacturer" class="form-control" />
+                <span asp-validation-for="Storage.Manufacturer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.Quantity" class="control-label"></label>
+                <input asp-for="Storage.Quantity" class="form-control" />
+                <span asp-validation-for="Storage.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.PurchasePrice" class="control-label"></label>
+                <input asp-for="Storage.PurchasePrice" class="form-control" />
+                <span asp-validation-for="Storage.PurchasePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.WholesalePrice" class="control-label"></label>
+                <input asp-for="Storage.WholesalePrice" class="form-control" />
+                <span asp-validation-for="Storage.WholesalePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.RetailPrice" class="control-label"></label>
+                <input asp-for="Storage.RetailPrice" class="form-control" />
+                <span asp-validation-for="Storage.RetailPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.DateOfArrival" class="control-label"></label>
+                <input asp-for="Storage.DateOfArrival" class="form-control" />
+                <span asp-validation-for="Storage.DateOfArrival" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.ModelId" class="control-label"></label>
+                <select asp-for="Storage.ModelId" class="form-control" asp-items="ViewBag.ModelId"></select>
+                <span asp-validation-for="Storage.ModelId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Storage.WorkerId" class="control-label"></label>
+                <select asp-for="Storage.WorkerId" class="form-control" asp-items="ViewBag.WorkerId"></select>
+                <span asp-validation-for="Storage.WorkerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -19,6 +19,175 @@ namespace BoOl.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
+            modelBuilder.Entity("BoOl.Models.CustomService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTime>("ExecutionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDone")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WorkerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PartId")
+                        .IsUnique();
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("CustomServices");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<double?>("Discount")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Model", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Models");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTime>("DateOfAdmission")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DateOfIssue")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<double?>("Discount")
+                        .HasColumnType("double precision");
+
+                    b.Property<bool>("Payment")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("WorkerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Part", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StorageId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StorageId");
+
+                    b.ToTable("Parts");
+                });
+
             modelBuilder.Entity("BoOl.Models.Position", b =>
                 {
                     b.Property<int>("Id")
@@ -40,6 +209,99 @@ namespace BoOl.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("AdditionalInf")
+                        .HasColumnType("text");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModelId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ModelId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Storage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTime>("DateOfArrival")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Manufacturer")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ModelId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<double>("PurchasePrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("RetailPrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("WholesalePrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("WorkerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModelId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("Storages");
                 });
 
             modelBuilder.Entity("BoOl.Models.Worker", b =>
@@ -98,6 +360,109 @@ namespace BoOl.Migrations
                     b.ToTable("Workers");
                 });
 
+            modelBuilder.Entity("BoOl.Models.CustomService", b =>
+                {
+                    b.HasOne("BoOl.Models.Order", "Order")
+                        .WithMany("CustomServices")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoOl.Models.Part", "Part")
+                        .WithOne("CustomService")
+                        .HasForeignKey("BoOl.Models.CustomService", "PartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoOl.Models.Service", "Service")
+                        .WithMany("CustomServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoOl.Models.Worker", "Worker")
+                        .WithMany("CustomServices")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Part");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Order", b =>
+                {
+                    b.HasOne("BoOl.Models.Product", "Product")
+                        .WithMany("Orders")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoOl.Models.Worker", "Worker")
+                        .WithMany("Orders")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Part", b =>
+                {
+                    b.HasOne("BoOl.Models.Storage", "Storage")
+                        .WithMany("Parts")
+                        .HasForeignKey("StorageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Storage");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Product", b =>
+                {
+                    b.HasOne("BoOl.Models.Customer", "Customer")
+                        .WithMany("Products")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoOl.Models.Model", "Model")
+                        .WithMany("Products")
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Model");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Storage", b =>
+                {
+                    b.HasOne("BoOl.Models.Model", "Model")
+                        .WithMany("Storages")
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoOl.Models.Worker", "Worker")
+                        .WithMany("Storages")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Model");
+
+                    b.Navigation("Worker");
+                });
+
             modelBuilder.Entity("BoOl.Models.Worker", b =>
                 {
                     b.HasOne("BoOl.Models.Position", "Position")
@@ -109,9 +474,55 @@ namespace BoOl.Migrations
                     b.Navigation("Position");
                 });
 
+            modelBuilder.Entity("BoOl.Models.Customer", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Model", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Storages");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Order", b =>
+                {
+                    b.Navigation("CustomServices");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Part", b =>
+                {
+                    b.Navigation("CustomService");
+                });
+
             modelBuilder.Entity("BoOl.Models.Position", b =>
                 {
                     b.Navigation("Workers");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Product", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Service", b =>
+                {
+                    b.Navigation("CustomServices");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Storage", b =>
+                {
+                    b.Navigation("Parts");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Worker", b =>
+                {
+                    b.Navigation("CustomServices");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("Storages");
                 });
 #pragma warning restore 612, 618
         }

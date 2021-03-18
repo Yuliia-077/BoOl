@@ -46,5 +46,9 @@ namespace BoOl.Models
         public int PositionId { get; set; }
 
         public Position Position { get; set; }
+
+        public List<Order> Orders { get; set; }
+        public List<Storage> Storages { get; set; }
+        public List<CustomService> CustomServices { get; set; }
     }
 }

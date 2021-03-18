@@ -1,0 +1,40 @@
+﻿@page
+@model BoOl.Pages.Position.DetailsModel
+
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Position.Name);
+}
+
+<h4 class="text-center">@Html.DisplayFor(model => model.Position.Name)</h4>
+<hr />
+<div class="row">
+    <div class="col-1">
+            <a asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
+    </div>
+    <div class="col-10">
+    <dl class="row">
+        <dt class="col-6 text-right">
+            Посада:
+        </dt>
+        <dd class="col-6">
+            @Html.DisplayFor(model => model.Position.Name)
+        </dd>
+        <dt class="col-6 text-right">
+            Зарплата:
+        </dt>
+        <dd class="col-6">
+            @Html.DisplayFor(model => model.Position.Salary)
+        </dd>
+        <dt class="col-6 text-right">
+            Процент від роботи:
+        </dt>
+        <dd class="col-6">
+            @Html.DisplayFor(model => model.Position.PercentageOfWork)
+        </dd>
+    </dl>
+        </div>
+    <div class="col-1">
+        <a asp-page="./Edit" asp-route-id="@Model.Position.Id"><i class="far fa-edit"></i></a>
+        <a asp-page="./Delete" asp-route-id="@Model.Position.Id"><i class="far fa-trash-alt"></i></a>
+    </div>
+</div>

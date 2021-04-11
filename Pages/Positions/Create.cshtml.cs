@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BoOl.Models;
+using BoOl.Repository;
 
-namespace BoOl.Pages.Position
+namespace BoOl.Pages.Positions
 {
     public class CreateModel : PageModel
     {
-        private readonly BoOlContext _context;
+        private readonly IRepository<Position> _repository;
+        [BindProperty]
+        public Position Position { get; set; }
 
         public CreateModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new PositionRepository(context);
         }
 
         public IActionResult OnGet()
@@ -23,11 +26,6 @@ namespace BoOl.Pages.Position
             return Page();
         }
 
-        [BindProperty]
-        public Models.Position Position { get; set; }
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -35,8 +33,7 @@ namespace BoOl.Pages.Position
                 return Page();
             }
 
-            _context.Positions.Add(Position);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(Position);
 
             return RedirectToPage("./Index");
         }

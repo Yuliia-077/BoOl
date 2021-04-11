@@ -19,12 +19,12 @@ namespace BoOl.Models
         public DateTime DateOfAdmission { get; set; }
         public DateTime? DateOfIssue { get; set; }
 
-        public int WorkerId { get; set; }
         [Required(ErrorMessage = "Оберіть працівника!")]
+        public int WorkerId { get; set; }
         public Worker Worker { get; set; }
 
-        public int ProductId { get; set; }
         [Required(ErrorMessage = "Оберіть техніку!")]
+        public int ProductId { get; set; }
         public Product Product { get; set; }
 
         public List<CustomService> CustomServices { get; set; }

@@ -5,64 +5,239 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.Customer.LastName);
 }
 
-<h4 class="text-center">@Html.DisplayFor(model => model.Customer.LastName)  @Html.DisplayFor(model => model.Customer.FirstName)</h4>
-<hr />
+@*<h1 class="text-center">@Html.DisplayFor(model => model.Customer.LastName)  @Html.DisplayFor(model => model.Customer.FirstName)</h1>*@
 <div class="row">
-    <div class="col-3">
-        <ul class="nav navbar-nav bd-navbar-nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-page="#">Техніка</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-page="#">Замовлення</a>
-            </li>
-        </ul>
+    <div class="col-4 col-md-3">
+        <div class="card border border-secondary text-center">
+            <div class="card-header">
+                Кількість техніки:
+            </div>
+            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfProducts</p>
+        </div>
     </div>
-    <div class="col-7">
-        <dl class="row">
-            <dt class="col-4 text-right">
-                ПІБ:
-            </dt>
-            <dd class="col-8">
-                @Html.DisplayFor(model => model.Customer.LastName)  @Html.DisplayFor(model => model.Customer.FirstName)  @Html.DisplayFor(model => model.Customer.MiddleName)
-            </dd>
-            <dt class="col-4 text-right">
-                Номер телефону:
-            </dt>
-            <dd class="col-8">
-                @Html.DisplayFor(model => model.Customer.PhoneNumber)
-            </dd>
-            <dt class="col-4 text-right">
-                Електронна пошта:
-            </dt>
-            <dd class="col-8">
-                @Html.DisplayFor(model => model.Customer.Email)
-            </dd>
-            <dt class="col-4 text-right">
-                Дата народження:
-            </dt>
-            <dd class="col-8">
-                @Html.DisplayFor(model => model.Customer.DateOfBirth)
-            </dd>
-            <dt class="col-4 text-right">
-                Адреса:
-            </dt>
-            <dd class="col-8">
-                @Html.DisplayFor(model => model.Customer.Address)
-            </dd>
-            <dt class="col-4 text-right">
-                Знижка:
-            </dt>
-            <dd class="col-8">
-                @Html.DisplayFor(model => model.Customer.Discount)
-            </dd>
-        </dl>
+    <div class="col-4 col-md-3">
+        <div class="card border border-secondary text-center">
+            <div class="card-header">
+                Кількість замовлень:
+            </div>
+            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfOrders</p>
+        </div>
     </div>
-    <div class="col-1">
-        <a asp-page="./Edit" asp-route-id="@Model.Customer.Id"><i class="far fa-edit"></i></a>
-        <a asp-page="./Delete" asp-route-id="@Model.Customer.Id"><i class="far fa-trash-alt"></i></a>
+    <div class="col-4 col-md-6">
+        <div class="d-grid gap-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mt-1" asp-page="/Products/Create" asp-route-id="@Model.Customer.Id"><i class="fas fa-plus"> Додати техніку</i></a>
+        </div>
+        <div class="d-grid gap-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mt-1" asp-page="/Orders/Create" asp-route-id="@Model.Customer.Id"><i class="fas fa-plus"> Додати замовлення</i></a>
+        </div>
     </div>
 </div>
+<br />
+<div class="row">
+    <div class="col-12 col-md-6 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Особиста інформація</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-4">
+                        ПІБ:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Customer.LastName)  @Html.DisplayFor(model => model.Customer.FirstName)  @Html.DisplayFor(model => model.Customer.MiddleName)
+                    </dd>
+                    <dt class="col-4">
+                        Номер телефону:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Customer.PhoneNumber)
+                    </dd>
+                    <dt class="col-4">
+                        Електронна пошта:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Customer.Email)
+                    </dd>
+                    <dt class="col-4">
+                        Дата народження:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Customer.DateOfBirth)
+                    </dd>
+                    <dt class="col-4">
+                        Адреса:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Customer.Address)
+                    </dd>
+                    <dt class="col-4">
+                        Знижка:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Customer.Discount)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Customer.Id"><i class="far fa-edit"> Редагувати</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Customer.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Техніка</strong>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Серійний номер
+                            </th>
+                            <th>
+                                Модель
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Products)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.Manufacturer) @Html.DisplayFor(modelItem => item.Model.Type)
+                                </td>
+                                <td>
+                                    <a asp-page="/Products/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Замовлення</strong>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Техніка
+                            </th>
+                            <th>
+                                Статус
+                            </th>
+                            <th>
+                                Оплачено
+                            </th>
+                            <th>
+                                Сума
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            @foreach (var item in product.Orders)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Product.SerialNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Payment)
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <a asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@*<hr />
+    <div class="row">
+        <div class="col-3">
+            <ul class="nav navbar-nav bd-navbar-nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Products/Index" asp-route-id="@Model.Customer.Id">Техніка</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Orders/Index" asp-route-id="@Model.Customer.Id">Замовлення</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-7">
+            <dl class="row">
+                <dt class="col-4 text-right">
+                    ПІБ:
+                </dt>
+                <dd class="col-8">
+                    @Html.DisplayFor(model => model.Customer.LastName)  @Html.DisplayFor(model => model.Customer.FirstName)  @Html.DisplayFor(model => model.Customer.MiddleName)
+                </dd>
+                <dt class="col-4 text-right">
+                    Номер телефону:
+                </dt>
+                <dd class="col-8">
+                    @Html.DisplayFor(model => model.Customer.PhoneNumber)
+                </dd>
+                <dt class="col-4 text-right">
+                    Електронна пошта:
+                </dt>
+                <dd class="col-8">
+                    @Html.DisplayFor(model => model.Customer.Email)
+                </dd>
+                <dt class="col-4 text-right">
+                    Дата народження:
+                </dt>
+                <dd class="col-8">
+                    @Html.DisplayFor(model => model.Customer.DateOfBirth)
+                </dd>
+                <dt class="col-4 text-right">
+                    Адреса:
+                </dt>
+                <dd class="col-8">
+                    @Html.DisplayFor(model => model.Customer.Address)
+                </dd>
+                <dt class="col-4 text-right">
+                    Знижка:
+                </dt>
+                <dd class="col-8">
+                    @Html.DisplayFor(model => model.Customer.Discount)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-1">
+            <a asp-page="./Edit" asp-route-id="@Model.Customer.Id"><i class="far fa-edit"></i></a>
+            <a asp-page="./Delete" asp-route-id="@Model.Customer.Id"><i class="far fa-trash-alt"></i></a>
+        </div>
+    </div>*@

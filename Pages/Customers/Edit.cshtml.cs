@@ -7,20 +7,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Customers
 {
     public class EditModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public EditModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
+        private readonly IRepository<Customer> _repository;
 
         [BindProperty]
         public Customer Customer { get; set; }
+
+        public EditModel(BoOl.Models.BoOlContext context)
+        {
+            _repository = new CustomerRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,7 +30,7 @@ namespace BoOl.Pages.Customers
                 return NotFound();
             }
 
-            Customer = await _context.Customers.FirstOrDefaultAsync(m => m.Id == id);
+            Customer = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Customer == null)
             {
@@ -38,8 +39,6 @@ namespace BoOl.Pages.Customers
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -47,30 +46,9 @@ namespace BoOl.Pages.Customers
                 return Page();
             }
 
-            _context.Attach(Customer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(Customer.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _repository.UpdateAsync(Customer);
 
             return RedirectToPage("./Index");
-        }
-
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.Id == id);
         }
     }
 }

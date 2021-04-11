@@ -1,0 +1,154 @@
+﻿@page
+@model BoOl.Pages.Products.DetailsModel
+
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Product.SerialNumber);
+}
+
+<div class="row">
+    <div class="col-4 col-md-3">
+        <div class="card border border-secondary text-center">
+            <div class="card-header">
+                Кількість замовлень:
+            </div>
+            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfOrders</p>
+        </div>
+    </div>
+    <div class="col-8 col-md-9">
+        <div class="d-grid gap-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mt-1" asp-page="/Orders/Create" asp-route-id="@Model.Product.CustomerId"><i class="fas fa-plus"> Додати замовлення</i></a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-12 col-md-4 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Особиста інформація</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-6">
+                        Власник:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.Customer.LastName) @Html.DisplayFor(model => model.Product.Customer.FirstName) @Html.DisplayFor(model => model.Product.Customer.MiddleName)
+                    </dd>
+
+                    <dt class="col-6">
+                        Серійний номер:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.SerialNumber)
+                    </dd>
+
+                    <dt class="col-6">
+                        Модель:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.Model.Manufacturer)  @Html.DisplayFor(model => model.Product.Model.Type)
+                    </dd>
+
+                    <dt class="col-6">
+                        Додаткова інформація:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.AdditionalInf)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Product.Id"><i class="far fa-edit"> Редагувати</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Product.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-8 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Замовлення</strong>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Статус
+                            </th>
+                            <th>
+                                Оплачено
+                            </th>
+                            <th>
+                                Сума
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Product.Orders)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Payment)
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    <a asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+    @*<h4 class="text-center"> @Html.DisplayFor(model => model.Product.Customer.LastName) @Html.DisplayFor(model => model.Product.Customer.FirstName) @Html.DisplayFor(model => model.Product.SerialNumber)</h4>
+        <hr />
+        <div class="row">
+            <div class="col-1">
+                <a asp-page="./Index" asp-route-id="@Model.Product.CustomerId"><i class="fas fa-arrow-left"></i></a>
+            </div>
+            <div class="col-10">
+                <dl class="row">
+                    <dt class="col-6 text-right">
+                       Серійний номер:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.SerialNumber)
+                    </dd>
+
+                    <dt class="col-6 text-right">
+                        Модель:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.Model.Manufacturer)  @Html.DisplayFor(model => model.Product.Model.Type)
+                    </dd>
+
+                    <dt class="col-6 text-right">
+                        Власник:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.Customer.LastName) @Html.DisplayFor(model => model.Product.Customer.FirstName) @Html.DisplayFor(model => model.Product.Customer.MiddleName)
+                    </dd>
+
+                    <dt class="col-6 text-right">
+                        Додаткова інформація:
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Product.AdditionalInf)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-1">
+                <a asp-page="./Edit" asp-route-id="@Model.Product.Id"><i class="far fa-edit"></i></a>
+                <a asp-page="./Delete" asp-route-id="@Model.Product.Id"><i class="far fa-trash-alt"></i></a>
+            </div>
+        </div>*@

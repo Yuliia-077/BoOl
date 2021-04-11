@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 
 namespace BoOl.Pages.Storages
@@ -18,10 +19,14 @@ namespace BoOl.Pages.Storages
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGetAsync()
         {
-        ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Manufacturer");
-        ViewData["WorkerId"] = new SelectList(_context.Workers, "Id", "LastName");
+            var workers = _context.Workers.Select(
+                x => new { Value = x.Id, Text = x.LastName +" " + x.FirstName}).ToList();
+            var models = _context.Models.Select(
+               x => new { Value = x.Id, Text = x.Manufacturer + " " + x.Type }).ToList();
+            ViewData["ModelId"] = new SelectList(models, "Value", "Text");
+            ViewData["WorkerId"] = new SelectList(workers, "Value", "Text");
             return Page();
         }
 

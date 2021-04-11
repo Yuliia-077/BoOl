@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BoOl
 {
@@ -27,6 +28,8 @@ namespace BoOl
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BoOlContext>(options => options.UseNpgsql(connection));
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<BoOlContext>();
             services.AddRazorPages();
         }
 
@@ -49,6 +52,7 @@ namespace BoOl
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

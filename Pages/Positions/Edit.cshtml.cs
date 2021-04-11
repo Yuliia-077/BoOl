@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 
-namespace BoOl.Pages.Position
+namespace BoOl.Pages.Positions
 {
     public class EditModel : PageModel
     {

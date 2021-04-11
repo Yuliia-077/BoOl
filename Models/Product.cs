@@ -17,11 +17,12 @@ namespace BoOl.Models
         public string AdditionalInf { get; set; }
 
         [Required(ErrorMessage = "Оберіть модель!")]
+        public int ModelId { get; set; }
+
         public Model Model { get; set; }
 
         public int CustomerId { get; set; }
 
-        [Required(ErrorMessage = "Оберіть власника!")]
         public Customer Customer { get; set; }
 
         public List<Order> Orders { get; set; }

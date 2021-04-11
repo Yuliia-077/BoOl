@@ -6,19 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Customers
 {
     public class DetailsModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Customer> _repositoryCustomer;
+        private readonly IRepository<Product> _repositoryProduct;
+        public IEnumerable<Product> Products { get; set; }
+        public int CountOfProducts { get; set; }
+        public int CountOfOrders { get; set; }
 
-        public DetailsModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
+        [BindProperty]
         public Customer Customer { get; set; }
+
+        public DetailsModel(BoOlContext context)
+        {
+            _repositoryCustomer = new CustomerRepository(context);
+            _repositoryProduct = new ProductRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -27,13 +34,26 @@ namespace BoOl.Pages.Customers
                 return NotFound();
             }
 
-            Customer = await _context.Customers.FirstOrDefaultAsync(m => m.Id == id);
+            Customer = await _repositoryCustomer.GetByIdAsync(Convert.ToInt32(id));
 
             if (Customer == null)
             {
                 return NotFound();
             }
+            CountOfProducts = await _repositoryProduct.CountAsync(id);
+            Products = await _repositoryProduct.GetAllAsync(Customer.Id);
+
+            foreach(var item in Products)
+            {
+                CountOfOrders += item.Orders.Count();
+            }
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            await _repositoryCustomer.DeleteAsync(id);
+            return RedirectToPage("./Index");
         }
     }
 }

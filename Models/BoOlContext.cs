@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BoOl.Models
 {
-    public class BoOlContext : DbContext
+    public class BoOlContext : IdentityDbContext<User>
     {
         public DbSet<Position> Positions { get; set; }
         public DbSet<Worker> Workers { get; set; }
@@ -28,6 +29,7 @@ namespace BoOl.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

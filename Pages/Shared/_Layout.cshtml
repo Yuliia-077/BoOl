@@ -8,43 +8,58 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
 </head>
-<body>
+<body style="background-color: #f2f7f7">
     <header>
         <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white border-bottom box-shadow mb-2">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">BoOl</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="/img/logo.png" alt="">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
+                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse navbar-nav-scroll">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Дашборд</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Index">Дашборд</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Customers/Index">Клієнти</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Customers/Index">Клієнти</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Orders/Index">Замовлення</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Orders/Index">Замовлення</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Workers/Index">Працівники</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Workers/Index">Працівники</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Services/Index">Послуги</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Services/Index">Послуги</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Storages/Index">Склад</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Storages/Index">Склад</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Types/Index">Моделі</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Types/Index">Моделі</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Position/Index">Посади</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Positions/Index">Посади</a>
                         </li>
                     </ul>
                 </div>
+                <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                    <li class="nav-item">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <p>@User.Identity.Name</p>
+                            <a class="nav-link font-weight-bolder" asp-page="/Account/Login" asp-page-handler="LogOut" onclick="return confirm('Ви дійсно хочете вийти?');">Вихід</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link font-weight-bolder" asp-page="/Account/Login">Вхід</a>
+                        }
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>
@@ -63,6 +78,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        var myModal = document.getElementById('myModal')
+        var myInput = document.getElementById('myInput')
+
+        myModal.addEventListener('shown.bs.modal', function () {
+            myInput.focus()
+        })
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>

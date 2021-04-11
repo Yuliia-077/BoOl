@@ -1,0 +1,103 @@
+﻿@page
+@model BoOl.Pages.CustomServices.IndexModel
+
+
+<div class="row">
+    <div class="col-11">
+        <h1 class="text-center"> Послуги по замовленню № </h1>
+    </div>
+    <div class="col-1">
+        <a asp-page="Create" asp-route-id="@Model.Id"><i class="fas fa-plus"></i></a>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CustomService)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].IsDone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].ExecutionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].Worker)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].Part)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].Service)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomService[0].Order)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CustomService)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExecutionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Worker.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Part.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Service.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order.Status)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

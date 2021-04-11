@@ -6,24 +6,44 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Workers
 {
     public class IndexModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Position> _repository;
+        public IEnumerable<Position> Positions { get; set; }
+        public int CountOfPosition { get; set; }
+        public int CountOfWorkers { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchPosition { get; set; }
+        //[BindProperty(SupportsGet = true)]
+        //public string SearchWorker { get; set; }
 
-        public IndexModel(BoOl.Models.BoOlContext context)
+        public IndexModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new PositionRepository(context);
         }
-
-        public IList<Worker> Worker { get;set; }
 
         public async Task OnGetAsync()
         {
-            Worker = await _context.Workers
-                .Include(w => w.Position).ToListAsync();
+            var positions = await _repository.GetAllAsync(null);
+            CountOfPosition = await _repository.CountAsync(null);
+            foreach (var position in positions)
+            {
+                CountOfWorkers += position.Workers.Count();
+            }
+            if (!string.IsNullOrEmpty(SearchPosition))
+            {
+                positions = positions.Where(s => s.Name.Contains(SearchPosition));
+            }
+            //if(!string.IsNullOrEmpty(SearchWorker))
+            //{
+
+            //}
+
+            Positions = positions.ToList();
         }
     }
 }

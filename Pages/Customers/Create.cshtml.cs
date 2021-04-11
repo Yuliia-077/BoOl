@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Customers
 {
     public class CreateModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Customer> _repository;
 
-        public CreateModel(BoOl.Models.BoOlContext context)
+        [BindProperty]
+        public Customer Customer { get; set; }
+
+        public CreateModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new CustomerRepository(context);
         }
 
         public IActionResult OnGet()
@@ -23,21 +27,13 @@ namespace BoOl.Pages.Customers
             return Page();
         }
 
-        [BindProperty]
-        public Customer Customer { get; set; }
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
-            _context.Customers.Add(Customer);
-            await _context.SaveChangesAsync();
-
+            await _repository.AddAsync(Customer);
             return RedirectToPage("./Index");
         }
     }

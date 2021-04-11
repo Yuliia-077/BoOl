@@ -1,0 +1,71 @@
+﻿@page
+@model BoOl.Pages.Orders.DetailsModel
+
+@{
+    ViewData["Title"] = "Order";
+}
+
+<h4 class="text-center">Замовлення №@Html.DisplayFor(model => model.Order.Id)</h4>
+<hr />
+<div class="row">
+    <div class="col-1">
+        <a asp-page="./Index" asp-route-id=""><i class="fas fa-arrow-left"></i></a>
+    </div>
+    <div class="col-10">
+        <dl class="row">
+            <dt class="col-6 text-right">
+                Техніка:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.Product.Model.Manufacturer) @Html.DisplayFor(model => model.Order.Product.Model.Type) @Html.DisplayFor(model => model.Order.Product.SerialNumber)
+            </dd>
+
+            <dt class="col-6 text-right">
+                Оплачено:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.Payment)
+            </dd>
+
+            <dt class="col-6 text-right">
+                Статус:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.Status)
+            </dd>
+
+            <dt class="col-6 text-right">
+                Знижка:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.Discount)
+            </dd>
+
+            <dt class="col-6 text-right">
+                Дата прийому:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.DateOfAdmission)
+            </dd>
+
+            <dt class="col-6 text-right">
+                Дата видачі:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.DateOfIssue)
+            </dd>
+
+            <dt class="col-6 text-right">
+                Працівник:
+            </dt>
+            <dd class="col-6">
+                @Html.DisplayFor(model => model.Order.Worker.LastName)
+                @Html.DisplayFor(model => model.Order.Worker.FirstName)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-1">
+        <a asp-page="./Edit" asp-route-id="@Model.Order.Id"><i class="far fa-edit"></i></a>
+        <a asp-page="./Delete" asp-route-id="@Model.Order.Id"><i class="far fa-trash-alt"></i></a>
+    </div>
+</div>

@@ -22,7 +22,6 @@ namespace BoOl.Models
         [Required(ErrorMessage = "Введіть по-батькові!")]
         public string MiddleName { get; set; }
 
-        [StringLength(13, MinimumLength = 13, ErrorMessage = "Довжина рядка повинна бути 13 символів!")]
         [Required(ErrorMessage = "Введіть номер телефону!")]
         [Phone]
         public string PhoneNumber { get; set; }
@@ -41,7 +40,5 @@ namespace BoOl.Models
         public double? Discount { get; set; }
 
         public List<Product> Products { get; set; }
-
-
     }
 }

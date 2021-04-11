@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 
-namespace BoOl.Pages.Position
+namespace BoOl.Pages.Positions
 {
     public class DeleteModel : PageModel
     {

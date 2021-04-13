@@ -35,7 +35,7 @@ namespace BoOl.Pages.Positions
 
             await _repository.AddAsync(Position);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Workers/Index");
         }
     }
 }

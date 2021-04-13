@@ -20,7 +20,7 @@ namespace BoOl.Pages.Products
         [BindProperty]
         public Product Product { get; set; }
 
-        public CreateModel(BoOl.Models.BoOlContext context)
+        public CreateModel(BoOlContext context)
         {
             _repository = new ProductRepository(context);
             _repositoryCustomer = new CustomerRepository(context);

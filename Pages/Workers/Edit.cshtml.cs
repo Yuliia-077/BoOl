@@ -7,20 +7,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Workers
 {
     public class EditModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public EditModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
+        private readonly IRepository<Worker> _repository;
+        private readonly IRepository<Position> _repositoryPosition;
         [BindProperty]
         public Worker Worker { get; set; }
+
+        public EditModel(BoOlContext context)
+        {
+            _repository = new WorkerRepository(context);
+            _repositoryPosition = new PositionRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,19 +31,17 @@ namespace BoOl.Pages.Workers
                 return NotFound();
             }
 
-            Worker = await _context.Workers
-                .Include(w => w.Position).FirstOrDefaultAsync(m => m.Id == id);
+            Worker = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Worker == null)
             {
                 return NotFound();
             }
-           ViewData["PositionId"] = new SelectList(_context.Positions, "Id", "Name");
+
+            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(), "Value", "Text");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -49,30 +49,9 @@ namespace BoOl.Pages.Workers
                 return Page();
             }
 
-            _context.Attach(Worker).State = EntityState.Modified;
+            await _repository.UpdateAsync(Worker);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WorkerExists(Worker.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool WorkerExists(int id)
-        {
-            return _context.Workers.Any(e => e.Id == id);
+            return RedirectToPage("./Details", new { id = Worker.Id });
         }
     }
 }

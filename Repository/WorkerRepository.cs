@@ -10,7 +10,7 @@ namespace BoOl.Repository
 {
     public class WorkerRepository : IRepository<Worker>
     {
-        private readonly BoOlContext _context;
+        private BoOlContext _context;
 
         public WorkerRepository(BoOlContext context)
         {
@@ -61,6 +61,7 @@ namespace BoOl.Repository
                 .Include(w => w.Orders)
                 .Include(w => w.CustomServices)
                 .Include(w => w.Storages)
+                .Include(w => w.User)
                 .FirstOrDefaultAsync(w => w.Id == id);
         }
 

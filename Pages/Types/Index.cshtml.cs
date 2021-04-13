@@ -6,23 +6,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Types
 {
     public class IndexModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Model> _repository;
+        public IEnumerable<Model> Models { get; set; }
+        public int CountOfModels { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
-        public IndexModel(BoOl.Models.BoOlContext context)
+        public IndexModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new ModelRepository(context);
         }
-
-        public IList<Model> Model { get;set; }
 
         public async Task OnGetAsync()
         {
-            Model = await _context.Models.ToListAsync();
+            CountOfModels = await _repository.CountAsync(null);
+            var models = await _repository.GetAllAsync(null);
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                models = models.Where(s => s.Manufacturer.Contains(SearchString));
+            }
+
+            Models = models.ToList();
         }
     }
 }

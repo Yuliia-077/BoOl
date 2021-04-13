@@ -13,7 +13,7 @@ namespace BoOl.Pages.Customers
 {
     public class IndexModel : PageModel
     {
-        private IRepository<Customer> _repository;
+        private readonly IRepository<Customer> _repository;
         public int CountOfCustomers { get; set; }
         public IEnumerable<Customer> Customers { get; set; }
         [BindProperty(SupportsGet = true)]

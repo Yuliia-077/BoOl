@@ -18,7 +18,7 @@ namespace BoOl.Pages.Customers
         [BindProperty]
         public Customer Customer { get; set; }
 
-        public EditModel(BoOl.Models.BoOlContext context)
+        public EditModel(BoOlContext context)
         {
             _repository = new CustomerRepository(context);
         }

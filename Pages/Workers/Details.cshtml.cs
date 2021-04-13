@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Workers
 {
     public class DetailsModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Worker> _repository;
+        public int CountOfOrders { get; set; }
+        public int CountOfStorage { get; set; }
+        public int CountOfServices { get; set; }
 
-        public DetailsModel(BoOl.Models.BoOlContext context)
+        public DetailsModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new WorkerRepository(context);
         }
 
         public Worker Worker { get; set; }
@@ -27,13 +31,16 @@ namespace BoOl.Pages.Workers
                 return NotFound();
             }
 
-            Worker = await _context.Workers
-                .Include(w => w.Position).FirstOrDefaultAsync(m => m.Id == id);
+            Worker = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Worker == null)
             {
                 return NotFound();
             }
+
+            CountOfOrders = Worker.Orders.Count();
+            CountOfServices = Worker.CustomServices.Count();
+            CountOfStorage = Worker.Storages.Count();
             return Page();
         }
     }

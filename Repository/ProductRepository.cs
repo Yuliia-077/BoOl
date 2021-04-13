@@ -10,7 +10,7 @@ namespace BoOl.Repository
 {
     public class ProductRepository: IRepository<Product>
     {
-        private readonly BoOlContext _context;
+        private BoOlContext _context;
 
         public ProductRepository(BoOlContext context)
         {

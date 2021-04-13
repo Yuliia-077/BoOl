@@ -17,6 +17,7 @@ namespace BoOl.Models
         [Required(ErrorMessage = "Введіть зарплату!")]
         public double Salary { get; set; }
 
+        [Required(ErrorMessage = "Введіть процент від роботи!")]
         public double PercentageOfWork { get; set; }
 
         public List<Worker> Workers { get; set; }

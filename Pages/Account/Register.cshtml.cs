@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BoOl.Models;
 using BoOl.Repository;
 using BoOl.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BoOl.Pages.Account
 {
+    [Authorize]
     public class RegisterModel : PageModel
     {
         private readonly UserManager<User> _userManager;
@@ -26,10 +28,16 @@ namespace BoOl.Pages.Account
             _signInManager = signInManager;
             _repository = new WorkerRepository(context);
         }
-        public async Task<IActionResult> OnGet()
+        public IActionResult OnGet(int? id)
         {
-            ViewData["WorkerId"] = new SelectList(await _repository.SelectAsync(), "Value", "Text");
-            return Page();
+            if(id!=null)
+            {
+                RegisterUser = new RegisterViewModel();
+                RegisterUser.WorkerId = Convert.ToInt32(id);
+                return Page();
+            }
+            //ViewData["WorkerId"] = new SelectList(await _repository.SelectAsync(), "Value", "Text");
+            return NotFound();
         }
         
         public async Task<IActionResult> OnPostAsync()
@@ -37,11 +45,9 @@ namespace BoOl.Pages.Account
             if (ModelState.IsValid)
             {
                 User user = new User { Email = RegisterUser.Email, UserName = RegisterUser.Email, WorkerId = RegisterUser.WorkerId };
-                // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, RegisterUser.Password);
                 if (result.Succeeded)
                 {
-                    // установка куки
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToPage("/Index");
                 }

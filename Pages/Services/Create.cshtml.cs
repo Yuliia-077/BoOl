@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Services
 {
     public class CreateModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Service> _repository;
 
-        public CreateModel(BoOl.Models.BoOlContext context)
+        [BindProperty]
+        public Service Service { get; set; }
+
+        public CreateModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new ServiceRepository(context);
         }
 
         public IActionResult OnGet()
@@ -23,11 +27,6 @@ namespace BoOl.Pages.Services
             return Page();
         }
 
-        [BindProperty]
-        public Service Service { get; set; }
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -35,8 +34,7 @@ namespace BoOl.Pages.Services
                 return Page();
             }
 
-            _context.Services.Add(Service);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(Service);
 
             return RedirectToPage("./Index");
         }

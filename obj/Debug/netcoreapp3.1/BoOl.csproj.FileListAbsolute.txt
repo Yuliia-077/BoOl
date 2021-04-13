@@ -37,7 +37,6 @@ D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Pr
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Products\Edit.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Services\Create.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Services\Delete.cshtml.g.cs
-D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Services\Details.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Services\Edit.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Services\Index.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_Layout.cshtml.g.cs
@@ -49,7 +48,6 @@ D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\St
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Storages\Index.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Types\Create.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Types\Delete.cshtml.g.cs
-D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Types\Details.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Types\Edit.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Types\Index.cshtml.g.cs
 D:\University\4thYear\TermPaper\BoOl\BoOl\obj\Debug\netcoreapp3.1\Razor\Pages\Workers\Create.cshtml.g.cs

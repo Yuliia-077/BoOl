@@ -7,20 +7,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Services
 {
     public class EditModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public EditModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
+        private readonly IRepository<Service> _repository;
 
         [BindProperty]
         public Service Service { get; set; }
+
+        public EditModel(BoOlContext context)
+        {
+            _repository = new ServiceRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,7 +30,7 @@ namespace BoOl.Pages.Services
                 return NotFound();
             }
 
-            Service = await _context.Services.FirstOrDefaultAsync(m => m.Id == id);
+            Service = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Service == null)
             {
@@ -38,8 +39,6 @@ namespace BoOl.Pages.Services
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -47,30 +46,9 @@ namespace BoOl.Pages.Services
                 return Page();
             }
 
-            _context.Attach(Service).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ServiceExists(Service.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _repository.UpdateAsync(Service);
 
             return RedirectToPage("./Index");
-        }
-
-        private bool ServiceExists(int id)
-        {
-            return _context.Services.Any(e => e.Id == id);
         }
     }
 }

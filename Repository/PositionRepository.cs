@@ -10,7 +10,7 @@ namespace BoOl.Repository
 {
     public class PositionRepository: IRepository<Position>
     {
-        private readonly BoOlContext _context;
+        private BoOlContext _context;
 
         public PositionRepository(BoOlContext context)
         {

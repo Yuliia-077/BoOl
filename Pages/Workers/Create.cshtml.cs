@@ -5,30 +5,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Workers
 {
     public class CreateModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public CreateModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
-        public IActionResult OnGet()
-        {
-        ViewData["PositionId"] = new SelectList(_context.Positions, "Id", "Name");
-            return Page();
-        }
-
+        private readonly IRepository<Worker> _repository;
+        private readonly IRepository<Position> _repositoryPosition;
         [BindProperty]
         public Worker Worker { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
+        public CreateModel(BoOlContext context)
+        {
+            _repository = new WorkerRepository(context);
+            _repositoryPosition = new PositionRepository(context);
+        }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            Worker = new Worker();
+            Worker.DateOfEmployment = DateTime.Now.Date;
+            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(), "Value", "Text");
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -36,10 +39,9 @@ namespace BoOl.Pages.Workers
                 return Page();
             }
 
-            _context.Workers.Add(Worker);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(Worker);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Workers/Details", new { id = Worker.Id});
         }
     }
 }

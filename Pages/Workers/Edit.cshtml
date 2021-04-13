@@ -1,82 +1,112 @@
 ﻿@page
 @model BoOl.Pages.Workers.EditModel
-
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h3>Змінити</h3>
-
-<div class="row">
-    <h4 class="col-10">@Html.DisplayFor(model => model.Worker.LastName) @Html.DisplayFor(model => model.Worker.FirstName)</h4>
-    <div class="col-2">
-        <a asp-page="./Delete" asp-route-id="@Model.Worker.Id"><i class="far fa-trash-alt"></i></a>|
-        <a asp-page="./Details" asp-route-id="@Model.Worker.Id"><i class="fas fa-arrow-left"></i></a>
+<div class="card border-dark">
+    <div class="card-header">
+        <h4 class="text-center">Редагувати дані співробітника</h4>
     </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Worker.Id" />
-            <div class="form-group">
-                <label asp-for="Worker.LastName" class="control-label">Прізвище</label>
-                <input asp-for="Worker.LastName" class="form-control" />
-                <span asp-validation-for="Worker.LastName" class="text-danger"></span>
+    <form method="post">
+        <div class="card-body">
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
             </div>
-            <div class="form-group">
-                <label asp-for="Worker.FirstName" class="control-label">Ім'я</label>
-                <input asp-for="Worker.FirstName" class="form-control" />
-                <span asp-validation-for="Worker.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.MiddleName" class="control-label">По-батькові</label>
-                <input asp-for="Worker.MiddleName" class="form-control" />
-                <span asp-validation-for="Worker.MiddleName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.PhoneNumber" class="control-label">Номер телефону</label>
-                <input asp-for="Worker.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Worker.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.DateOfBirth" class="control-label">Дата народження</label>
-                <input asp-for="Worker.DateOfBirth" class="form-control" />
-                <span asp-validation-for="Worker.DateOfBirth" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.Address" class="control-label">Адреса</label>
-                <input asp-for="Worker.Address" class="form-control" />
-                <span asp-validation-for="Worker.Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.Education" class="control-label">Освіта</label>
-                <input asp-for="Worker.Education" class="form-control" />
-                <span asp-validation-for="Worker.Education" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.DateOfEmployment" class="control-label">Дата прийому на роботу</label>
-                <input asp-for="Worker.DateOfEmployment" class="form-control" />
-                <span asp-validation-for="Worker.DateOfEmployment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.DateOfQuit" class="control-label">Дата звільнення</label>
-                <input asp-for="Worker.DateOfQuit" class="form-control" />
-                <span asp-validation-for="Worker.DateOfQuit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Worker.PositionId" class="control-label">Посада</label>
-                <select asp-for="Worker.PositionId" class="form-control" asp-items="ViewBag.PositionId"></select>
-                <span asp-validation-for="Worker.PositionId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+            <div class="form-row">
+                <input asp-for="Worker.Id" type="hidden" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Worker.LastName" class="control-label">Прізвище *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.LastName" class="form-control" id="LastName" aria-describedby="button-addon1" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('LastName').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Worker.FirstName" class="control-label">Ім'я *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.FirstName" class="form-control" id="FirstName" aria-describedby="button-addon3" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('FirstName').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Worker.MiddleName" class="control-label">По-батькові *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.MiddleName" class="form-control" id="MiddleName" aria-describedby="button-addon5" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon5" onclick="document.getElementById('MiddleName').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.MiddleName" class="text-danger"></span>
+                </div>
 
+                <div class="form-group col-md-4">
+                    <label asp-for="Worker.PhoneNumber" class="control-label">Номер телефону *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.PhoneNumber" class="form-control" id="PhoneNumber" aria-describedby="button-addon2" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('PhoneNumber').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Worker.DateOfBirth" class="control-label">Дата народження *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.DateOfBirth" type="date" class="form-control" id="DateOfBirth" aria-describedby="button-addon4" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('DateOfBirth').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.DateOfBirth" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Worker.Education" class="control-label">Освіта *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.Education" class="form-control" id="Education" aria-describedby="button-addon6" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon6" onclick="document.getElementById('Education').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.Education" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Worker.Address" class="control-label">Адреса *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.Address" class="form-control" id="Address" aria-describedby="button-addon8" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon8" onclick="document.getElementById('Address').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.Address" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Worker.PositionId" class="control-label">Посада *</label>
+                    <div class="input-group">
+                        <select asp-for="Worker.PositionId" asp-items="ViewBag.PositionId" class="form-control" aria-describedby="button-addon9" id="Position"></select>
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon9" onclick="document.getElementById('Position').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.PositionId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Worker.DateOfEmployment" class="control-label">Дата прийому *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.DateOfEmployment" type="date" class="form-control" id="DateOfEmployment" aria-describedby="button-addon7" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon7" onclick="document.getElementById('DateOfEmployment').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.DateOfEmployment" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Worker.DateOfQuit" class="control-label">Дата звільнення *</label>
+                    <div class="input-group">
+                        <input asp-for="Worker.DateOfQuit" type="date" class="form-control" id="DateOfQuit" aria-describedby="button-addon8" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon8" onclick="document.getElementById('DateOfQuit').value = ''">X</button>
+                    </div>
+                    <span asp-validation-for="Worker.DateOfQuit" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

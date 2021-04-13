@@ -25,25 +25,22 @@
                             <a class="nav-link font-weight-bolder" asp-page="/Index">Дашборд</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font-weight-bolder" asp-page="/Customers/Index">Клієнти</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link font-weight-bolder" asp-page="/Orders/Index">Замовлення</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font-weight-bolder" asp-page="/Workers/Index">Працівники</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Customers/Index">Клієнти</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font-weight-bolder" asp-page="/Services/Index">Послуги</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Workers/Index">Співробітники</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link font-weight-bolder" asp-page="/Storages/Index">Склад</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font-weight-bolder" asp-page="/Types/Index">Моделі</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Services/Index">Послуги</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link font-weight-bolder" asp-page="/Positions/Index">Посади</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Types/Index">Моделі</a>
                         </li>
                     </ul>
                 </div>
@@ -78,14 +75,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        var myModal = document.getElementById('myModal')
-        var myInput = document.getElementById('myInput')
-
-        myModal.addEventListener('shown.bs.modal', function () {
-            myInput.focus()
-        })
-    </script>
 
     @RenderSection("Scripts", required: false)
 </body>

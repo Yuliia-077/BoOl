@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Orders
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly BoOl.Models.BoOlContext _context;

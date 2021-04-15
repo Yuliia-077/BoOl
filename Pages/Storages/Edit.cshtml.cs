@@ -7,20 +7,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
+    [Authorize]
     public class EditModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public EditModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
+        private readonly IRepository<Storage> _repository;
+        private readonly IRepository<Model> _repositoryModel;
         [BindProperty]
         public Storage Storage { get; set; }
+
+        public EditModel(BoOlContext context)
+        {
+            _repository = new StorageRepository(context);
+            _repositoryModel = new ModelRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,25 +33,17 @@ namespace BoOl.Pages.Storages
                 return NotFound();
             }
 
-            Storage = await _context.Storages
-                .Include(s => s.Model)
-                .Include(s => s.Worker).FirstOrDefaultAsync(m => m.Id == id);
+            Storage = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Storage == null)
             {
                 return NotFound();
             }
-            var workers = _context.Workers.Select(
-                x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName }).ToList();
-            var models = _context.Models.Select(
-               x => new { Value = x.Id, Text = x.Manufacturer + " " + x.Type }).ToList();
-            ViewData["ModelId"] = new SelectList(models, "Value", "Text");
-            ViewData["WorkerId"] = new SelectList(workers, "Value", "Text");
+
+            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(), "Value", "Text");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -55,30 +51,9 @@ namespace BoOl.Pages.Storages
                 return Page();
             }
 
-            _context.Attach(Storage).State = EntityState.Modified;
+            await _repository.UpdateAsync(Storage);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StorageExists(Storage.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool StorageExists(int id)
-        {
-            return _context.Storages.Any(e => e.Id == id);
+            return RedirectToPage("./Details", new { id = Storage.Id });
         }
     }
 }

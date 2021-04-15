@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using BoOl.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Workers
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Worker> _repository;

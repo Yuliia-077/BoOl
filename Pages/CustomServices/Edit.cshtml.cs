@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.CustomServices
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         private readonly BoOl.Models.BoOlContext _context;

@@ -7,34 +7,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public CreateModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
-        public IActionResult OnGetAsync()
-        {
-            var workers = _context.Workers.Select(
-                x => new { Value = x.Id, Text = x.LastName +" " + x.FirstName}).ToList();
-            var models = _context.Models.Select(
-               x => new { Value = x.Id, Text = x.Manufacturer + " " + x.Type }).ToList();
-            ViewData["ModelId"] = new SelectList(models, "Value", "Text");
-            ViewData["WorkerId"] = new SelectList(workers, "Value", "Text");
-            return Page();
-        }
-
+        private readonly IRepository<Storage> _repository;
+        private readonly IRepository<Model> _repositoryModel;
+        private readonly UserRepository _repositoryUser;
         [BindProperty]
         public Storage Storage { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
+        public CreateModel(BoOlContext context)
+        {
+            _repository = new StorageRepository(context);
+            _repositoryModel = new ModelRepository(context);
+            _repositoryUser = new UserRepository(context);
+        }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            Storage = new Storage();
+            Storage.DateOfArrival = DateTime.Now;
+            var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
+            Storage.WorkerId = user.WorkerId;
+            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(), "Value", "Text");
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -42,10 +45,9 @@ namespace BoOl.Pages.Storages
                 return Page();
             }
 
-            _context.Storages.Add(Storage);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(Storage);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Details", new { id = Storage.Id });
         }
     }
 }

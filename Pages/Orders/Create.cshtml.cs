@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BoOl.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Orders
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly BoOl.Models.BoOlContext _context;

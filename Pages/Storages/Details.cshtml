@@ -5,72 +5,76 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.Storage.Name);
 }
 
-<h4 class="text-center">@Html.DisplayFor(model => model.Storage.Name)</h4>
-<hr />
 <div class="row">
-    <div class="col-1">
-        <a asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
+    <div class="col-md-3"></div>
+    <div class="col-12 col-md-6 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Інформація про постачання</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-4">
+                        Назва:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.Name)
+                    </dd>
+                    <dt class="col-4">
+                        Виробник:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.Manufacturer)
+                    </dd>
+                    <dt class="col-4">
+                        Модель:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.Model.Manufacturer) @Html.DisplayFor(model => model.Storage.Model.Type)
+                    </dd>
+                    <dt class="col-4">
+                        Кількість:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.Quantity)
+                    </dd>
+                    <dt class="col-4">
+                        Закупівельна ціна:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.PurchasePrice)
+                    </dd>
+                    <dt class="col-4">
+                        Оптова ціна:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.WholesalePrice)
+                    </dd>
+                    <dt class="col-4">
+                        Роздрібна ціна:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.RetailPrice)
+                    </dd>
+                    <dt class="col-4">
+                        Співробітник:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.Worker.LastName) @Html.DisplayFor(model => model.Storage.Worker.FirstName)
+                    </dd>
+                    <dt class="col-4">
+                        Дата прибуття:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Storage.DateOfArrival)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Storage.Id"><i class="far fa-edit"> Редагувати</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Storage.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+            </div>
+        </div>
     </div>
-    <div class="col-10">
-        <dl class="row">
-            <dt class="col-6 text-right">
-                Назва:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.Name)
-            </dd>
-            <dt class="col-6 text-right">
-                Виробник:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.Manufacturer)
-            </dd>
-            <dt class="col-6 text-right">
-                Модель:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.Model.Manufacturer) @Html.DisplayFor(model => model.Storage.Model.Type)
-            </dd>
-            <dt class="col-6 text-right">
-                Кількість:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.Quantity)
-            </dd>
-            <dt class="col-6 text-right">
-                Закупівельна ціна:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.PurchasePrice)
-            </dd>
-            <dt class="col-6 text-right">
-                Оптова ціна:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.WholesalePrice)
-            </dd>
-            <dt class="col-6 text-right">
-                Роздрібна ціна:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.RetailPrice)
-            </dd>
-            <dt class="col-6 text-right">
-                Співробітник:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.Worker.LastName) @Html.DisplayFor(model => model.Storage.Worker.FirstName)
-            </dd>
-            <dt class="col-6 text-right">
-                Дата прибуття:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Storage.DateOfArrival)
-            </dd>
-        </dl>
-    </div>
-    <div class="col-1">
-        <a asp-page="./Edit" asp-route-id="@Model.Storage.Id"><i class="far fa-edit"></i></a>
-        <a asp-page="./Delete" asp-route-id="@Model.Storage.Id"><i class="far fa-trash-alt"></i></a>
-    </div>
+    <div class="col-md-3"></div>
 </div>

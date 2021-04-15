@@ -6,25 +6,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Storage> _repository;
+        public int CountOfDeliveries { get; set; }
+        public IEnumerable<Storage> Storage { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
-        public IndexModel(BoOl.Models.BoOlContext context)
+        public IndexModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new StorageRepository(context);
         }
-
-        public IList<Storage> Storage { get;set; }
 
         public async Task OnGetAsync()
         {
-            Storage = await _context.Storages
-                .Include(s => s.Model)
-                .Include(s => s.Worker).ToListAsync();
+            CountOfDeliveries = await _repository.CountAsync(null);
+            var deliveries = await _repository.GetAllAsync(null);
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                deliveries = deliveries.Where(s => s.Name.Contains(SearchString));
+            }
+
+            Storage = deliveries.ToList();
         }
     }
 }

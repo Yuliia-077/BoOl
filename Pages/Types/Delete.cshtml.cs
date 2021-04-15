@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Types
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
         private readonly BoOl.Models.BoOlContext _context;

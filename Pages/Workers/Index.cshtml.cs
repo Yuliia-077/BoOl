@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using BoOl.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Workers
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IRepository<Position> _repository;

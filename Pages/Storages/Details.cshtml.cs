@@ -6,19 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public DetailsModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
+        private readonly IRepository<Storage> _repository;
         public Storage Storage { get; set; }
+
+        public DetailsModel(BoOlContext context)
+        {
+            _repository = new StorageRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -27,9 +29,7 @@ namespace BoOl.Pages.Storages
                 return NotFound();
             }
 
-            Storage = await _context.Storages
-                .Include(s => s.Model)
-                .Include(s => s.Worker).FirstOrDefaultAsync(m => m.Id == id);
+            Storage = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Storage == null)
             {

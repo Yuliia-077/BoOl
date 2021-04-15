@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using BoOl.ViewModel;
 using BoOl.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Customers
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IRepository<Customer> _repository;

@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.CustomServices
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly BoOl.Models.BoOlContext _context;

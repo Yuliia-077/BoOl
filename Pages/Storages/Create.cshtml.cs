@@ -34,7 +34,7 @@ namespace BoOl.Pages.Storages
             Storage.DateOfArrival = DateTime.Now;
             var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
             Storage.WorkerId = user.WorkerId;
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(), "Value", "Text");
+            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
             return Page();
         }
 

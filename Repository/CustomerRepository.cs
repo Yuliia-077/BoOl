@@ -57,7 +57,7 @@ namespace BoOl.Repository
             return await _context.Customers.CountAsync();
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             var productsList = await _context.Customers.Select(
                x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName + " " + x.MiddleName}).ToListAsync();

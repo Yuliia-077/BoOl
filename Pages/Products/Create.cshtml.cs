@@ -42,7 +42,7 @@ namespace BoOl.Pages.Products
             Product.Customer = customer;
             Product.CustomerId = customer.Id;
 
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(), "Value", "Text");
+            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
             return Page();
         }
 

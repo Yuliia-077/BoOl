@@ -5,67 +5,141 @@
     ViewData["Title"] = "Order";
 }
 
-<h4 class="text-center">Замовлення №@Html.DisplayFor(model => model.Order.Id)</h4>
-<hr />
 <div class="row">
-    <div class="col-1">
-        <a asp-page="./Index" asp-route-id=""><i class="fas fa-arrow-left"></i></a>
+    <div class="col-4 col-md-3">
+        <div class="card border border-secondary text-center">
+            <div class="card-header">
+                Кількість послуг:
+            </div>
+            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfServices</p>
+        </div>
     </div>
-    <div class="col-10">
-        <dl class="row">
-            <dt class="col-6 text-right">
-                Техніка:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.Product.Model.Manufacturer) @Html.DisplayFor(model => model.Order.Product.Model.Type) @Html.DisplayFor(model => model.Order.Product.SerialNumber)
-            </dd>
-
-            <dt class="col-6 text-right">
-                Оплачено:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.Payment)
-            </dd>
-
-            <dt class="col-6 text-right">
-                Статус:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.Status)
-            </dd>
-
-            <dt class="col-6 text-right">
-                Знижка:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.Discount)
-            </dd>
-
-            <dt class="col-6 text-right">
-                Дата прийому:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.DateOfAdmission)
-            </dd>
-
-            <dt class="col-6 text-right">
-                Дата видачі:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.DateOfIssue)
-            </dd>
-
-            <dt class="col-6 text-right">
-                Працівник:
-            </dt>
-            <dd class="col-6">
-                @Html.DisplayFor(model => model.Order.Worker.LastName)
-                @Html.DisplayFor(model => model.Order.Worker.FirstName)
-            </dd>
-        </dl>
+    <div class="col-8 col-md-9">
+        <div class="d-grid gap-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id"><i class="fas fa-plus"> Додати послугу</i></a>
+        </div>
     </div>
-    <div class="col-1">
-        <a asp-page="./Edit" asp-route-id="@Model.Order.Id"><i class="far fa-edit"></i></a>
-        <a asp-page="./Delete" asp-route-id="@Model.Order.Id"><i class="far fa-trash-alt"></i></a>
+</div>
+<br />
+<div class="row">
+    <div class="col-12 col-md-6 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Інформація по замовленню №@Html.DisplayFor(model => model.Order.Id)</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-4">
+                        Клієнт:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.Product.Customer.FirstName) @Html.DisplayFor(model => model.Order.Product.Customer.MiddleName)
+                    </dd>
+                    <dt class="col-4">
+                        Техніка:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.Product.Model.Manufacturer) @Html.DisplayFor(model => model.Order.Product.Model.Type) @Html.DisplayFor(model => model.Order.Product.SerialNumber)
+                    </dd>
+
+                    <dt class="col-4">
+                        Оплачено:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.Payment)
+                    </dd>
+
+                    <dt class="col-4">
+                        Статус:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.Status)
+                    </dd>
+
+                    <dt class="col-4">
+                        Знижка:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.Discount)
+                    </dd>
+
+                    <dt class="col-4">
+                        Дата прийому:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.DateOfAdmission)
+                    </dd>
+
+                    <dt class="col-4">
+                        Дата видачі:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.DateOfIssue)
+                    </dd>
+
+                    <dt class="col-4">
+                        Працівник:
+                    </dt>
+                    <dd class="col-8">
+                        @Html.DisplayFor(model => model.Order.Worker.LastName)
+                        @Html.DisplayFor(model => model.Order.Worker.FirstName)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Order.Id"><i class="far fa-edit"> Редагувати</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Order.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Послуги</strong>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Послуга
+                            </th>
+                            <th>
+                                Працівник
+                            </th>
+                            <th>
+                                Дата виконання
+                            </th>
+                            <th>
+                                Зроблено
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Order.CustomServices)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Service.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Worker.LastName)@Html.DisplayFor(modelItem => item.Worker.FirstName) @Html.DisplayFor(modelItem => item.Worker.MiddleName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExecutionDate.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsDone)
+                                </td>
+                                <td>
+                                    <a asp-page="/CustomServices/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

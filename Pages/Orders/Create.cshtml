@@ -6,91 +6,77 @@
     ViewData["Title"] = "Create";
 }
 
-
-<h4 class="text-center">Створити </h4>
-<h3 class="text-center">@Html.DisplayFor(modelItem => Model.Customer.LastName) @Html.DisplayFor(modelItem => Model.Customer.FirstName)</h3>
-<hr />
-
 <div class="row">
-    <div class="col-sm-1">
-        <a asp-page="./Index"><i class="fas fa-arrow-left"></i></a>
-    </div>
-    <div class="col-sm-11">
-        <form method="post">
-            <div class="form-row">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="CustomerId" />
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.ProductId" class="control-label">Техніка *</label>
-                    <div class="form-inline">
-                        <select asp-for="Order.ProductId" class="form-control col-10" asp-items="ViewBag.ProductId"></select>
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.ProductId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.Status" class="control-label">Статус *</label>
-                    <div class="form-inline">
-                        <input asp-for="Order.Status" class="form-control col-10" />
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.Status" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.Discount" class="control-label">Знижка</label>
-                    <div class="form-inline">
-                        <input asp-for="Order.Discount" class="form-control col-10" />
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.Discount" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.DateOfAdmission" class="control-label">Дата прийому *</label>
-                    <div class="form-inline">
-                        <input asp-for="Order.DateOfAdmission" class="form-control col-10" />
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.DateOfAdmission" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.Payment" class="control-label">Оплата</label>
-                    <div class="form-inline">
-                        <input asp-for="Order.Payment" class="form-control col-10" />
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.Payment" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.WorkerId" class="control-label">Працівник *</label>
-                    <div class="form-inline">
-                        <select asp-for="Order.WorkerId" class="form-control col-10" asp-items="ViewBag.WorkerId"></select>
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.WorkerId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label asp-for="Order.DateOfIssue" class="control-label">Дата видачі</label>
-                    <div class="form-inline">
-                        <input asp-for="Order.DateOfIssue" class="form-control col-10" />
-                        <input type="reset" class="btn-light form-control col-1" value="X" />
-                    </div>
-                    <span asp-validation-for="Order.DateOfIssue" class="text-danger"></span>
-                </div>
-
-                <div class="form-group col-12">
-                    <input type="submit" value="Зберегти" class="btn btn-primary" />
-                </div>
+    <div class="col-1 col-md-3"></div>
+    <div class="col-10 col-md-6">
+        <div class="card border-dark">
+            <div class="card-header">
+                <h4 class="text-center">Додати замовлення</h4>
+                <h5 class="text-center">Власник: @Html.DisplayFor(modelItem => Model.Customer.LastName) @Html.DisplayFor(modelItem => Model.Customer.FirstName)</h5>
             </div>
-        </form>
+            <form method="post">
+                <div class="card-body">
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                    </div>
+                    <div class="form-row">
+                        <input asp-for="CustomerId" hidden />
+                        <input asp-for="Order.WorkerId" hidden />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group col-12">
+                            <label asp-for="Order.ProductId" class="control-label">Техніка *</label>
+                            <div class="input-group">
+                                <select asp-for="Order.ProductId" class="form-control" asp-items="ViewBag.ProductId" id="ProductId" aria-describedby="button-addon1"></select>
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('ProductId').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="Order.ProductId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-12">
+                            <label asp-for="Order.Status" class="control-label">Статус *</label>
+                            <div class="input-group">
+                                <input asp-for="Order.Status" class="form-control" id="Status" aria-describedby="button-addon2" />
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Status').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="Order.Status" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-3">
+                            <label asp-for="Order.Payment" class="control-label">Оплачено</label>
+                            <div class="input-group">
+                                <input asp-for="Order.Payment" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-9">
+                            <label asp-for="Order.Discount" class="control-label">Знижка</label>
+                            <div class="input-group">
+                                <input asp-for="Order.Discount" class="form-control" id="Discount" aria-describedby="button-addon3" />
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Discount').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="Order.Discount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-12">
+                            <label asp-for="Order.DateOfAdmission" class="control-label">Дата прийому *</label>
+                            <div class="input-group">
+                                <input asp-for="Order.DateOfAdmission" type="date" class="form-control" id="Date" aria-describedby="button-addon1" />
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Date').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="Order.DateOfAdmission" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                        <a class="btn btn-outline-secondary" asp-page="/Customers/Details" asp-route-id="@Model.Customer.Id">Скасувати</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+    <div class="col-1 col-md-3"></div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }

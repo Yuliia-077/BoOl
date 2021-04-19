@@ -52,7 +52,7 @@ namespace BoOl.Repository
             return await _context.Services.Include(s => s.CustomServices).FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             var productsList = await _context.Services
                 .Select(x => new { Value = x.Id, Text = x.Name }).ToListAsync();

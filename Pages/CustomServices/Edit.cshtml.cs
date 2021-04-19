@@ -8,21 +8,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.CustomServices
 {
     [Authorize]
     public class EditModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public EditModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
+        private readonly IRepository<CustomService> _repository;
+        private readonly IRepository<Service> _repositoryService;
         [BindProperty]
         public CustomService CustomService { get; set; }
+
+        public EditModel(BoOlContext context)
+        {
+            _repository = new CustomServiceRepository(context);
+            _repositoryService = new ServiceRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,56 +33,27 @@ namespace BoOl.Pages.CustomServices
                 return NotFound();
             }
 
-            CustomService = await _context.CustomServices
-                .Include(c => c.Order)
-                .Include(c => c.Part)
-                .Include(c => c.Service)
-                .Include(c => c.Worker).FirstOrDefaultAsync(m => m.Id == id);
+            CustomService = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (CustomService == null)
             {
                 return NotFound();
             }
-           ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Status");
-           ViewData["PartId"] = new SelectList(_context.Parts, "Id", "Id");
-           ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name");
-           ViewData["WorkerId"] = new SelectList(_context.Workers, "Id", "Address");
+            ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
                 return Page();
             }
 
-            _context.Attach(CustomService).State = EntityState.Modified;
+            await _repository.UpdateAsync(CustomService);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomServiceExists(CustomService.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool CustomServiceExists(int id)
-        {
-            return _context.CustomServices.Any(e => e.Id == id);
+            return RedirectToPage("./Details", new { id = CustomService.Id});
         }
     }
 }

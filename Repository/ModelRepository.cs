@@ -58,7 +58,7 @@ namespace BoOl.Repository
 
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             var productsList = await _context.Models.Select(
                x => new { Value = x.Id, Text = x.Manufacturer + " " + x.Type }).ToListAsync();

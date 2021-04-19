@@ -15,6 +15,6 @@ namespace BoOl.Repository
         Task UpdateAsync(T t);
         Task DeleteAsync(int id);
         Task<int> CountAsync(int? id);
-        Task<IEnumerable<SelectedModel>> SelectAsync();
+        Task<IEnumerable<SelectedModel>> SelectAsync(int? id);
     }
 }

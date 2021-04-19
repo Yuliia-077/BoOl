@@ -40,7 +40,7 @@ namespace BoOl.Pages.Workers
                 return NotFound();
             }
 
-            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(), "Value", "Text");
+            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(null), "Value", "Text");
             return Page();
         }
 

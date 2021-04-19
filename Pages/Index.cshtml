@@ -1,10 +1,41 @@
 ﻿@page
 @model IndexModel
+@section Styles{
+    <link rel="stylesheet" href="~/css/Index.css" />
+}
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<header class="page-header header container-fluid">
+    <div class="overlay">
+        <div class="description">
+            <h1><small>CRM-система</small></h1>
+            <h1>BoOl</h1>
+            <a href="#service" class="btn btn-light">Переглянути послуги</a>
+        </div>
+    </div>
+</header>
+<script src="/js/site.js"></script>
+<div class="container-fluid">
+    <a name="service"></a>
+
+    <hr />
+    <h1 class="text-center">Послуги</h1>
+    <hr />
+    <div class="row">
+        <div class="col d-flex">
+            @foreach (var item in Model.Services)
+            {
+                <div class="card border border-secondary text-center mr-3">
+                    <div class="card-header">
+                        <b style="font-size:large">@Html.DisplayFor(modelItem => item.Name)</b>
+                    </div>
+                    <div class="card-body">
+                        <b>Ціна: @Html.DisplayFor(modelItem => item.Price)</b>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

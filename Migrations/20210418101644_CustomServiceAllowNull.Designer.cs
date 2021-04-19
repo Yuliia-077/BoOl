@@ -3,15 +3,17 @@ using System;
 using BoOl.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BoOl.Migrations
 {
     [DbContext(typeof(BoOlContext))]
-    partial class BoOlContextModelSnapshot : ModelSnapshot
+    [Migration("20210418101644_CustomServiceAllowNull")]
+    partial class CustomServiceAllowNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +37,9 @@ namespace BoOl.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("PartId")
+                        .HasColumnType("integer");
+
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
@@ -47,6 +52,9 @@ namespace BoOl.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("PartId")
+                        .IsUnique();
 
                     b.HasIndex("ServiceId");
 
@@ -168,22 +176,13 @@ namespace BoOl.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CustomServiceId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsInjured")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("SerialNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("StorageId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomServiceId");
 
                     b.HasIndex("StorageId");
 
@@ -570,6 +569,10 @@ namespace BoOl.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BoOl.Models.Part", "Part")
+                        .WithOne("CustomService")
+                        .HasForeignKey("BoOl.Models.CustomService", "PartId");
+
                     b.HasOne("BoOl.Models.Service", "Service")
                         .WithMany("CustomServices")
                         .HasForeignKey("ServiceId")
@@ -583,6 +586,8 @@ namespace BoOl.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
+
+                    b.Navigation("Part");
 
                     b.Navigation("Service");
 
@@ -610,19 +615,11 @@ namespace BoOl.Migrations
 
             modelBuilder.Entity("BoOl.Models.Part", b =>
                 {
-                    b.HasOne("BoOl.Models.CustomService", "CustomService")
-                        .WithMany("Parts")
-                        .HasForeignKey("CustomServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BoOl.Models.Storage", "Storage")
                         .WithMany("Parts")
                         .HasForeignKey("StorageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CustomService");
 
                     b.Navigation("Storage");
                 });
@@ -738,11 +735,6 @@ namespace BoOl.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BoOl.Models.CustomService", b =>
-                {
-                    b.Navigation("Parts");
-                });
-
             modelBuilder.Entity("BoOl.Models.Customer", b =>
                 {
                     b.Navigation("Products");
@@ -758,6 +750,11 @@ namespace BoOl.Migrations
             modelBuilder.Entity("BoOl.Models.Order", b =>
                 {
                     b.Navigation("CustomServices");
+                });
+
+            modelBuilder.Entity("BoOl.Models.Part", b =>
+                {
+                    b.Navigation("CustomService");
                 });
 
             modelBuilder.Entity("BoOl.Models.Position", b =>

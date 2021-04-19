@@ -57,7 +57,7 @@ namespace BoOl.Repository
             return await _context.Positions.CountAsync();
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             var positionsList = await _context.Positions.Select(
                x => new { Value = x.Id, Text = x.Name }).ToListAsync();

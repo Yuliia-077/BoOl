@@ -8,23 +8,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
     [Authorize]
     public class EditModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public EditModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
+        private readonly IRepository<Order> _repository;
+        private readonly IRepository<Product> _repositoryProduct;
+        private readonly IRepository<Customer> _repositoryCustomer;
+        private readonly UserRepository _repositoryUser;
 
         [BindProperty]
         public Order Order { get; set; }
         [BindProperty]
         public int CustomerId { get; set; }
+
+
+        public EditModel(BoOl.Models.BoOlContext context)
+        {
+            _repository = new OrdersRepository(context);
+            _repositoryProduct = new ProductRepository(context);
+            _repositoryCustomer = new CustomerRepository(context);
+            _repositoryUser = new UserRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,16 +41,14 @@ namespace BoOl.Pages.Orders
                 return NotFound();
             }
 
-            Order = await _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Worker).FirstOrDefaultAsync(m => m.Id == id);
+            Order = await _repository.GetByIdAsync(Convert.ToInt32(id));
             CustomerId = Order.Product.CustomerId;
 
             if (Order == null)
             {
                 return NotFound();
             }
-            await OnGetLists(CustomerId);
+            ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(CustomerId), "Value", "Text");
             return Page();
         }
 
@@ -52,49 +58,12 @@ namespace BoOl.Pages.Orders
         {
             if (!ModelState.IsValid)
             {
-                await OnGetLists(CustomerId);
+                ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(CustomerId), "Value", "Text");
                 return Page();
             }
 
-            _context.Attach(Order).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(Order.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToPage("./Index", new {id = CustomerId});
-        }
-
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
-        }
-
-        public async Task OnGetLists(int? id)
-        {
-            if (id != null)
-            {
-                var workers = await _context.Workers
-                    .Select(x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName })
-                    .ToListAsync();
-                var products = await _context.Products
-                    .Where(x => x.CustomerId == id)
-                    .Select(x => new { Value = x.Id, Text = x.SerialNumber + " " + x.Model.Manufacturer + " " + x.Model.Type })
-                    .ToListAsync();
-                ViewData["WorkerId"] = new SelectList(workers, "Value", "Text");
-                ViewData["ProductId"] = new SelectList(products, "Value", "Text");
-            }
+            await _repository.UpdateAsync(Order);
+            return RedirectToPage("./Details", new {Order.Id});
         }
     }
 }

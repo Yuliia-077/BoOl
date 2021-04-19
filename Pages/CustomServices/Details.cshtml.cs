@@ -1,26 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BoOl.Models;
+using BoOl.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.CustomServices
 {
-    [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
-
-        public DetailsModel(BoOl.Models.BoOlContext context)
-        {
-            _context = context;
-        }
-
+        private readonly IRepository<CustomService> _repository;
+        public int CountOfParts { get; set; }
         public CustomService CustomService { get; set; }
+
+        public DetailsModel(BoOlContext context)
+        {
+            _repository = new CustomServiceRepository(context);
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,11 +27,8 @@ namespace BoOl.Pages.CustomServices
                 return NotFound();
             }
 
-            CustomService = await _context.CustomServices
-                .Include(c => c.Order)
-                .Include(c => c.Part)
-                .Include(c => c.Service)
-                .Include(c => c.Worker).FirstOrDefaultAsync(m => m.Id == id);
+            CustomService = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            CountOfParts = CustomService.Parts.Count();
 
             if (CustomService == null)
             {

@@ -48,7 +48,7 @@ namespace BoOl.Repository
             return await _context.Storages.Include(s => s.Worker).Include(s => s.Model).FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             var deliveryList = await _context.Storages.Select(
                x => new { Value = x.Id, Text = x.Name})

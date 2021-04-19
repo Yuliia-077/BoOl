@@ -40,7 +40,7 @@ namespace BoOl.Pages.Products
                 return NotFound();
             }
 
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(), "Value", "Text");
+            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
             return Page();
         }
 

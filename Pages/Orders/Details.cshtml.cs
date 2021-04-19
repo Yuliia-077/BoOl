@@ -7,20 +7,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
     [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Order> _repository;
+        public int CountOfServices { get; set; }
 
+        [BindProperty]
         public Order Order { get; set; }
-        public int CustomerId { get; set; }
 
-        public DetailsModel(BoOl.Models.BoOlContext context)
+        public DetailsModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new OrdersRepository(context);
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -30,18 +32,13 @@ namespace BoOl.Pages.Orders
                 return NotFound();
             }
 
-            Order = await _context.Orders
-                .Include(o => o.Worker)
-                .Include(o => o.Product)
-                .Include(o => o.Product.Model)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            CustomerId = Order.Product.CustomerId;
+            Order = await _repository.GetByIdAsync(Convert.ToInt32(id));
 
             if (Order == null)
             {
                 return NotFound();
             }
+            CountOfServices = await _repository.CountAsync(id);
             return Page();
         }
     }

@@ -8,13 +8,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using BoOl.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
     [Authorize]
     public class CreateModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Order> _repository;
+        private readonly IRepository<Product> _repositoryProduct;
+        private readonly IRepository<Customer> _repositoryCustomer;
+        private readonly UserRepository _repositoryUser;
 
         [BindProperty]
         public Order Order { get; set; }
@@ -23,9 +27,12 @@ namespace BoOl.Pages.Orders
 
         public Customer Customer { get; set; }
 
-        public CreateModel(BoOl.Models.BoOlContext context)
+        public CreateModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new OrdersRepository(context);
+            _repositoryProduct = new ProductRepository(context);
+            _repositoryCustomer = new CustomerRepository(context);
+            _repositoryUser = new UserRepository(context);
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -37,20 +44,12 @@ namespace BoOl.Pages.Orders
             }
             CustomerId = Convert.ToInt32(id);
             Order = new Order();
-            Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
+            Customer = await _repositoryCustomer.GetByIdAsync(CustomerId);
             Order.Discount = Customer.Discount;
             Order.DateOfAdmission = DateTime.Now.Date;
-            await OnGetLists(id);
-            //var workers = _context.Workers.Select(
-            //x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName }).ToList();
-            //var products = _context.Products
-            //    .Where(x=> x.CustomerId == id)
-            //    .Select(
-            //    x => new { Value = x.Id, Text = x.SerialNumber + " " + x.Model.Manufacturer + " " + x.Model.Type }).ToList();
-            //ViewData["WorkerId"] = new SelectList(workers, "Value", "Text");
-            //ViewData["ProductId"] = new SelectList(products, "Value", "Text");
-            //ViewData["ProductId"] = new SelectList(_context.Products, "Id", "SerialNumber");
-            //ViewData["WorkerId"] = new SelectList(_context.Workers, "Id", "Address");
+            ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(id), "Value", "Text");
+            var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
+            Order.WorkerId = user.WorkerId;
             return Page();
         }
 
@@ -58,31 +57,14 @@ namespace BoOl.Pages.Orders
         {
             if (!ModelState.IsValid)
             {
-                Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == CustomerId);
-                await OnGetLists(CustomerId);
+                Customer = await _repositoryCustomer.GetByIdAsync(CustomerId);
+                ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(CustomerId), "Value", "Text");
                 return Page();
             }
 
-            _context.Orders.Add(Order);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(Order);
 
-            return RedirectToPage("./Index", new { id = CustomerId});
-        }
-
-        public async Task OnGetLists(int? id)
-        {
-            if(id != null)
-            {
-                var workers = await _context.Workers
-                    .Select(x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName })
-                    .ToListAsync();
-                var products = await _context.Products
-                    .Where(x => x.CustomerId == id)
-                    .Select(x => new { Value = x.Id, Text = x.SerialNumber + " " + x.Model.Manufacturer + " " + x.Model.Type })
-                    .ToListAsync();
-                ViewData["WorkerId"] = new SelectList(workers, "Value", "Text");
-                ViewData["ProductId"] = new SelectList(products, "Value", "Text");
-            }
+            return RedirectToPage("./Details", new { id = Order.Id});
         }
     }
 }

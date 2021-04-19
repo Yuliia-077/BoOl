@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BoOl</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    @*<link rel="stylesheet" href="~/css/site.css" />*@
+    @RenderSection("Styles", false)
     <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
 </head>
 <body style="background-color: #f2f7f7">
@@ -24,8 +25,13 @@
                     <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse navbar-nav-scroll">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link font-weight-bolder" asp-page="/Index">Дашборд</a>
+                                <a class="nav-link font-weight-bolder" asp-page="/Account/Login" asp-page-handler="LogOut" onclick="return confirm('Ви дійсно хочете вийти?');">Вихід</a>
                             </li>
+                        </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            @*<li class="nav-item">
+                                <a class="nav-link font-weight-bolder" asp-page="/Index">Дашборд</a>
+                            </li>*@
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Orders/Index">Замовлення</a>
                             </li>
@@ -47,20 +53,15 @@
                         </ul>
                     </div>
                 }
+                else
+                {
                     <ul class="navbar-nav flex-row d-flex">
                         <li class="nav-item">
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <p>@User.Identity.Name</p>
-                                <a class="nav-link font-weight-bolder" asp-page="/Account/Login" asp-page-handler="LogOut" onclick="return confirm('Ви дійсно хочете вийти?');">Вихід</a>
-                            }
-                            else
-                            {
-                                <a class="nav-link font-weight-bolder" asp-page="/Account/Login">Вхід</a>
-                            }
+                           <a class="nav-link font-weight-bolder" asp-page="/Account/Login">Вхід</a>
                         </li>
                     </ul>
-                </div>
+                }
+            </div>
         </nav>
     </header>
     <div class="container">

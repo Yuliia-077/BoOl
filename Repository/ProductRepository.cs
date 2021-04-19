@@ -75,17 +75,29 @@ namespace BoOl.Repository
             }
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
-            var productsList = await _context.Products.Include(x => x.Model)
-                .Select(x => new { Value = x.Id, Text = x.SerialNumber }).ToListAsync();
             List<SelectedModel> models = new List<SelectedModel>();
-
-            foreach(var item in productsList)
+            if (id!=null)
             {
-                models.Add(new SelectedModel(item.Value, item.Text));
+                var productsList = await _context.Products.Include(x => x.Model).Where(p => p.CustomerId == id)
+               .Select(x => new { Value = x.Id, Text = x.SerialNumber }).ToListAsync();
+                foreach (var item in productsList)
+                {
+                    models.Add(new SelectedModel(item.Value, item.Text));
+                }
+                return models;
             }
-            return models;
+            else
+            {
+                var productsList = await _context.Products.Include(x => x.Model)
+                .Select(x => new { Value = x.Id, Text = x.SerialNumber }).ToListAsync();
+                foreach (var item in productsList)
+                {
+                    models.Add(new SelectedModel(item.Value, item.Text));
+                }
+                return models;
+            }
         }
     }
 }

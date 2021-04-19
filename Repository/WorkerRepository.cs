@@ -65,7 +65,7 @@ namespace BoOl.Repository
                 .FirstOrDefaultAsync(w => w.Id == id);
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             var productsList = await _context.Workers.Include(w => w.Position).Select(
                x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName + " " + x.MiddleName + " " + x.Position.Name })

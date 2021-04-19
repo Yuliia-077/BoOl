@@ -7,44 +7,34 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BoOl.Models;
 using Microsoft.AspNetCore.Authorization;
+using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
     [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly BoOl.Models.BoOlContext _context;
+        private readonly IRepository<Order> _repository;
+        public int CountOfOrders { get; set; }
+        public IEnumerable<Order> Orders { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
-        public IndexModel(BoOl.Models.BoOlContext context)
+        public IndexModel(BoOlContext context)
         {
-            _context = context;
+            _repository = new OrdersRepository(context);
         }
 
-        public IList<Order> Order { get;set; }
-
-        [BindProperty]
-        public Customer Customer { get; set; }
-
-        public async Task OnGetAsync(int? id)
+        public async Task OnGetAsync()
         {
-            if(id!=null)
+            CountOfOrders = await _repository.CountAsync(null);
+            var orders = await _repository.GetAllAsync(null);
+            if (!string.IsNullOrEmpty(SearchString))
             {
-                Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
-                Order = await _context.Orders
-                    .Include(o => o.Product)
-                    .Include(o => o.Worker)
-                    .Where(o => o.Product.CustomerId == id)
-                    .OrderByDescending(o => o.DateOfAdmission)
-                    .ToListAsync();
+                orders = orders.Where(s => s.Status.Contains(SearchString));
             }
-            else
-            {
-                Order = await _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Worker)
-                .OrderByDescending(o => o.DateOfAdmission)
-                .ToListAsync();
-            }
+
+            Orders = orders.ToList();
         }
     }
 }

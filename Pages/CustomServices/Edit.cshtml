@@ -5,59 +5,66 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>CustomService</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CustomService.Id" />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CustomService.IsDone" /> @Html.DisplayNameFor(model => model.CustomService.IsDone)
-                </label>
+    <div class="col-1 col-md-3"></div>
+    <div class="col-10 col-md-6">
+        <div class="card border-dark">
+            <div class="card-header">
+                <h4 class="text-center">Редагувати послугу до замовлення №@Html.DisplayFor(modelItem => Model.CustomService.OrderId)</h4>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomService.Price" class="control-label"></label>
-                <input asp-for="CustomService.Price" class="form-control" />
-                <span asp-validation-for="CustomService.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomService.ExecutionDate" class="control-label"></label>
-                <input asp-for="CustomService.ExecutionDate" class="form-control" />
-                <span asp-validation-for="CustomService.ExecutionDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomService.WorkerId" class="control-label"></label>
-                <select asp-for="CustomService.WorkerId" class="form-control" asp-items="ViewBag.WorkerId"></select>
-                <span asp-validation-for="CustomService.WorkerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomService.PartId" class="control-label"></label>
-                <select asp-for="CustomService.PartId" class="form-control" asp-items="ViewBag.PartId"></select>
-                <span asp-validation-for="CustomService.PartId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomService.ServiceId" class="control-label"></label>
-                <select asp-for="CustomService.ServiceId" class="form-control" asp-items="ViewBag.ServiceId"></select>
-                <span asp-validation-for="CustomService.ServiceId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomService.OrderId" class="control-label"></label>
-                <select asp-for="CustomService.OrderId" class="form-control" asp-items="ViewBag.OrderId"></select>
-                <span asp-validation-for="CustomService.OrderId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+            <form method="post">
+                <div class="card-body">
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                    </div>
+                    <div class="form-row">
+                        <input asp-for="CustomService.Id" hidden />
+                        <input asp-for="CustomService.OrderId" hidden />
+                        <input asp-for="CustomService.WorkerId" hidden />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
+                        <div class="form-group col-12">
+                            <label asp-for="CustomService.ServiceId" class="control-label">Послуга *</label>
+                            <div class="input-group">
+                                <select asp-for="CustomService.ServiceId" class="form-control" asp-items="ViewBag.ServiceId" id="ServiceId" aria-describedby="button-addon1"></select>
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('ServiceId').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="CustomService.ServiceId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-3">
+                            <label asp-for="CustomService.IsDone" class="control-label">Зроблено</label>
+                            <div class="input-group">
+                                <input asp-for="CustomService.IsDone" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-9">
+                            <label asp-for="CustomService.Price" class="control-label">Ціна *</label>
+                            <div class="input-group">
+                                <input asp-for="CustomService.Price" class="form-control" id="Price" aria-describedby="button-addon3" />
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Price').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="CustomService.Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-12">
+                            <label asp-for="CustomService.ExecutionDate" class="control-label">Дата прийому *</label>
+                            <div class="input-group">
+                                <input asp-for="CustomService.ExecutionDate" type="date" class="form-control" id="Date" aria-describedby="button-addon1" />
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Date').value = ''">X</button>
+                            </div>
+                            <span asp-validation-for="CustomService.ExecutionDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                        <a class="btn btn-outline-secondary" asp-page="/Orders/Details" asp-route-id="@Model.CustomService.OrderId">Скасувати</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-1 col-md-3"></div>
 </div>
 
 @section Scripts {

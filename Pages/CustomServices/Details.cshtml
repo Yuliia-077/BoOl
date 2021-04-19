@@ -1,61 +1,125 @@
 ﻿@page
 @model BoOl.Pages.CustomServices.DetailsModel
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Html.DisplayFor(model => model.CustomService.Service.Name);
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>CustomService</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.IsDone)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.IsDone)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.ExecutionDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.ExecutionDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.Worker)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.Worker.Address)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.Part)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.Part.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.Service)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.Service.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomService.Order)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CustomService.Order.Status)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-4 col-md-3">
+        <div class="card border border-secondary text-center">
+            <div class="card-header">
+                Кількість запчастин:
+            </div>
+            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfParts</p>
+        </div>
+    </div>
+    <div class="col-8 col-md-9">
+        <div class="d-grid gap-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mt-1" asp-page="/Parts/Create" asp-route-id="@Model.CustomService.Id"><i class="fas fa-plus"> Додати запчастину</i></a>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.CustomService.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+<br />
+<div class="row">
+    <div class="col-12 col-md-4 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Інформація по послузі</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-6">
+                        Послуга
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CustomService.Service.Name)
+                    </dd>
+
+                    <dt class="col-6">
+                        Ціна
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CustomService.Price)
+                    </dd>
+
+                    <dt class="col-6">
+                        № замовлення
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CustomService.OrderId)
+                    </dd>
+
+                    <dt class="col-6">
+                        Виконувач
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CustomService.Worker.LastName) @Html.DisplayFor(model => model.CustomService.Worker.FirstName) @Html.DisplayFor(model => model.CustomService.Worker.MiddleName)
+                    </dd>
+
+                    <dt class="col-6">
+                        Зроблено
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CustomService.IsDone)
+                    </dd>
+
+                    <dt class="col-6">
+                        Дата виконання
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CustomService.ExecutionDate)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.CustomService.Id"><i class="far fa-edit"> Редагувати</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.CustomService.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-8 mt-1">
+        <div class="card border-dark">
+            <div class="card-header">
+                <strong>Запчастини</strong>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Назва
+                            </th>
+                            <th>
+                                Серійний номер
+                            </th>
+                            <th>
+                                Пошкоджений
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CustomService.Parts)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Storage.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsInjured)
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-secondary" asp-page="/Parts/Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
+                                    <a class="btn btn-outline-danger" asp-page="/Parts/Delete" asp-route-id="@item.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

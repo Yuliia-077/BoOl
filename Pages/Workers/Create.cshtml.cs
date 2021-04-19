@@ -30,7 +30,7 @@ namespace BoOl.Pages.Workers
         {
             Worker = new Worker();
             Worker.DateOfEmployment = DateTime.Now.Date;
-            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(), "Value", "Text");
+            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(null), "Value", "Text");
             return Page();
         }
 

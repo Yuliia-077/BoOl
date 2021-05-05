@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Positions
 {
-    [Authorize]
+    //редагувати посаду
+    [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
         private readonly IRepository<Position> _repository;

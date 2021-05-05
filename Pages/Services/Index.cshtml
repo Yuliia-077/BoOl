@@ -26,10 +26,13 @@
         </form>
     </div>
     <div class="col-12 col-md-3">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати послугу</i></a>
+        @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+        {
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати послугу</i></a>
+            </div>
+        }
         </div>
-    </div>
 </div>
 <br />
 
@@ -60,10 +63,14 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Price)
                         </td>
-                        <td>
-                            <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
-                            <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@item.Id"><i class="far fa-trash-alt"> Видалити</i></a>
-                        </td>
+                        @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                        {
+                            <td>
+                                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
+                                <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@item.Id" onclick="return confirm('Ви дійсно хочете видалити дану послугу?');"><i class="far fa-trash-alt"> Видалити</i></a>
+
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

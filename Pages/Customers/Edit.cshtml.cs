@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Customers
 {
-    [Authorize]
+    //редагування клієнта
+    [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
         private readonly IRepository<Customer> _repository;

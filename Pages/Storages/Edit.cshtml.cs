@@ -12,7 +12,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
-    [Authorize]
+    //редагувати постачання
+    [Authorize(Roles = "Owner, Storekeeper")]
     public class EditModel : PageModel
     {
         private readonly IRepository<Storage> _repository;

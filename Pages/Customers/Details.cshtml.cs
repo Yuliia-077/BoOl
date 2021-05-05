@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Customers
 {
-    [Authorize]
+    //повна інформація по клієнту
+    [Authorize(Roles = "Owner, Administrator")]
     public class DetailsModel : PageModel
     {
         private readonly IRepository<Customer> _repositoryCustomer;
@@ -47,12 +48,13 @@ namespace BoOl.Pages.Customers
 
             foreach(var item in Products)
             {
+                item.Orders.OrderByDescending(c => c.DateOfAdmission);
                 CountOfOrders += item.Orders.Count();
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
             await _repositoryCustomer.DeleteAsync(id);
             return RedirectToPage("./Index");

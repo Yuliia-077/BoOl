@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
+    //отримання даних з бд по таблиці співробітник
     public class WorkerRepository : IRepository<Worker>
     {
         private BoOlContext _context;

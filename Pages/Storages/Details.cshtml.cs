@@ -11,7 +11,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
-    [Authorize]
+    //повна інформація по постачанню
+    [Authorize(Roles = "Owner, Administrator, Technician,  Storekeeper")]
     public class DetailsModel : PageModel
     {
         private readonly IRepository<Storage> _repository;
@@ -36,6 +37,12 @@ namespace BoOl.Pages.Storages
                 return NotFound();
             }
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+            return RedirectToPage("./Index");
         }
     }
 }

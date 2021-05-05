@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Types
 {
+    //перелік всіх моделей
     [Authorize]
     public class IndexModel : PageModel
     {
@@ -35,6 +36,12 @@ namespace BoOl.Pages.Types
             }
 
             Models = models.ToList();
+        }
+
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+            return RedirectToPage("./Index");
         }
     }
 }

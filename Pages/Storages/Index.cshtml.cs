@@ -11,6 +11,7 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
+    //перелік постачань на складі
     [Authorize]
     public class IndexModel : PageModel
     {

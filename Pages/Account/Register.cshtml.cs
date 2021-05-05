@@ -13,18 +13,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BoOl.Pages.Account
 {
-    [Authorize]
+    // реєстрація нового користувача
+    [Authorize (Roles = "Owner, Administrator")]
     public class RegisterModel : PageModel
     {
         private readonly UserManager<User> _userManager;
+        RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly WorkerRepository _repository;
         [BindProperty]
         public RegisterViewModel RegisterUser { get; set; }
 
-        public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, BoOlContext context)
+        public RegisterModel(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, BoOlContext context)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _signInManager = signInManager;
             _repository = new WorkerRepository(context);
         }
@@ -34,9 +37,9 @@ namespace BoOl.Pages.Account
             {
                 RegisterUser = new RegisterViewModel();
                 RegisterUser.WorkerId = Convert.ToInt32(id);
+                RegisterUser.AllRoles = _roleManager.Roles.ToList();
                 return Page();
             }
-            //ViewData["WorkerId"] = new SelectList(await _repository.SelectAsync(), "Value", "Text");
             return NotFound();
         }
         
@@ -48,8 +51,9 @@ namespace BoOl.Pages.Account
                 var result = await _userManager.CreateAsync(user, RegisterUser.Password);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, false);
-                    return RedirectToPage("/Index");
+
+                    await _userManager.AddToRolesAsync(user, RegisterUser.UserRoles);
+                    return RedirectToPage("/Workers/Details", new { id = RegisterUser.WorkerId});
                 }
                 else
                 {

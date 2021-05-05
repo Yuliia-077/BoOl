@@ -11,7 +11,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
-    [Authorize]
+    //перелік усіх замовлень
+    [Authorize(Roles = "Owner, Administrator, Technician")]
     public class IndexModel : PageModel
     {
         private readonly IRepository<Order> _repository;
@@ -22,7 +23,7 @@ namespace BoOl.Pages.Orders
 
         public IndexModel(BoOlContext context)
         {
-            _repository = new OrdersRepository(context);
+            _repository = new OrderRepository(context);
         }
 
         public async Task OnGetAsync()

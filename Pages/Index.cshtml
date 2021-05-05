@@ -12,6 +12,14 @@
         <div class="description">
             <h1><small>CRM-система</small></h1>
             <h1>BoOl</h1>
+            <br />
+            <b><i class="far fa-clock"></i> Час роботи: Пн-Пт 9:00-18:00</b>
+            <br />
+            <b><i class="fas fa-phone"></i> Номер телефону: +380666666666</b>
+            <br />
+            <b><i class="fas fa-map-marker-alt"></i> Адреса: вулиця Університетська, 28, Чернівці</b>
+            <br />
+            <br />
             <a href="#service" class="btn btn-light">Переглянути послуги</a>
         </div>
     </div>
@@ -23,19 +31,31 @@
     <hr />
     <h1 class="text-center">Послуги</h1>
     <hr />
-    <div class="row">
-        <div class="col d-flex">
-            @foreach (var item in Model.Services)
-            {
-                <div class="card border border-secondary text-center mr-3">
-                    <div class="card-header">
-                        <b style="font-size:large">@Html.DisplayFor(modelItem => item.Name)</b>
+    <div class="d-flex justify-content-end">
+        <form>
+            <div class="input-group mt-2 mb-3">
+                <input type="text" class="form-check" asp-for="SearchString" aria-describedby="button-addon" placeholder="Пошук по назві">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon">Шукати</button>
+            </div>
+        </form>
+    </div>
+    <div class="overflow-auto">
+        <div class="row">
+            <div class="d-flex">
+                @foreach (var item in Model.Services)
+                {
+                    <div class="col-1">
+                        <div class="card border border-secondary text-center mr-1">
+                            <div class="card-header">
+                                <b style="font-size:large">@Html.DisplayFor(modelItem => item.Name)</b>
+                            </div>
+                            <div class="card-body">
+                                <b>Ціна: @Html.DisplayFor(modelItem => item.Price)</b>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <b>Ціна: @Html.DisplayFor(modelItem => item.Price)</b>
-                    </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
 </div>

@@ -8,78 +8,87 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
-    //отримання даних з бд по таблиці техніка
-    public class ProductRepository: IRepository<Product>
+    //отримання даних з бд по таблиці запчастини
+    public class PartRepository : IRepository<Part>
     {
         private BoOlContext _context;
+        private StorageRepository _storageRepository;
 
-        public ProductRepository(BoOlContext context)
+        public PartRepository(BoOlContext context)
         {
             _context = context;
+            _storageRepository = new StorageRepository(context);
         }
 
-        public async Task AddAsync(Product t)
+        public async Task AddAsync(Part t)
         {
-            await _context.Products.AddAsync(t);
+            await _context.Parts.AddAsync(t);
+            Storage storage = await _storageRepository.GetByIdAsync(t.StorageId);
+            storage.Quantity -= 1;
+            await _storageRepository.UpdateAsync(storage);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            Product product = await GetByIdAsync(id);
-            if (product != null)
+            Part part = await GetByIdAsync(id);
+            if (part != null)
             {
-                _context.Products.Remove(product);
+                if(part.IsInjured == false)
+                {
+                    part.Storage.Quantity += 1;
+                    await _storageRepository.UpdateAsync(part.Storage);
+                }
+                _context.Parts.Remove(part);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync(int? id)
+        public async Task<IEnumerable<Part>> GetAllAsync(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
-                return await _context.Products.OrderByDescending(c => c.ModelId).ToListAsync();
+                return await _context.Parts.Include(p => p.Storage).OrderByDescending(c => c.Storage.Name).ToListAsync();
             }
             else
             {
-                return await _context.Products.Include(p=>p.Model)
-                    .Include(p=>p.Orders)
-                    .Where(p => p.CustomerId == id)
-                    .OrderByDescending(c => c.ModelId).ToListAsync();
+                return await _context.Parts.Include(p => p.Storage)
+                    .Where(p => p.CustomServiceId == id)
+                    .OrderByDescending(c => c.Storage.Name).ToListAsync();
             }
         }
 
-        public async Task<Product> GetByIdAsync(int id)
+        public async Task<Part> GetByIdAsync(int id)
         {
-            return await _context.Products.Include(p => p.Customer).Include(p => p.Model)
-                .Include(p => p.Orders).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Parts.Include(p => p.Storage).FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task UpdateAsync(Product t)
+        public async Task UpdateAsync(Part t)
         {
             if (t != null)
             {
-                _context.Products.Update(t);
+                _context.Parts.Update(t);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task<int> CountAsync(int? id)
         {
-            if(id!=null)
+            if (id != null)
             {
-                return await _context.Products.CountAsync(p => p.CustomerId == id);
+                return await _context.Parts.CountAsync(p => p.CustomServiceId == id);
             }
             else
             {
-                return await _context.Products.CountAsync();
+                return await _context.Parts.CountAsync();
             }
         }
 
+        //змінити
         public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             List<SelectedModel> models = new List<SelectedModel>();
-            if (id!=null)
+            if (id != null)
             {
                 var productsList = await _context.Products.Include(x => x.Model).Where(p => p.CustomerId == id)
                .Select(x => new { Value = x.Id, Text = x.SerialNumber }).ToListAsync();

@@ -11,7 +11,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.CustomServices
 {
-    [Authorize]
+    //створення послуги по замовленню
+    [Authorize(Roles = "Owner, Technician")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<CustomService> _repository;
@@ -38,7 +39,7 @@ namespace BoOl.Pages.CustomServices
             CustomService.OrderId = Convert.ToInt32(id);
             ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
             var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
-            CustomService.WorkerId = user.WorkerId;
+            CustomService.WorkerId = Convert.ToInt32(user.WorkerId);
             CustomService.ExecutionDate = DateTime.Now.Date;
             return Page();
         }

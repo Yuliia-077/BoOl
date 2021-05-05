@@ -12,7 +12,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Storages
 {
-    [Authorize]
+    //додати постачання
+    [Authorize(Roles = "Owner, Storekeeper")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Storage> _repository;
@@ -33,7 +34,7 @@ namespace BoOl.Pages.Storages
             Storage = new Storage();
             Storage.DateOfArrival = DateTime.Now;
             var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
-            Storage.WorkerId = user.WorkerId;
+            Storage.WorkerId = Convert.ToInt32(user.WorkerId);
             ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
             return Page();
         }

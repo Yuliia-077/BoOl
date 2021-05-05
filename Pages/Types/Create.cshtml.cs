@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Types
 {
-    [Authorize]
+    //додати моделі
+    [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Model> _repository;

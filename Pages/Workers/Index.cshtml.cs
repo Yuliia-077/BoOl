@@ -11,21 +11,22 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Workers
 {
-    [Authorize]
+    //перелік працівників поділених по посадах
+    [Authorize(Roles = "Owner, Administrator")]
     public class IndexModel : PageModel
     {
         private readonly IRepository<Position> _repository;
+        private readonly IRepository<Worker> _repositoryWorker;
         public IEnumerable<Position> Positions { get; set; }
         public int CountOfPosition { get; set; }
         public int CountOfWorkers { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchPosition { get; set; }
-        //[BindProperty(SupportsGet = true)]
-        //public string SearchWorker { get; set; }
 
         public IndexModel(BoOlContext context)
         {
             _repository = new PositionRepository(context);
+            _repositoryWorker = new WorkerRepository(context);
         }
 
         public async Task OnGetAsync()
@@ -40,12 +41,13 @@ namespace BoOl.Pages.Workers
             {
                 positions = positions.Where(s => s.Name.Contains(SearchPosition));
             }
-            //if(!string.IsNullOrEmpty(SearchWorker))
-            //{
-
-            //}
-
             Positions = positions.ToList();
+        }
+
+        public async Task<IActionResult> OnGetDelete(int? id)
+        {
+            await _repository.DeleteAsync(Convert.ToInt32(id));
+            return RedirectToPage("./Index");
         }
     }
 }

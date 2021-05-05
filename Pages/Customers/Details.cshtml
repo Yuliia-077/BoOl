@@ -5,7 +5,6 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.Customer.LastName);
 }
 
-@*<h1 class="text-center">@Html.DisplayFor(model => model.Customer.LastName)  @Html.DisplayFor(model => model.Customer.FirstName)</h1>*@
 <div class="row">
     <div class="col-4 col-md-3">
         <div class="card border border-secondary text-center">
@@ -81,7 +80,7 @@
             </div>
             <div class="card-footer d-grid gap-2 d-flex justify-content-end">
                 <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Customer.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Customer.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Customer.Id" onclick="return confirm('Ви дійсно хочете видалити даного клієнта?');"><i class="far fa-trash-alt"> Видалити</i></a>
             </div>
         </div>
     </div>
@@ -133,6 +132,9 @@
                     <thead>
                         <tr>
                             <th>
+                                №Замовлення
+                            </th>
+                            <th>
                                 Техніка
                             </th>
                             <th>
@@ -140,9 +142,6 @@
                             </th>
                             <th>
                                 Оплачено
-                            </th>
-                            <th>
-                                Сума
                             </th>
                             <th></th>
                         </tr>
@@ -152,22 +151,23 @@
                         {
                             @foreach (var item in product.Orders)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Product.SerialNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Payment)
-                                    </td>
-                                    <td>
-                                    </td>
-                                    <td>
-                                        <a asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Product.SerialNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Payment)
+                                </td>
+                                <td>
+                                    <a asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                </td>
+                            </tr>
                             }
                         }
                     </tbody>

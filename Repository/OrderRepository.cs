@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
-    public class OrdersRepository : IRepository<Order>
+    //отримання даних з бд по таблиці замовлення
+    public class OrderRepository : IRepository<Order>
     {
         private BoOlContext _context;
 
-        public OrdersRepository(BoOlContext context)
+        public OrderRepository(BoOlContext context)
         {
             _context = context;
         }
@@ -66,7 +67,7 @@ namespace BoOl.Repository
                 .Include(o => o.Product.Model).FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
+        public Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
             throw new NotImplementedException();
         }

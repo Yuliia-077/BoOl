@@ -28,8 +28,7 @@ namespace BoOl
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BoOlContext>(options => options.UseNpgsql(connection));
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<BoOlContext>();
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<BoOlContext>();
             services.AddRazorPages();
         }
 

@@ -140,7 +140,7 @@
             </div>
             <div class="card-footer d-grid gap-2 d-flex justify-content-end">
                 <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Worker.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Worker.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" onclick="return confirm('Ви дійсно хочете видалити даного співробітника?');" asp-route-id="@Model.Worker.Id"><i class="far fa-trash-alt"> Видалити</i></a>
             </div>
         </div>
     </div>

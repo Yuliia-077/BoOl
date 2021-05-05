@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Customers
 {
-    [Authorize]
+    //перелік усіх клфєнтів
+    [Authorize(Roles = "Owner, Administrator")]
     public class IndexModel : PageModel
     {
         private readonly IRepository<Customer> _repository;

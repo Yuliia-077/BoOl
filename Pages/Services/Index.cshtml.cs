@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Services
 {
+    //перелік усіх послуг
     [Authorize]
     public class IndexModel : PageModel
     {
@@ -35,6 +36,12 @@ namespace BoOl.Pages.Services
             }
 
             Services = services.ToList();
+        }
+
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+            return RedirectToPage("./Index");
         }
     }
 }

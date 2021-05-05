@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BoOl.Pages.Account
 {
+    //аутентифікація
     public class LoginModel : PageModel
     {
         private readonly UserManager<User> _userManager;

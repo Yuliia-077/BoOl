@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Products
 {
-    [Authorize]
+    //додати нову техніку до певного клієнта
+    [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Product> _repository;

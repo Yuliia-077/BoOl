@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
+    //отримання даних з бд по таблиці посади
     public class PositionRepository: IRepository<Position>
     {
         private BoOlContext _context;

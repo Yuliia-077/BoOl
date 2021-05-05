@@ -53,7 +53,7 @@
                 <h1>@position.Name</h1>
                 <div class="d-grid gap-2 d-flex justify-content-end">
                     <a class="btn btn-outline-secondary" asp-page="/Positions/Edit" asp-route-id="@position.Id"><i class="far fa-edit"> Редагувати</i></a>
-                    <a class="btn btn-outline-danger" asp-page="/Positions/Delete" asp-route-id="@position.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                    <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" onclick="return confirm('Ви дійсно хочете видалити дану посаду?');" asp-route-id="@position.Id"><i class="far fa-trash-alt"> Видалити</i></a>
                 </div>
             </div>
             <div class="card-body">

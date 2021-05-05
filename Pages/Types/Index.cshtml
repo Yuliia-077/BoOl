@@ -27,12 +27,15 @@
             </div>
         </form>
     </div>
-    <div class="col-12 col-md-3">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати модель</i></a>
+    @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+    {
+        <div class="col-12 col-md-3">
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати модель</i></a>
+            </div>
         </div>
+    }
     </div>
-</div>
 <br />
 
 <div class="card border-dark">
@@ -49,25 +52,31 @@
                     <th>
                         Модель
                     </th>
-                    <th></th>
-                </tr>
+                    @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                    {
+                        <th></th>
+                    }
+                    </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Models)
-                {
-                    <tr>
+                 {
+                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Manufacturer)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Type)
                         </td>
-                        <td>
-                            <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
-                            <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@item.Id"><i class="far fa-trash-alt"> Видалити</i></a>
-                        </td>
-                    </tr>
-                }
+                        @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                        {
+                            <td>
+                                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
+                                <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@item.Id" onclick="return confirm('Ви дійсно хочете видалити дану модель?');"><i class="far fa-trash-alt"> Видалити</i></a>
+                            </td>
+                        }
+                     </tr>
+                 }
             </tbody>
         </table>
     </div>

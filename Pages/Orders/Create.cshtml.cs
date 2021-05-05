@@ -12,7 +12,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
-    [Authorize]
+    //створення замовлення через клієнта
+    [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Order> _repository;
@@ -29,7 +30,7 @@ namespace BoOl.Pages.Orders
 
         public CreateModel(BoOlContext context)
         {
-            _repository = new OrdersRepository(context);
+            _repository = new OrderRepository(context);
             _repositoryProduct = new ProductRepository(context);
             _repositoryCustomer = new CustomerRepository(context);
             _repositoryUser = new UserRepository(context);
@@ -49,7 +50,7 @@ namespace BoOl.Pages.Orders
             Order.DateOfAdmission = DateTime.Now.Date;
             ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(id), "Value", "Text");
             var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
-            Order.WorkerId = user.WorkerId;
+            Order.WorkerId = Convert.ToInt32(user.WorkerId);
             return Page();
         }
 

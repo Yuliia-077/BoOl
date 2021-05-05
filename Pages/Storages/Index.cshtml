@@ -27,9 +27,12 @@
         </form>
     </div>
     <div class="col-12 col-md-3">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати постачання</i></a>
-        </div>
+        @if ((User.IsInRole("Owner") || (User.IsInRole("Storekeeper"))))
+        {
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати постачання</i></a>
+            </div>
+        }
     </div>
 </div>
 <br />

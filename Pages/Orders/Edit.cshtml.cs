@@ -12,7 +12,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
-    [Authorize]
+    //редагування замовлення
+    [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
         private readonly IRepository<Order> _repository;
@@ -28,7 +29,7 @@ namespace BoOl.Pages.Orders
 
         public EditModel(BoOl.Models.BoOlContext context)
         {
-            _repository = new OrdersRepository(context);
+            _repository = new OrderRepository(context);
             _repositoryProduct = new ProductRepository(context);
             _repositoryCustomer = new CustomerRepository(context);
             _repositoryUser = new UserRepository(context);

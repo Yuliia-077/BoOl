@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
+    //отримання даних з бд по таблиці склад
     public class StorageRepository : IRepository<Storage>
     {
         private BoOlContext _context;
@@ -50,8 +51,9 @@ namespace BoOl.Repository
 
         public async Task<IEnumerable<SelectedModel>> SelectAsync(int? id)
         {
-            var deliveryList = await _context.Storages.Select(
-               x => new { Value = x.Id, Text = x.Name})
+            var deliveryList = await _context.Storages.Include(s => s.Model)
+                .Where(s => s.Quantity >= 1).Select(
+               x => new { Value = x.Id, Text = x.Name + " " + x.Model.Manufacturer + " " + x.Model.Type})
                 .ToListAsync();
             List<SelectedModel> models = new List<SelectedModel>();
 

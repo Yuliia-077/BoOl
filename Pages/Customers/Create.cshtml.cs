@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Customers
 {
-    [Authorize]
+    //створення нового клієнта
+    [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Customer> _repository;

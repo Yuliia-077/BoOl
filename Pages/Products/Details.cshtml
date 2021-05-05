@@ -14,11 +14,6 @@
             <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfOrders</p>
         </div>
     </div>
-    <div class="col-8 col-md-9">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="/Orders/Create" asp-route-id="@Model.Product.CustomerId"><i class="fas fa-plus"> Додати замовлення</i></a>
-        </div>
-    </div>
 </div>
 <br />
 <div class="row">
@@ -60,7 +55,7 @@
             </div>
             <div class="card-footer d-grid gap-2 d-flex justify-content-end">
                 <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Product.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Product.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Product.Id" onclick="return confirm('Ви дійсно хочете видалити дану техніку?');"><i class="far fa-trash-alt"> Видалити</i></a>
             </div>
         </div>
     </div>

@@ -11,7 +11,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.Orders
 {
-    [Authorize]
+    //повна інформація по замовленню
+    [Authorize(Roles = "Owner, Administrator, Technician")]
     public class DetailsModel : PageModel
     {
         private readonly IRepository<Order> _repository;
@@ -22,7 +23,7 @@ namespace BoOl.Pages.Orders
 
         public DetailsModel(BoOlContext context)
         {
-            _repository = new OrdersRepository(context);
+            _repository = new OrderRepository(context);
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -40,6 +41,12 @@ namespace BoOl.Pages.Orders
             }
             CountOfServices = await _repository.CountAsync(id);
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+            return RedirectToPage("./Index");
         }
     }
 }

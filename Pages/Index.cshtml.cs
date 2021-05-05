@@ -15,6 +15,8 @@ namespace BoOl.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IRepository<Service> _repository;
         public IEnumerable<Service> Services { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, BoOlContext context)
         {
@@ -24,7 +26,13 @@ namespace BoOl.Pages
 
         public async Task OnGetAsync()
         {
-            Services = await _repository.GetAllAsync(null);
+            var services = await _repository.GetAllAsync(null);
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                services = services.Where(s => s.Name.Contains(SearchString));
+            }
+
+            Services = services.ToList();
         }
     }
 }

@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Workers
 {
-    [Authorize]
+    //повна інформація по працівнику
+    [Authorize(Roles = "Owner, Administrator")]
     public class DetailsModel : PageModel
     {
         private readonly IRepository<Worker> _repository;
@@ -34,6 +35,7 @@ namespace BoOl.Pages.Workers
             }
 
             Worker = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            Worker.Orders = Worker.Orders.OrderByDescending(c => c.DateOfAdmission.Date).ToList();
 
             if (Worker == null)
             {
@@ -44,6 +46,12 @@ namespace BoOl.Pages.Workers
             CountOfServices = Worker.CustomServices.Count();
             CountOfStorage = Worker.Storages.Count();
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+            return RedirectToPage("./Index");
         }
     }
 }

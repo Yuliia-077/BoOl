@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
+    //отримання даних з бд по таблиці клієнт
     public class CustomerRepository: IRepository<Customer>
     {
         private BoOlContext _context;
@@ -16,13 +17,13 @@ namespace BoOl.Repository
         {
             _context = context;
         }
-
+        
         public async Task AddAsync(Customer t)
         {
             await _context.Customers.AddAsync(t);
             await _context.SaveChangesAsync();
         }
-
+      
         public async Task DeleteAsync(int id)
         {
             Customer customer = await GetByIdAsync(id);
@@ -32,7 +33,7 @@ namespace BoOl.Repository
                 await _context.SaveChangesAsync();
             }
         }
-
+        
         public async Task<IEnumerable<Customer>> GetAllAsync(int? id)
         {
             return await _context.Customers.OrderBy(c => c.LastName).ToListAsync();

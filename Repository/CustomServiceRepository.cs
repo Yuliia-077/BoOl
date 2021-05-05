@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
+    //отримання даних з бд по таблиці послуги по замовленню
     public class CustomServiceRepository : IRepository<CustomService>
     {
         private BoOlContext _context;

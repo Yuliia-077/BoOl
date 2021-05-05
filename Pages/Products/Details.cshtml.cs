@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Products
 {
-    [Authorize]
+    //повна інформація по техніці
+    [Authorize(Roles = "Owner, Administrator")]
     public class DetailsModel : PageModel
     {
         private readonly IRepository<Product> _repository;
@@ -39,6 +40,14 @@ namespace BoOl.Pages.Products
                 return NotFound();
             }
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            Product = await _repository.GetByIdAsync(Convert.ToInt32(id));
+
+            await _repository.DeleteAsync(id);
+            return RedirectToPage("/Customers/Details", new { id = Product.CustomerId });
         }
     }
 }

@@ -15,9 +15,12 @@
         </div>
     </div>
     <div class="col-8 col-md-9">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id"><i class="fas fa-plus"> Додати послугу</i></a>
-        </div>
+        @if (!User.IsInRole("Administrator"))
+        {
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id"><i class="fas fa-plus"> Додати послугу</i></a>
+            </div>
+        }
     </div>
 </div>
 <br />
@@ -33,7 +36,7 @@
                         Клієнт:
                     </dt>
                     <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Product.Customer.FirstName) @Html.DisplayFor(model => model.Order.Product.Customer.MiddleName)
+                        @Html.DisplayFor(model => model.Order.Product.Customer.LastName) @Html.DisplayFor(model => model.Order.Product.Customer.FirstName) @Html.DisplayFor(model => model.Order.Product.Customer.MiddleName)
                     </dd>
                     <dt class="col-4">
                         Техніка:
@@ -81,14 +84,13 @@
                         Працівник:
                     </dt>
                     <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Worker.LastName)
-                        @Html.DisplayFor(model => model.Order.Worker.FirstName)
+                        @Html.DisplayFor(model => model.Order.Worker.LastName) @Html.DisplayFor(model => model.Order.Worker.FirstName) @Html.DisplayFor(model => model.Order.Worker.MiddleName)
                     </dd>
                 </dl>
             </div>
             <div class="card-footer d-grid gap-2 d-flex justify-content-end">
                 <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Order.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.Order.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Order.Id" onclick="return confirm('Ви дійсно хочете видалити дане замовлення?');"><i class="far fa-trash-alt"> Видалити</i></a>
             </div>
         </div>
     </div>
@@ -124,7 +126,7 @@
                                     @Html.DisplayFor(modelItem => item.Service.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Worker.LastName)@Html.DisplayFor(modelItem => item.Worker.FirstName) @Html.DisplayFor(modelItem => item.Worker.MiddleName)
+                                    @Html.DisplayFor(modelItem => item.Worker.LastName) @Html.DisplayFor(modelItem => item.Worker.FirstName) @Html.DisplayFor(modelItem => item.Worker.MiddleName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ExecutionDate.Date)

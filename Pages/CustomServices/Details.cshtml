@@ -14,9 +14,12 @@
         </div>
     </div>
     <div class="col-8 col-md-9">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="/Parts/Create" asp-route-id="@Model.CustomService.Id"><i class="fas fa-plus"> Додати запчастину</i></a>
-        </div>
+        @if (!User.IsInRole("Administrator"))
+        {
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <a class="btn btn-secondary mt-1" asp-page="/Parts/Create" asp-route-id="@Model.CustomService.Id"><i class="fas fa-plus"> Додати запчастину</i></a>
+            </div>
+        }
     </div>
 </div>
 <br />
@@ -72,8 +75,11 @@
                 </dl>
             </div>
             <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                @if (!User.IsInRole("Administrator"))
+                {
                 <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.CustomService.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Delete" asp-route-id="@Model.CustomService.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.CustomService.Id" onclick="return confirm('Ви дійсно хочете видалити дану послугу?');"><i class="far fa-trash-alt"> Видалити</i></a>
+                }
             </div>
         </div>
     </div>
@@ -101,21 +107,23 @@
                     <tbody>
                         @foreach (var item in Model.CustomService.Parts)
                         {
-                            <tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Storage.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SerialNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsInjured)
+                            </td>
+                            @if (!User.IsInRole("Administrator"))
+                            {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Storage.Name)
+                                    <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="DeletePart" asp-route-id="@item.Id" onclick="return confirm('Ви дійсно хочете видалити дану запчастину?');"><i class="far fa-trash-alt"> Видалити</i></a>
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SerialNumber)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.IsInjured)
-                                </td>
-                                <td>
-                                    <a class="btn btn-outline-secondary" asp-page="/Parts/Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
-                                    <a class="btn btn-outline-danger" asp-page="/Parts/Delete" asp-route-id="@item.Id"><i class="far fa-trash-alt"> Видалити</i></a>
-                                </td>
-                            </tr>
+                            }
+                        </tr>
                         }
                     </tbody>
                 </table>

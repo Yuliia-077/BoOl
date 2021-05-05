@@ -12,7 +12,8 @@ using BoOl.Repository;
 
 namespace BoOl.Pages.CustomServices
 {
-    [Authorize]
+    //редагування послуги по замовленню
+    [Authorize(Roles = "Owner, Technician")]
     public class EditModel : PageModel
     {
         private readonly IRepository<CustomService> _repository;

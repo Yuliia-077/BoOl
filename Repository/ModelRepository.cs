@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoOl.Repository
 {
+    //отримання даних з бд по таблиці моделі
     public class ModelRepository : IRepository<Model>
     {
         private BoOlContext _context;

@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BoOl.Pages.Positions
 {
-    [Authorize]
+    //створити нову посаду
+    [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
         private readonly IRepository<Position> _repository;

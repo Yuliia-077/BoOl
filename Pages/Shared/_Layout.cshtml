@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BoOl</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
+    <link rel="stylesheet" href="~/css/site.css" />
     @RenderSection("Styles", false)
     <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
 </head>
@@ -29,28 +29,35 @@
                             </li>
                         </ul>
                         <ul class="navbar-nav flex-grow-1">
-                            @*<li class="nav-item">
-                                <a class="nav-link font-weight-bolder" asp-page="/Index">Дашборд</a>
-                            </li>*@
-                            <li class="nav-item">
-                                <a class="nav-link font-weight-bolder" asp-page="/Orders/Index">Замовлення</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link font-weight-bolder" asp-page="/Customers/Index">Клієнти</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link font-weight-bolder" asp-page="/Workers/Index">Співробітники</a>
-                            </li>
+                            @if (User.IsInRole("Owner") || User.IsInRole("Administrator") || User.IsInRole("Technician"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bolder" asp-page="/Orders/Index">Замовлення</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bolder" asp-page="/Customers/Index">Клієнти</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bolder" asp-page="/Workers/Index">Співробітники</a>
+                                </li>
+                            }
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Storages/Index">Склад</a>
                             </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Services/Index">Послуги</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Types/Index">Моделі</a>
                             </li>
-                        </ul>
+                            </ul>
                     </div>
                 }
                 else
@@ -72,7 +79,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - BoOl - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2021 - BoOl
         </div>
     </footer>
 

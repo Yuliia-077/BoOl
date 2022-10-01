@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BoOl.Models;
+using BoOl.Domain;
 using BoOl.Repository;
 using Microsoft.AspNetCore.Authorization;
+using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Types
 {

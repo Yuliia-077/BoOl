@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BoOl.Models;
+using BoOl.Domain;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Repository;
+using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Orders
 {
@@ -27,7 +28,7 @@ namespace BoOl.Pages.Orders
         public int CustomerId { get; set; }
 
 
-        public EditModel(BoOl.Models.BoOlContext context)
+        public EditModel(BoOlContext context)
         {
             _repository = new OrderRepository(context);
             _repositoryProduct = new ProductRepository(context);

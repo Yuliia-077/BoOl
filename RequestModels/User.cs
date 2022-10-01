@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace BoOl.Models
+namespace BoOl.RequestModels
 {
     public class User: IdentityUser
     {

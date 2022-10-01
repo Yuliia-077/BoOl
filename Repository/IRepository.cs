@@ -1,5 +1,5 @@
-﻿using BoOl.Models;
-using BoOl.ViewModel;
+﻿using BoOl.Domain;
+using BoOl.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

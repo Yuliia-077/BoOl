@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BoOl.Models
+namespace BoOl.RequestModels
 {
     public class CustomService
     {
@@ -31,3 +31,4 @@ namespace BoOl.Models
 
     }
 }
+

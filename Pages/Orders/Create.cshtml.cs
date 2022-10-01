@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BoOl.Models;
+using BoOl.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Repository;
+using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Orders
 {

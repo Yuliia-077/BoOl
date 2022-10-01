@@ -10,6 +10,7 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>BoOl.Models.BoOlContext</WebStackScaffolding_DbContextTypeFullName>
     <ActiveDebugProfile>BoOl</ActiveDebugProfile>
+    <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>

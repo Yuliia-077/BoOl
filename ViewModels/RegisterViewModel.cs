@@ -1,4 +1,4 @@
-﻿using BoOl.Models;
+﻿using BoOl.Domain;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BoOl.ViewModel
+namespace BoOl.ViewModels
 {
     public class RegisterViewModel
     {

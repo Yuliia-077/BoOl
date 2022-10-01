@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BoOl.Domain;
+using BoOl.Persistence;
+using BoOl.Persistence.DatabaseContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace BoOl
 {
@@ -26,8 +22,8 @@ namespace BoOl
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<BoOlContext>(options => options.UseNpgsql(connection));
+            services.Configure<DatabaseOptions>(Configuration.GetSection("DatabaseOptions"));
+            services.AddDbContext<BoOlContext>();
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<BoOlContext>();
             services.AddRazorPages();
         }

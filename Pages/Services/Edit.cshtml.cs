@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Services;
+using BoOl.Models.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Services
 {
@@ -17,29 +12,30 @@ namespace BoOl.Pages.Services
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Service> _repository;
+        private readonly IServiceService _serviceService;
+
+        public EditModel(IServiceService serviceService)
+        {
+            _serviceService = serviceService ?? throw new ArgumentNullException(nameof(serviceService));
+        }
 
         [BindProperty]
         public Service Service { get; set; }
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new ServiceRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Id не забезпечено.");
             }
 
-            Service = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var dto = await _serviceService.GetById(Convert.ToInt32(id));
 
-            if (Service == null)
+            if (dto == null)
             {
-                return NotFound();
+                return NotFound($"Для даного Id = {id} моделі не існує.");
             }
+            Service = dto.AsViewModel();
             return Page();
         }
 
@@ -50,7 +46,7 @@ namespace BoOl.Pages.Services
                 return Page();
             }
 
-            await _repository.UpdateAsync(Service);
+            await _serviceService.Update(Service.AsDto());
 
             return RedirectToPage("./Index");
         }

@@ -1,14 +1,12 @@
-﻿using System;
+﻿using BoOl.Application.Services.Services;
+using BoOl.Models.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Services
 {
@@ -16,33 +14,49 @@ namespace BoOl.Pages.Services
     [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly IRepository<Service> _repository;
-        public IEnumerable<Service> Services { get; set; }
+        private readonly IServiceService _serviceService;
+        private readonly int _pageSize = 7;
+
+        public IndexModel(IServiceService serviceService)
+        {
+            _serviceService = serviceService ?? throw new ArgumentNullException(nameof(serviceService));
+        }
+
         public int CountOfServices { get; set; }
+        public IList<ServiceListItem> Services { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
 
-        public IndexModel(BoOlContext context)
-        {
-            _repository = new ServiceRepository(context);
-        }
+        public int PageIndex { get; set; }
+        public bool ShowPrevious => PageIndex > 1;
+        public bool ShowNext => PageIndex < (int)Math.Ceiling(decimal.Divide(CountOfServices, _pageSize));
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string currentFilter, int pageIndex = 1, string searchString = null)
         {
-            CountOfServices = await _repository.CountAsync(null);
-            var services = await _repository.GetAllAsync(null);
-            if (!string.IsNullOrEmpty(SearchString))
+            PageIndex = pageIndex;
+
+            if (searchString != null)
             {
-                services = services.Where(s => s.Name.Contains(SearchString));
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
             }
 
-            Services = services.ToList();
+            SearchString = searchString;
+
+            CountOfServices = await _serviceService.Count(searchString);
+            var services = await _serviceService.GetListItems(pageIndex, _pageSize, searchString);
+
+            Services = services.Select(x => x.AsViewService()).ToList();
         }
 
-        public async Task<IActionResult> OnGetDeleteAsync(int id)
-        {
-            await _repository.DeleteAsync(id);
-            return RedirectToPage("./Index");
-        }
+        //public async Task<IActionResult> OnGetDeleteAsync(int id)
+        //{
+        //    await _repository.DeleteAsync(id);
+        //    return RedirectToPage("./Index");
+        //}
     }
 }

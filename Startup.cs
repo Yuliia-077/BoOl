@@ -1,6 +1,7 @@
 using BoOl.Application.Interfaces;
 using BoOl.Application.Services.Customers;
 using BoOl.Application.Services.Models;
+using BoOl.Application.Services.Services;
 using BoOl.Domain;
 using BoOl.Persistence;
 using BoOl.Persistence.DatabaseContext;
@@ -34,11 +35,13 @@ namespace BoOl
             #region Services
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IModelService, ModelService>();
+            services.AddTransient<IServiceService, ServiceService>();
             #endregion
 
             #region Repositories
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IModelRepository, ModelRepository>();
+            services.AddTransient<IServiceRepository, ServiceRepository>();
             #endregion
         }
 

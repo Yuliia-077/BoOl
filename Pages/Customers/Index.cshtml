@@ -20,7 +20,7 @@
                 Пошук по прізвищу
             </div>
             <div class="input-group mt-2 mb-3 justify-content-center">
-                <input type="text" class="form-check" asp-for="SearchString" aria-describedby="button-addon">
+                <input type="text" class="form-check" name="searchString" value="@Model.SearchString" aria-describedby="button-addon">
                 <button class="btn btn-outline-secondary" type="submit" id="button-addon">Шукати</button>
             </div>
         </form>
@@ -73,5 +73,25 @@
                 }
             </tbody>
         </table>
+
+        @{
+            var prevDisabled = !Model.ShowPrevious ? "disabled" : "";
+            var nextDisabled = !Model.ShowNext ? "disabled" : "";
+        }
+
+        <div class="text-center">
+            <a asp-page="./Index"
+                asp-route-pageIndex="@(Model.PageIndex - 1)"
+                asp-route-currentFilter="@Model.SearchString"
+                class="btn btn-light @prevDisabled">
+                <i class="fa fa-angle-left"></i>
+            </a>
+            <a asp-page="./Index"
+                asp-route-pageIndex="@(Model.PageIndex + 1)"
+                asp-route-currentFilter="@Model.SearchString"
+                class="btn btn-light @nextDisabled">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </div>
     </div>
 </div>

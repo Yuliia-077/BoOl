@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace BoOl.RequestModels
+namespace BoOl.Models
 {
     public class Service
     {

@@ -1,6 +1,6 @@
-﻿using BoOl.Domain;
+﻿using BoOl.Application.Models;
+using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
-using BoOl.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace BoOl.Repository
 
         public async Task DeleteAsync(int id)
         {
-            Product product = await GetByIdAsync(id);
+            var product = await GetByIdAsync(id);
             if (product != null)
             {
                 _context.Products.Remove(product);

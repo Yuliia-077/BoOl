@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Customers;
+using BoOl.Models.Customers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Customers
 {
@@ -16,15 +12,14 @@ namespace BoOl.Pages.Customers
     [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<Customer> _repository;
+        private readonly ICustomerService _customerService;
+        public CreateModel(ICustomerService customerService)
+        {
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+        }
 
         [BindProperty]
         public Customer Customer { get; set; }
-
-        public CreateModel(BoOlContext context)
-        {
-            _repository = new CustomerRepository(context);
-        }
 
         public IActionResult OnGet()
         {
@@ -37,8 +32,9 @@ namespace BoOl.Pages.Customers
             {
                 return Page();
             }
-            await _repository.AddAsync(Customer);
-            return RedirectToPage("./Index");
+
+            var customerID = await _customerService.Create(Customer.AsDto());
+            return RedirectToPage("./Details", new { id = customerID});
         }
     }
 }

@@ -2904,6 +2904,19 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
+      "BoOl.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "BoOl.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BoOl.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BoOl.Application.dll": {}
+        }
+      },
       "BoOl.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -2921,6 +2934,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
+          "BoOl.Application": "1.0.0",
           "BoOl.Domain": "1.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.5",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "5.0.2",
@@ -9256,6 +9270,11 @@
         "system.xml.xmlserializer.4.3.0.nupkg.sha512",
         "system.xml.xmlserializer.nuspec"
       ]
+    },
+    "BoOl.Application/1.0.0": {
+      "type": "project",
+      "path": "../BoOl.Application/BoOl.Application.csproj",
+      "msbuildProject": "../BoOl.Application/BoOl.Application.csproj"
     },
     "BoOl.Domain/1.0.0": {
       "type": "project",

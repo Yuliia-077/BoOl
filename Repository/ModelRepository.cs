@@ -1,6 +1,6 @@
-﻿using BoOl.Domain;
+﻿using BoOl.Application.Models;
+using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
-using BoOl.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace BoOl.Repository
 
         public async Task AddAsync(Model t)
         {
-            await _context.Models.AddAsync(t);
+            await _context.Models.AddAsync((Domain.Model)t);
             await _context.SaveChangesAsync();
         }
 
@@ -35,7 +35,7 @@ namespace BoOl.Repository
             var model = await GetByIdAsync(id);
             if (model != null)
             {
-                _context.Models.Remove(model);
+                _context.Models.Remove((Domain.Model)model);
                 await _context.SaveChangesAsync();
             }
         }
@@ -54,7 +54,7 @@ namespace BoOl.Repository
         {
             if (t != null)
             {
-                _context.Models.Update(t);
+                _context.Models.Update((Domain.Model)t);
                 await _context.SaveChangesAsync();
             }
 

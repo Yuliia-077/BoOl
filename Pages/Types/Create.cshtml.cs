@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Models;
+using BoOl.Models.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Types
 {
@@ -16,15 +12,14 @@ namespace BoOl.Pages.Types
     [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<Model> _repository;
+        private readonly IModelService _modelService;
+        public CreateModel(IModelService modelService)
+        {
+            _modelService = modelService ?? throw new ArgumentNullException(nameof(modelService));
+        }
 
         [BindProperty]
         public Model Model { get; set; }
-
-        public CreateModel(BoOlContext context)
-        {
-            _repository = new ModelRepository(context);
-        }
 
         public IActionResult OnGet()
         {
@@ -38,7 +33,7 @@ namespace BoOl.Pages.Types
                 return Page();
             }
 
-            await _repository.AddAsync(Model);
+            var modelID = await _modelService.Create(Model.AsDto());
 
             return RedirectToPage("./Index");
         }

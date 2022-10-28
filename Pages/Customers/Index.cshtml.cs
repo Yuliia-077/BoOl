@@ -1,43 +1,56 @@
-﻿using System;
+﻿using BoOl.Application.Services.Customers;
+using BoOl.Models.Customers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.ViewModels;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Customers
 {
-    //перелік усіх клфєнтів
+    //перелік усіх клієнтів
     [Authorize(Roles = "Owner, Administrator")]
     public class IndexModel : PageModel
     {
-        private readonly IRepository<Customer> _repository;
+        private readonly ICustomerService _customerService;
+        private readonly int _pageSize = 8;
+
+        public IndexModel(ICustomerService customerService)
+        {
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+        }
+
         public int CountOfCustomers { get; set; }
-        public IEnumerable<Customer> Customers { get; set; }
+        public IList<CustomerListItem> Customers { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
 
-        public IndexModel(BoOlContext context)
-        {
-            _repository = new CustomerRepository(context);
-        }
+        public int PageIndex { get; set; }
+        public bool ShowPrevious => PageIndex > 1;
+        public bool ShowNext => PageIndex < (int)Math.Ceiling(decimal.Divide(CountOfCustomers, _pageSize));
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string currentFilter, int pageIndex = 1, string searchString = null)
         {
-            CountOfCustomers = await _repository.CountAsync(null);
-            var customers = await _repository.GetAllAsync(null);
-            if (!string.IsNullOrEmpty(SearchString))
+            PageIndex = pageIndex;
+
+            if (searchString != null)
             {
-                customers = customers.Where(s => s.LastName.Contains(SearchString));
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
             }
 
-            Customers = customers.ToList();
+            SearchString = searchString;
+
+            CountOfCustomers = await _customerService.Count(searchString);
+            var customers = await _customerService.GetListItems(pageIndex, _pageSize, searchString);
+
+             Customers = customers.Select(x => x.AsViewModel()).ToList();
         }
     }
 }

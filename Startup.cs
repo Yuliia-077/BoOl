@@ -1,6 +1,10 @@
+using BoOl.Application.Interfaces;
+using BoOl.Application.Services.Customers;
+using BoOl.Application.Services.Models;
 using BoOl.Domain;
 using BoOl.Persistence;
 using BoOl.Persistence.DatabaseContext;
+using BoOl.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +30,16 @@ namespace BoOl
             services.AddDbContext<BoOlContext>();
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<BoOlContext>();
             services.AddRazorPages();
+
+            #region Services
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IModelService, ModelService>();
+            #endregion
+
+            #region Repositories
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IModelRepository, ModelRepository>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

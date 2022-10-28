@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
 using BoOl.Repository;
-using BoOl.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Account
 {
@@ -23,7 +20,7 @@ namespace BoOl.Pages.Account
         private readonly SignInManager<User> _signInManager;
         private readonly WorkerRepository _repository;
         [BindProperty]
-        public RegisterViewModel RegisterUser { get; set; }
+        public Models.RegisterViewModel RegisterUser { get; set; }
 
         public RegisterModel(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, BoOlContext context)
         {
@@ -36,7 +33,7 @@ namespace BoOl.Pages.Account
         {
             if(id!=null)
             {
-                RegisterUser = new RegisterViewModel();
+                RegisterUser = new Models.RegisterViewModel();
                 RegisterUser.WorkerId = Convert.ToInt32(id);
                 RegisterUser.AllRoles = _roleManager.Roles.ToList();
                 return Page();

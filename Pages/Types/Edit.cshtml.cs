@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
 using BoOl.Repository;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Persistence.DatabaseContext;
+using BoOl.Application.Services.Models;
+using BoOl.Models;
+using BoOl.Models.Models;
 
 namespace BoOl.Pages.Types
 {
@@ -17,29 +19,30 @@ namespace BoOl.Pages.Types
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Model> _repository;
+        private readonly IModelService _modelService;
+
+        public EditModel(IModelService modelService)
+        {
+            _modelService = modelService ?? throw new ArgumentNullException(nameof(modelService));
+        }
 
         [BindProperty]
         public Model Model { get; set; }
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new ModelRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Id не забезпечено.");
             }
 
-            Model = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var dto = await _modelService.GetById(Convert.ToInt32(id));
 
-            if (Model == null)
+            if (dto == null)
             {
-                return NotFound();
+                return NotFound($"Для даного Id = {id} моделі не існує.");
             }
+            Model = dto.AsViewModel();
             return Page();
         }
 
@@ -50,7 +53,7 @@ namespace BoOl.Pages.Types
                 return Page();
             }
 
-            await _repository.UpdateAsync(Model);
+            await _modelService.Update(Model.AsDto());
 
             return RedirectToPage("./Index");
         }

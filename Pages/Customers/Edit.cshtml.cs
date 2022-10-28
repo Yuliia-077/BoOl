@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Customers;
+using BoOl.Models.Customers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Customers
 {
@@ -17,29 +12,30 @@ namespace BoOl.Pages.Customers
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Customer> _repository;
+        private readonly ICustomerService _customerService;
+
+        public EditModel(ICustomerService customerService)
+        {
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+        }
 
         [BindProperty]
         public Customer Customer { get; set; }
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new CustomerRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Id не забезпечено.");
             }
 
-            Customer = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var dto = await _customerService.GetById(Convert.ToInt32(id));
 
-            if (Customer == null)
+            if (dto == null)
             {
-                return NotFound();
+                return NotFound($"Для даного Id = {id} користувача не існує.");
             }
+            Customer = dto.AsViewModel();
             return Page();
         }
 
@@ -50,9 +46,9 @@ namespace BoOl.Pages.Customers
                 return Page();
             }
 
-            await _repository.UpdateAsync(Customer);
+            await _customerService.Update(Customer.AsDto());
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Details", new { id = Customer.Id});
         }
     }
 }

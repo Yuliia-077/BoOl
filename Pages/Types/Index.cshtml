@@ -2,7 +2,7 @@
 @model BoOl.Pages.Types.IndexModel
 
 @{
-    ViewData["Title"] = "Services";
+    ViewData["Title"] = "Models";
 }
 
 <div class="row">
@@ -17,7 +17,7 @@
         </div>
         <form class="card border border-secondary text-center">
             <div class="card-header">
-                Пошук по виробнику
+                Пошук
             </div>
             <div class="card-body">
                 <div class="input-group ml-2 mr-2">
@@ -40,7 +40,7 @@
 
 <div class="card border-dark">
     <div class="card-header">
-        <h1>Послуги</h1>
+        <h1>Моделі</h1>
     </div>
     <div class="card-body">
         <table class="table">
@@ -56,12 +56,12 @@
                     {
                         <th></th>
                     }
-                    </tr>
+                </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Models)
-                 {
-                     <tr>
+                {
+                    <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Manufacturer)
                         </td>
@@ -75,9 +75,29 @@
                                 <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@item.Id" onclick="return confirm('Ви дійсно хочете видалити дану модель?');"><i class="far fa-trash-alt"> Видалити</i></a>
                             </td>
                         }
-                     </tr>
-                 }
+                    </tr>
+                }
             </tbody>
         </table>
+
+        @{
+            var prevDisabled = !Model.ShowPrevious ? "disabled" : "";
+            var nextDisabled = !Model.ShowNext ? "disabled" : "";
+        }
+
+        <div class="text-center">
+            <a asp-page="./Index"
+               asp-route-pageIndex="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@Model.SearchString"
+               class="btn btn-light @prevDisabled">
+                <i class="fa fa-angle-left"></i>
+            </a>
+            <a asp-page="./Index"
+               asp-route-pageIndex="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@Model.SearchString"
+               class="btn btn-light @nextDisabled">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </div>
     </div>
 </div>

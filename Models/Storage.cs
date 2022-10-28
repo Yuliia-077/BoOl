@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BoOl.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BoOl.RequestModels
+namespace BoOl.Models
 {
     public class Storage
     {

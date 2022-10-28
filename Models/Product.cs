@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using BoOl.Models.Customers;
+using BoOl.Models.Models;
 
-namespace BoOl.RequestModels
+namespace BoOl.Models
 {
     public class Product
     {

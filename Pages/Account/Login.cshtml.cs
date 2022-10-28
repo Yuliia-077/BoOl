@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
-using BoOl.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,7 +16,7 @@ namespace BoOl.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         [BindProperty]
-        public LoginViewModel LoginView { get; set; }
+        public Models.LoginViewModel LoginView { get; set; }
 
         public LoginModel(UserManager<User> userManager, SignInManager<User> signInManager, BoOlContext context)
         {
@@ -28,7 +27,7 @@ namespace BoOl.Pages.Account
 
         public IActionResult OnGet(string returnUrl = null)
         {
-            LoginView = new LoginViewModel();
+            LoginView = new Models.LoginViewModel();
             LoginView.ReturnUrl = returnUrl;
             return Page();
         }

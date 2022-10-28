@@ -1,6 +1,5 @@
 ﻿using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
-using BoOl.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -435,3 +435,5 @@ D:\University\TermPaper\BoOl\BoOl\bin\Debug\netcoreapp3.1\BoOl.Domain.dll
 D:\University\TermPaper\BoOl\BoOl\bin\Debug\netcoreapp3.1\BoOl.Persistence.dll
 D:\University\TermPaper\BoOl\BoOl\bin\Debug\netcoreapp3.1\BoOl.Persistence.pdb
 D:\University\TermPaper\BoOl\BoOl\bin\Debug\netcoreapp3.1\BoOl.Domain.pdb
+D:\University\TermPaper\BoOl\BoOl\bin\Debug\netcoreapp3.1\BoOl.Application.dll
+D:\University\TermPaper\BoOl\BoOl\bin\Debug\netcoreapp3.1\BoOl.Application.pdb

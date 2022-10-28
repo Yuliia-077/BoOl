@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BoOl.ViewModels
+namespace BoOl.Models
 {
     public class SelectedModel
     {

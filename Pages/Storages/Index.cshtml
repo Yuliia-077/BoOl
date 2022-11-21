@@ -61,14 +61,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Storage)
+                @foreach (var item in Model.Storages)
                 {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Model.Manufacturer)  @Html.DisplayFor(modelItem => item.Model.Type)
+                            @Html.DisplayFor(modelItem => item.ModelManufacturer)  @Html.DisplayFor(modelItem => item.ModelType)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Quantity)
@@ -83,5 +83,25 @@
                 }
             </tbody>
         </table>
+
+        @{
+            var prevDisabled = !Model.ShowPrevious ? "disabled" : "";
+            var nextDisabled = !Model.ShowNext ? "disabled" : "";
+        }
+
+        <div class="text-center">
+            <a asp-page="./Index"
+               asp-route-pageIndex="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@Model.SearchString"
+               class="btn btn-light @prevDisabled">
+                <i class="fa fa-angle-left"></i>
+            </a>
+            <a asp-page="./Index"
+               asp-route-pageIndex="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@Model.SearchString"
+               class="btn btn-light @nextDisabled">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </div>
     </div>
 </div>

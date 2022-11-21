@@ -1,14 +1,12 @@
-﻿using System;
+﻿using BoOl.Application.Services.Storages;
+using BoOl.Models.Storages;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Storages
 {
@@ -16,27 +14,43 @@ namespace BoOl.Pages.Storages
     [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly IRepository<Storage> _repository;
+        private readonly IStorageService _storageService;
+        private readonly int _pageSize = 8;
+
+        public IndexModel(IStorageService storageService)
+        {
+            _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
+        }
+
         public int CountOfDeliveries { get; set; }
-        public IEnumerable<Storage> Storage { get; set; }
+        public IList<StorageListItem> Storages { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
 
-        public IndexModel(BoOlContext context)
-        {
-            _repository = new StorageRepository(context);
-        }
+        public int PageIndex { get; set; }
+        public bool ShowPrevious => PageIndex > 1;
+        public bool ShowNext => PageIndex < (int)Math.Ceiling(decimal.Divide(CountOfDeliveries, _pageSize));
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string currentFilter, int pageIndex = 1, string searchString = null)
         {
-            CountOfDeliveries = await _repository.CountAsync(null);
-            var deliveries = await _repository.GetAllAsync(null);
-            if (!string.IsNullOrEmpty(SearchString))
+            PageIndex = pageIndex;
+
+            if (searchString != null)
             {
-                deliveries = deliveries.Where(s => s.Name.Contains(SearchString));
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
             }
 
-            Storage = deliveries.ToList();
+            SearchString = searchString;
+
+            CountOfDeliveries = await _storageService.Count(searchString);
+            var storages = await _storageService.GetListItems(pageIndex, _pageSize, searchString);
+
+            Storages = storages.Select(x => x.AsViewModel()).ToList();
         }
     }
 }

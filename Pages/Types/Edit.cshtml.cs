@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Models;
+using BoOl.Application.Validations.Models;
+using BoOl.Models.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Application.Services.Models;
-using BoOl.Models;
-using BoOl.Models.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Types
 {
@@ -20,10 +14,13 @@ namespace BoOl.Pages.Types
     public class EditModel : PageModel
     {
         private readonly IModelService _modelService;
+        private readonly IModelValidation _modelValidation;
 
-        public EditModel(IModelService modelService)
+        public EditModel(IModelService modelService,
+            IModelValidation modelValidation)
         {
             _modelService = modelService ?? throw new ArgumentNullException(nameof(modelService));
+            _modelValidation = modelValidation ?? throw new ArgumentNullException(nameof(modelValidation));
         }
 
         [BindProperty]
@@ -36,7 +33,7 @@ namespace BoOl.Pages.Types
                 return NotFound("Id не забезпечено.");
             }
 
-            var dto = await _modelService.GetById(Convert.ToInt32(id));
+            var dto = await _modelService.GetById(id.Value);
 
             if (dto == null)
             {
@@ -48,12 +45,20 @@ namespace BoOl.Pages.Types
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Model.AsDto();
+
+            var error = await _modelValidation.ValidationForCreateOrUpdate(dto);
+            if (error != null)
+            {
+                ModelState.AddModelError("Model", error);
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            await _modelService.Update(Model.AsDto());
+            await _modelService.Update(dto);
 
             return RedirectToPage("./Index");
         }

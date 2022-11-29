@@ -5,49 +5,50 @@
     ViewData["Title"] = "Edit";
 }
 
-<div class="row">
-    <div class="col-1 col-md-3"></div>
-    <div class="col-10 col-md-6">
-        <div class="card border-dark ml-5 mr-5">
-            <div class="card-header">
-                <h4 class="text-center">Редагувати модель</h4>
-            </div>
-            <form method="post">
-                <div class="card-body">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-                        <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
-                    </div>
-                    <div class="form-row">
-                        <input type="hidden" asp-for="Model.Id" />
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group col-12">
-                            <label asp-for="Model.Manufacturer" class="control-label">Виробник *</label>
-                            <div class="input-group">
-                                <input asp-for="Model.Manufacturer" class="form-control" id="Name" aria-describedby="button-addon1" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Model.Manufacturer" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-12">
-                            <label asp-for="Model.Type" class="control-label">Модель *</label>
-                            <div class="input-group">
-                                <input asp-for="Model.Type" class="form-control" id="Type" aria-describedby="button-addon2" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Type').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Model.Type" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-                        <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
-                        <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
-                    </div>
-                </div>
-            </form>
+<div class="container">
+    <div class="card border-dark ml-5 mr-5">
+        <div class="card-header">
+            <h4 class="text-center">Редагувати модель</h4>
         </div>
+        <form method="post">
+            <div class="card-body">
+                <div class="d-flex justify-content-end">
+                    <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                </div>
+                <input type="hidden" asp-for="Model.Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Model.Manufacturer" class="control-label col-md-2">Виробник*</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="Model.Manufacturer" class="form-control col-12" id="Name" aria-describedby="button-addon1" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
+                    </div>
+                    <div class="col-md-2">
+                        <span asp-validation-for="Model.Manufacturer" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Model.Type" class="control-label col-md-2">Модель*</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="Model.Type" class="form-control col-12" id="Type" aria-describedby="button-addon2" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Type').value = ''">X</button>
+                    </div>
+                    <div class="col-md-2">
+                        <span asp-validation-for="Model.Manufacturer" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                    <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                    <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="col-1 col-md-3"></div>
 </div>
 
 @section Scripts {

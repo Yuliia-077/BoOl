@@ -3,6 +3,7 @@ using BoOl.Application.Services.Customers;
 using BoOl.Application.Services.Models;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
+using BoOl.Application.Validations.Models;
 using BoOl.Domain;
 using BoOl.Persistence;
 using BoOl.Persistence.DatabaseContext;
@@ -33,6 +34,10 @@ namespace BoOl
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<BoOlContext>();
             services.AddRazorPages();
 
+            #region Validation
+            services.AddTransient<IModelValidation, ModelValidation>();
+            #endregion
+
             #region Services
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IModelService, ModelService>();
@@ -45,6 +50,7 @@ namespace BoOl
             services.AddTransient<IModelRepository, ModelRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<IStorageRepository, StorageRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
             #endregion
         }
 

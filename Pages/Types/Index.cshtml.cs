@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Services.Models;
+using BoOl.Application.Validations.Models;
 using BoOl.Models;
 using BoOl.Models.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,49 +16,58 @@ namespace BoOl.Pages.Types
     [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly IModelService _customerService;
+        private readonly IModelService _modelService;
+        private readonly IModelValidation _modelValidation;
         private readonly int _pageSize = 7;
 
-        public IndexModel(IModelService customerService)
+        public IndexModel(IModelService modelService,
+            IModelValidation modelValidation)
         {
-            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+            _modelService = modelService ?? throw new ArgumentNullException(nameof(modelService));
+            _modelValidation = modelValidation ?? throw new ArgumentNullException(nameof(modelValidation));
         }
 
         public int CountOfModels { get; set; }
+        public int TotalPages { get; private set; }
         public IList<ModelListItem> Models { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
+        public ListQuery Query { get; set; }
 
-        public int PageIndex { get; set; }
-        public bool ShowPrevious => PageIndex > 1;
-        public bool ShowNext => PageIndex < (int)Math.Ceiling(decimal.Divide(CountOfModels, _pageSize));
-
-        public async Task OnGetAsync(string currentFilter, int pageIndex = 1, string searchString = null)
+        public async Task OnGetAsync()
         {
-            PageIndex = pageIndex;
-
-            if (searchString != null)
+            if(Query.CurrentPage == default(int))
             {
-                pageIndex = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
+                Query.CurrentPage = 1;
             }
 
-            SearchString = searchString;
+            CountOfModels = await _modelService.Count(Query.Filter);
+            var models = await _modelService.GetListItems(Query.CurrentPage, _pageSize, Query.Filter);
 
-            CountOfModels = await _customerService.Count(searchString);
-            var customers = await _customerService.GetListItems(pageIndex, _pageSize, searchString);
-
-            Models = customers.Select(x => x.AsViewModel()).ToList();
+            TotalPages = (int)Math.Ceiling(decimal.Divide(CountOfModels, _pageSize));
+            Models = models.Select(x => x.AsViewModel()).ToList();
         }
 
-        //public async Task<IActionResult> OnGetDeleteAsync(int id)
-        //{
-        //    await _repository.DeleteAsync(id);
-        //    return RedirectToPage("./Index");
-        //}
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        {
+            var error = await _modelValidation.ValidationForDelete(id);
+            if (error != null)
+            {
+                ModelState.AddModelError("All", error);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                CountOfModels = await _modelService.Count(null);
+                var models = await _modelService.GetListItems(1, _pageSize, null);
+
+                TotalPages = (int)Math.Ceiling(decimal.Divide(CountOfModels, _pageSize));
+                Models = models.Select(x => x.AsViewModel()).ToList();
+                return Page();
+            }
+
+            await _modelService.Delete(id);
+            return RedirectToPage("./Index");
+        }
     }
 }

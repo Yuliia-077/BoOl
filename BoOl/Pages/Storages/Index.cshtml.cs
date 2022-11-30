@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Services.Storages;
+using BoOl.Models;
 using BoOl.Models.Storages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace BoOl.Pages.Storages
     public class IndexModel : PageModel
     {
         private readonly IStorageService _storageService;
-        private readonly int _pageSize = 8;
+        private readonly int _pageSize = 7;
 
         public IndexModel(IStorageService storageService)
         {
@@ -23,33 +24,23 @@ namespace BoOl.Pages.Storages
         }
 
         public int CountOfDeliveries { get; set; }
+        public int TotalPages { get; private set; }
         public IList<StorageListItem> Storages { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
+        public ListQuery Query { get; set; }
 
-        public int PageIndex { get; set; }
-        public bool ShowPrevious => PageIndex > 1;
-        public bool ShowNext => PageIndex < (int)Math.Ceiling(decimal.Divide(CountOfDeliveries, _pageSize));
-
-        public async Task OnGetAsync(string currentFilter, int pageIndex = 1, string searchString = null)
+        public async Task OnGetAsync()
         {
-            PageIndex = pageIndex;
-
-            if (searchString != null)
+            if(Query.CurrentPage == default(int))
             {
-                pageIndex = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
+                Query.CurrentPage = 1;
             }
 
-            SearchString = searchString;
+            CountOfDeliveries = await _storageService.Count(Query.Filter);
+            TotalPages = (int)Math.Ceiling(decimal.Divide(CountOfDeliveries, _pageSize));
 
-            CountOfDeliveries = await _storageService.Count(searchString);
-            var storages = await _storageService.GetListItems(pageIndex, _pageSize, searchString);
-
+            var storages = await _storageService.GetListItems(Query.CurrentPage, _pageSize, Query.Filter);
             Storages = storages.Select(x => x.AsViewModel()).ToList();
         }
     }

@@ -4,6 +4,7 @@ using BoOl.Application.Services.Models;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
 using BoOl.Application.Validations.Models;
+using BoOl.Application.Validations.Services;
 using BoOl.Domain;
 using BoOl.Persistence;
 using BoOl.Persistence.DatabaseContext;
@@ -36,6 +37,7 @@ namespace BoOl
 
             #region Validation
             services.AddTransient<IModelValidation, ModelValidation>();
+            services.AddTransient<IServiceValidation, ServiceValidation>();
             #endregion
 
             #region Services
@@ -47,6 +49,7 @@ namespace BoOl
 
             #region Repositories
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<ICustomServiceRepository, CustomServiceRepository>();
             services.AddTransient<IModelRepository, ModelRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<IStorageRepository, StorageRepository>();

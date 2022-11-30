@@ -5,95 +5,118 @@
     ViewData["Title"] = "Services";
 }
 
-<div class="row">
-    <div class="col-4 col-md-3">
-        <div class="card border border-secondary text-center">
-            <div class="card-header">
-                Кількість послуг:
+<div class="container">
+    <div class="card border-dark m-4">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-4 d-flex justify-content-start">
+                    <h1>Послуги</h1>
+                </div>
+                <div class="col-8 d-flex justify-content-end">
+                    <form class="form-inline m-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control" asp-for="Query.Filter" placeholder="Пошук" aria-describedby="button-addon">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon" title="Пошук"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </form>
+                    @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                    {
+                        <a class="btn btn-secondary m-2" asp-page="Create" title="Додати модель"><i class="fas fa-plus"></i></a>
+                    }
+                </div>
             </div>
-            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfServices</p>
         </div>
-    </div>
-    <div class="col-8 col-md-6">
-        <form class="card border border-secondary text-center">
-            <div class="card-header">
-                Пошук по назві
+        <div class="card-body">
+            <div class="row d-center justify-content-center p-2">
+                <div asp-validation-summary="All" class="text-danger"></div>
             </div>
-            <div class="input-group mt-2 mb-3 justify-content-center">
-                <input type="text" class="form-check" asp-for="SearchString" aria-describedby="button-addon">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon">Шукати</button>
-            </div>
-        </form>
-    </div>
-    <div class="col-12 col-md-3">
-        @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
-        {
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-secondary mt-1" asp-page="Create"><i class="fas fa-plus"> Додати послугу</i></a>
-            </div>
-        }
-        </div>
-</div>
-<br />
-
-<div class="card border-dark">
-    <div class="card-header">
-        <h1>Послуги</h1>
-    </div>
-    <div class="card-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Назва послуги
-                    </th>
-                    <th>
-                        Ціна
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Services)
-                {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
+                        <th>
+                            Назва послуги
+                        </th>
+                        <th>
+                            Ціна
+                        </th>
                         @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
                         {
-                            <td>
-                                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@item.Id"><i class="far fa-edit"> Редагувати</i></a>
-                                <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@item.Id" onclick="return confirm('Ви дійсно хочете видалити дану послугу?');"><i class="far fa-trash-alt"> Видалити</i></a>
-
-                            </td>
+                            <th>Дії</th>
                         }
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Services)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            @if (User.IsInRole("Owner") || User.IsInRole("Administrator"))
+                            {
+                                <td>
+                                    <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@item.Id" title="Редагувати"><i class="far fa-edit"></i></a>
+                                    <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" asp-route-id="@item.Id" title="Видалити" onclick="return confirm('Ви дійсно хочете видалити дану послугу?');"><i class="far fa-trash-alt"></i></a>
+
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <ul class="pagination justify-content-center">
+                @{
+                    int startPoint = 0, endPoint = 0, k = 15;
+                    if (Model.TotalPages > k)
+                    {
+                        if (Model.Query.CurrentPage - k / 2 >= 1 && Model.Query.CurrentPage + k / 2 < Model.TotalPages)
+                        {
+                            startPoint = Model.Query.CurrentPage - k / 2;
+                            endPoint = Model.Query.CurrentPage + k / 2;
+                        }
+                        else if (Model.Query.CurrentPage - k / 2 < 1)
+                        {
+                            startPoint = 1;
+                            endPoint = startPoint + k - 1;
+
+                        }
+                        else
+                        {
+                            endPoint = Model.TotalPages;
+                            startPoint = endPoint - k + 1;
+                        }
+                    }
+                    else
+                    {
+                        startPoint = 1;
+                        endPoint = Model.TotalPages;
+                    }
+
+                    for (var i = startPoint; i <= endPoint; i++)
+                    {
+                        if (i == startPoint && startPoint > 1)
+                        {
+                            <li class="page-item">
+                                <a asp-page="./Index" asp-route-currentpage="@(i - 1)" asp-route-filter="@Model.Query.Filter" class="page-link">...</a>
+                            </li>
+                        }
+                        <li class="page-item @(i == Model.Query.CurrentPage ? "active" : "")">
+                            <a asp-page="./Index" asp-route-currentpage="@i" asp-route-filter="@Model.Query.Filter" class="page-link">@i</a>
+                        </li>
+                        if (i == endPoint && endPoint < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a asp-page="./Index" asp-route-currentpage="@(i + 1)" asp-route-filter="@Model.Query.Filter" class="page-link">...</a>
+                            </li>
+                        }
+                    }
                 }
-            </tbody>
-        </table>
-
-        @{
-            var prevDisabled = !Model.ShowPrevious ? "disabled" : "";
-            var nextDisabled = !Model.ShowNext ? "disabled" : "";
-        }
-
-        <div class="text-center">
-            <a asp-page="./Index"
-               asp-route-pageIndex="@(Model.PageIndex - 1)"
-               asp-route-currentFilter="@Model.SearchString"
-               class="btn btn-light @prevDisabled">
-                <i class="fa fa-angle-left"></i>
-            </a>
-            <a asp-page="./Index"
-               asp-route-pageIndex="@(Model.PageIndex + 1)"
-               asp-route-currentFilter="@Model.SearchString"
-               class="btn btn-light @nextDisabled">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            </ul>
         </div>
     </div>
 </div>

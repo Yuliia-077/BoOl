@@ -2,52 +2,53 @@
 @model BoOl.Pages.Services.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Service";
 }
 
-<div class="row">
-    <div class="col-1 col-md-3"></div>
-    <div class="col-10 col-md-6">
-        <div class="card border-dark ml-5 mr-5">
-            <div class="card-header">
-                <h4 class="text-center">Редагувати послугу</h4>
-            </div>
-            <form method="post">
-                <div class="card-body">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-                        <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
-                    </div>
-                    <div class="form-row">
-                        <input type="hidden" asp-for="Service.Id" />
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group col-12">
-                            <label asp-for="Service.Name" class="control-label">Назва послуги *</label>
-                            <div class="input-group">
-                                <input asp-for="Service.Name" class="form-control" id="Name" aria-describedby="button-addon1" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Service.Name" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-12">
-                            <label asp-for="Service.Price" class="control-label">Ціна *</label>
-                            <div class="input-group">
-                                <input asp-for="Service.Price" class="form-control" id="Price" aria-describedby="button-addon2" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Price').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Service.Price" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-                        <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
-                        <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
-                    </div>
-                </div>
-            </form>
+<div class="container">
+    <div class="card border-dark ml-5 mr-5">
+        <div class="card-header">
+            <h4 class="text-center">Редагувати послугу</h4>
         </div>
+        <form method="post">
+            <div class="card-body">
+                <div class="d-flex justify-content-end">
+                    <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Service" class="text-danger"></span>
+                </div>
+                <input type="hidden" asp-for="Service.Id" />
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Service.Name" class="control-label col-md-2">Назва послуги*</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="Service.Name" class="form-control" id="Name" aria-describedby="button-addon1" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
+                    </div>
+                    <div class="col-md-2">
+                        <span asp-validation-for="Service.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Service.Price" class="control-label col-md-2">Ціна*</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="Service.Price" type="number" class="form-control" id="Price" aria-describedby="button-addon2" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Price').value = ''">X</button>
+                    </div>
+                    <div class="col-md-2">
+                        <span asp-validation-for="Service.Price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                    <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                    <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="col-1 col-md-3"></div>
 </div>
 
 @section Scripts {

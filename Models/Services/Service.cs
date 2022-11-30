@@ -5,7 +5,7 @@ namespace BoOl.Models.Services
 {
     public class Service
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Довжина рядка повинна бути від 3 символів!")]
         [Required(ErrorMessage = "Введіть назву!")]

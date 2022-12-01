@@ -5,95 +5,90 @@
     ViewData["Title"] = "Edit";
 }
 
-<div class="card border-dark">
-    <div class="card-header">
-        <h4 class="text-center">Редагувати постачання</h4>
-    </div>
-    <form method="post">
-        <div class="card-body">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
-            </div>
-            <div class="form-row">
+<div class="container">
+    <div class="card border-dark">
+        <div class="card-header">
+            <h4 class="text-center">Редагувати постачання</h4>
+        </div>
+        <form method="post">
+            <div class="card-body">
+                <div class="d-flex justify-content-end pb-2">
+                    <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                </div>
                 <input type="hidden" asp-for="Storage.Id" />
                 <input type="hidden" asp-for="Storage.WorkerId" />
+                <input type="hidden" asp-for="Storage.DateOfArrival" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Storage.Name" class="control-label">Назва *</label>
-                    <div class="input-group">
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Storage" class="text-danger"></span>
+                </div>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.Name" class="control-label col-md-3">Назва*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Storage.Name" class="form-control" id="Name" aria-describedby="button-addon1" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.Name" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.Name" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Storage.ModelId" class="control-label">Модель *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.ModelId" class="control-label col-md-3">Модель*</label>
+                    <div class="input-group col-md-5">
                         <select asp-for="Storage.ModelId" asp-items="ViewBag.ModelId" class="form-control" aria-describedby="button-addon2" id="Model"></select>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Model').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.ModelId" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.ModelId" class="text-danger"></span></div>
                 </div>
 
-                <div class="form-group col-md-4">
-                    <label asp-for="Storage.PurchasePrice" class="control-label">Закупівельна ціна *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.PurchasePrice" class="control-label col-md-3">Закупівельна ціна*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Storage.PurchasePrice" class="form-control" id="Purchase" aria-describedby="button-addon3" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Purchase').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.PurchasePrice" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.PurchasePrice" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="Storage.WholesalePrice" class="control-label">Оптова ціна *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.WholesalePrice" class="control-label col-md-3">Оптова ціна*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Storage.WholesalePrice" class="form-control" id="Wholesale" aria-describedby="button-addon4" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('Wholesale').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.WholesalePrice" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.WholesalePrice" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="Storage.RetailPrice" class="control-label">Роздрібна ціна *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.RetailPrice" class="control-label col-md-3">Роздрібна ціна*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Storage.RetailPrice" class="form-control" id="Retail" aria-describedby="button-addon5" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon5" onclick="document.getElementById('Retail').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.RetailPrice" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.RetailPrice" class="text-danger"></span></div>
                 </div>
 
-                <div class="form-group col-md-5">
-                    <label asp-for="Storage.Manufacturer" class="control-label">Виробник *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.Manufacturer" class="control-label col-md-3">Виробник*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Storage.Manufacturer" class="form-control" id="Manufacturer" aria-describedby="button-addon6" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon6" onclick="document.getElementById('Manufacturer').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.Manufacturer" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.Manufacturer" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="Storage.Quantity" class="control-label">Кількість *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Storage.Quantity" class="control-label col-md-3">Кількість*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Storage.Quantity" class="form-control" id="Quantity" aria-describedby="button-addon7" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon7" onclick="document.getElementById('Quantity').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Storage.Quantity" class="text-danger"></span>
+                    <div class="col-md-3"><span asp-validation-for="Storage.Quantity" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-md-5">
-                    <label asp-for="Storage.DateOfArrival" class="control-label">Дата і час прибуття *</label>
-                    <div class="input-group">
-                        <input asp-for="Storage.DateOfArrival" class="form-control" id="DateOfArrival" aria-describedby="button-addon8" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon8" onclick="document.getElementById('DateOfArrival').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Storage.DateOfArrival" class="text-danger"></span>
+            </div>
+            <div class="card-footer">
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                    <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                    <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
                 </div>
-
             </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
-                <a class="btn btn-outline-secondary" asp-page="./Index">Скасувати</a>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

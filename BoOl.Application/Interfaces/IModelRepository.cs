@@ -16,6 +16,6 @@ namespace BoOl.Application.Interfaces
         Task<int> CountAsync(string searchString);
         Task<bool> ExistAsync(int id);
         Task<bool> ExistWithManufacturerAndName(string manufacturer, string name, int? id = null);
-        //Task<IEnumerable<SelectedModel>> SelectAsync();
+        Task<IEnumerable<SelectListItem>> SelectListOfModelsAsync();
     }
 }

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Models;
+using BoOl.Application.Services.Storages;
+using BoOl.Application.Validations.Services;
+using BoOl.Models.Storages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Storages
 {
@@ -17,39 +15,53 @@ namespace BoOl.Pages.Storages
     [Authorize(Roles = "Owner, Storekeeper")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<Storage> _repository;
-        private readonly IRepository<Model> _repositoryModel;
-        private readonly UserRepository _repositoryUser;
+        private readonly IStorageService _storageService;
+        private readonly IModelService _modelService;
+        private readonly IStorageValidation _storageValidation;
+
         [BindProperty]
         public Storage Storage { get; set; }
 
-        public CreateModel(BoOlContext context)
+        public CreateModel(IStorageService storageService,
+            IModelService modelService,
+            IStorageValidation storageValidation)
         {
-            _repository = new StorageRepository(context);
-            _repositoryModel = new ModelRepository(context);
-            _repositoryUser = new UserRepository(context);
+            _modelService = modelService;
+            _storageService = storageService;
+            _storageValidation = storageValidation;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Storage = new Storage();
-            Storage.DateOfArrival = DateTime.Now;
-            var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
-            Storage.WorkerId = Convert.ToInt32(user.WorkerId);
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
+            await Get();
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Storage.AsDto();
+            var error = await _storageValidation.ValidationForCreateOrUpdate(dto);
+            if(error != null)
+            {
+                ModelState.AddModelError("Storage", error);
+            }
+
             if (!ModelState.IsValid)
             {
+                await Get();
                 return Page();
             }
 
-            await _repository.AddAsync(Storage);
+            var id = await _storageService.Create(dto, User.Identity.Name);
 
-            return RedirectToPage("./Details", new { id = Storage.Id });
+            return RedirectToPage("./Details", new { id = id });
+        }
+
+        private async Task Get()
+        {
+            Storage = new Storage();
+            Storage.DateOfArrival = DateTime.Now;
+            ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
         }
     }
 }

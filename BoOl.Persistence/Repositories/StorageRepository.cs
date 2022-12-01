@@ -36,9 +36,9 @@ namespace BoOl.Persistence.Repositories
             return await DbContext.Storages
                 .Include(s => s.Model)
                 .Where(s => string.IsNullOrEmpty(searchString) 
-                    || s.Name.Contains(searchString, System.StringComparison.CurrentCultureIgnoreCase)
-                    || s.Model.Manufacturer.Contains(searchString, System.StringComparison.CurrentCultureIgnoreCase)
-                    || s.Model.Type.Contains(searchString, System.StringComparison.CurrentCultureIgnoreCase))
+                    || s.Name.Contains(searchString)
+                    || s.Model.Manufacturer.Contains(searchString)
+                    || s.Model.Type.Contains(searchString))
                 .OrderBy(c => c.Name)
                 .ThenBy(c => c.Model.Manufacturer)
                 .ThenBy(c => c.Model.Type)
@@ -56,20 +56,32 @@ namespace BoOl.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<StorageDto> GetByIdAsync(int id)
+        public async Task<StorageDetailsDto> GetDetailsAsync(int id)
         {
-            var item = await DbContext.Storages.FirstOrDefaultAsync(c => c.Id == id);
+            var item = await DbContext.Storages
+                .Include(x => x.Model)
+                .Include(x => x.Worker)
+                .SingleOrDefaultAsync(x => x.Id == id);
 
             if(item == null)
             {
                 return null;
             }
 
-            return new StorageDto
+            return new StorageDetailsDto
             {
-                //Id = item.Id,
-                //Name = item.Name,
-                //Price = item.Price
+                Id = item.Id,
+                Manufacturer = item.Manufacturer,
+                Model = item.Model.Manufacturer + " " + item.Model.Type,
+                ModelId = item.ModelId,
+                DateOfArrival = item.DateOfArrival,
+                Name = item.Name,
+                PurchasePrice = item.PurchasePrice,
+                Quantity = item.Quantity,
+                WholesalePrice = item.WholesalePrice,
+                RetailPrice = item.RetailPrice,
+                WorkerId = item.WorkerId,
+                WorkerName = item.Worker.LastName + " " + item.Worker.FirstName
             };
         }
 
@@ -83,9 +95,9 @@ namespace BoOl.Persistence.Repositories
             return await DbContext.Storages
                 .Include(s => s.Model)
                 .Where(s => string.IsNullOrEmpty(searchString) 
-                    || s.Name.Contains(searchString, System.StringComparison.CurrentCultureIgnoreCase) 
-                    || s.Model.Manufacturer.Contains(searchString, System.StringComparison.CurrentCultureIgnoreCase) 
-                    || s.Model.Type.Contains(searchString, System.StringComparison.CurrentCultureIgnoreCase))
+                    || s.Name.Contains(searchString) 
+                    || s.Model.Manufacturer.Contains(searchString) 
+                    || s.Model.Type.Contains(searchString))
                 .CountAsync();
         }
 
@@ -94,19 +106,58 @@ namespace BoOl.Persistence.Repositories
             return await DbContext.Storages.AnyAsync(x => x.ModelId == modelId);
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<bool> Exist(int id)
         {
-            var deliveryList = await DbContext.Storages.Include(s => s.Model)
-                .Where(s => s.Quantity >= 1).Select(
-               x => new { Value = x.Id, Text = x.Name + " " + x.Model.Manufacturer + " " + x.Model.Type })
-                .ToListAsync();
-            List<SelectedModel> models = new List<SelectedModel>();
-
-            foreach (var item in deliveryList)
-            {
-                models.Add(new SelectedModel(item.Value, item.Text));
-            }
-            return models;
+            return await DbContext.Storages.AnyAsync(x => x.Id == id);
         }
+
+        public async Task<bool> IsUnique(StorageDto dto)
+        {
+            return await DbContext.Storages.AnyAsync(x => x.Id != dto.Id 
+                                                        && x.Manufacturer == dto.Manufacturer 
+                                                        && x.ModelId == dto.ModelId 
+                                                        && x.Name == dto.Name 
+                                                        && x.DateOfArrival == dto.DateOfArrival);
+        }
+
+        public async Task<StorageDto> GetByIdAsync(int id)
+        {
+            var item = await DbContext.Storages
+                .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (item == null)
+            {
+                return null;
+            }
+
+            return new StorageDto
+            {
+                Id = item.Id,
+                Manufacturer = item.Manufacturer,
+                ModelId = item.ModelId,
+                DateOfArrival = item.DateOfArrival,
+                Name = item.Name,
+                PurchasePrice = item.PurchasePrice,
+                Quantity = item.Quantity,
+                WholesalePrice = item.WholesalePrice,
+                RetailPrice = item.RetailPrice,
+                WorkerId = item.WorkerId
+            };
+        }
+
+        //public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        //{
+        //    var deliveryList = await DbContext.Storages.Include(s => s.Model)
+        //        .Where(s => s.Quantity >= 1).Select(
+        //       x => new { Value = x.Id, Text = x.Name + " " + x.Model.Manufacturer + " " + x.Model.Type })
+        //        .ToListAsync();
+        //    List<SelectedModel> models = new List<SelectedModel>();
+
+        //    foreach (var item in deliveryList)
+        //    {
+        //        models.Add(new SelectedModel(item.Value, item.Text));
+        //    }
+        //    return models;
+        //}
     }
 }

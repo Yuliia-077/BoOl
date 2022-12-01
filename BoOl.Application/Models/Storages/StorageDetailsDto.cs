@@ -2,9 +2,9 @@
 
 namespace BoOl.Application.Models.Storages
 {
-    public class StorageDto
+    public class StorageDetailsDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
@@ -23,5 +23,9 @@ namespace BoOl.Application.Models.Storages
         public int ModelId { get; set; }
 
         public int WorkerId { get; set; }
+
+        public string Model { get; set; }
+
+        public string WorkerName { get; set; }
     }
 }

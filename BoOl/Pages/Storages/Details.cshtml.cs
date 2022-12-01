@@ -9,6 +9,9 @@ using BoOl.Domain;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Repository;
 using BoOl.Persistence.DatabaseContext;
+using BoOl.Models.Storages;
+using BoOl.Application.Services.Storages;
+using BoOl.Application.Validations.Services;
 
 namespace BoOl.Pages.Storages
 {
@@ -16,13 +19,17 @@ namespace BoOl.Pages.Storages
     [Authorize(Roles = "Owner, Administrator, Technician,  Storekeeper")]
     public class DetailsModel : PageModel
     {
-        private readonly IRepository<Storage> _repository;
-        public Storage Storage { get; set; }
+        private readonly IStorageService _storageService;
+        private readonly IStorageValidation _storageValidation;
 
-        public DetailsModel(BoOlContext context)
+        public DetailsModel(IStorageService storageService,
+            IStorageValidation storageValidation)
         {
-            _repository = new StorageRepository(context);
+            _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
+            _storageValidation = storageValidation ?? throw new ArgumentNullException(nameof(storageValidation));
         }
+
+        public StorageDetails Storage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,18 +38,29 @@ namespace BoOl.Pages.Storages
                 return NotFound();
             }
 
-            Storage = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var storage = await _storageService.GetDetails(id.Value);
 
-            if (Storage == null)
-            {
-                return NotFound();
-            }
+            Storage = storage.AsViewModel();
             return Page();
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            await _repository.DeleteAsync(id);
+            var error = await _storageValidation.ValidationForDelete(id);
+
+            if(error != null)
+            {
+                ModelState.AddModelError("All", error);
+            }
+
+            if(!ModelState.IsValid)
+            {
+                var storage = await _storageService.GetDetails(id);
+                Storage = storage.AsViewModel();
+                return Page();
+            }
+
+            await _storageService.Delete(id);
             return RedirectToPage("./Index");
         }
     }

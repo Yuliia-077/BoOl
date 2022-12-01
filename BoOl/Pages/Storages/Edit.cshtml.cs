@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Models;
+using BoOl.Application.Services.Storages;
+using BoOl.Application.Validations.Services;
+using BoOl.Models.Storages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Storages
 {
@@ -17,15 +14,20 @@ namespace BoOl.Pages.Storages
     [Authorize(Roles = "Owner, Storekeeper")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Storage> _repository;
-        private readonly IRepository<Model> _repositoryModel;
+        private readonly IStorageService _storageService;
+        private readonly IModelService _modelService;
+        private readonly IStorageValidation _storageValidation;
+
         [BindProperty]
         public Storage Storage { get; set; }
 
-        public EditModel(BoOlContext context)
+        public EditModel(IStorageService storageService,
+            IModelService modelService,
+            IStorageValidation storageValidation)
         {
-            _repository = new StorageRepository(context);
-            _repositoryModel = new ModelRepository(context);
+            _modelService = modelService;
+            _storageService = storageService;
+            _storageValidation = storageValidation;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -35,27 +37,36 @@ namespace BoOl.Pages.Storages
                 return NotFound();
             }
 
-            Storage = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            await Get(id.Value);
 
-            if (Storage == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Storage.AsDto();
+            var error = await _storageValidation.ValidationForCreateOrUpdate(dto);
+            if (error != null)
+            {
+                ModelState.AddModelError("Storage", error);
+            }
+
             if (!ModelState.IsValid)
             {
+                await Get(Storage.Id.Value);
                 return Page();
             }
 
-            await _repository.UpdateAsync(Storage);
+            await _storageService.Update(dto);
 
             return RedirectToPage("./Details", new { id = Storage.Id });
+        }
+
+        private async Task Get(int id)
+        {
+            var storage = await _storageService.GetById(id);
+            Storage = storage.AsViewModel();
+            ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
         }
     }
 }

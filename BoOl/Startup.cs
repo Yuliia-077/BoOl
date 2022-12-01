@@ -38,6 +38,7 @@ namespace BoOl
             #region Validation
             services.AddTransient<IModelValidation, ModelValidation>();
             services.AddTransient<IServiceValidation, ServiceValidation>();
+            services.AddTransient<IStorageValidation, StorageValidation>();
             #endregion
 
             #region Services
@@ -54,6 +55,8 @@ namespace BoOl
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<IStorageRepository, StorageRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IPartRepository, PartRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             #endregion
         }
 

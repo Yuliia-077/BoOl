@@ -87,17 +87,17 @@ namespace BoOl.Persistence.Repositories
             return await DbContext.Models.AnyAsync(x => x.Id != id && x.Manufacturer == manufacturer && x.Type == name);
         }
 
-        //public async Task<IEnumerable<SelectedModel>> SelectAsync()
-        //{
-        //    var productsList = await DbContext.Models.Select(
-        //       x => new { Value = x.Id, Text = x.Manufacturer + " " + x.Type }).ToListAsync();
-        //    List<SelectedModel> models = new List<SelectedModel>();
-
-        //    foreach (var item in productsList)
-        //    {
-        //        models.Add(new SelectedModel(item.Value, item.Text));
-        //    }
-        //    return models;
-        //}
+        public async Task<IEnumerable<SelectListItem>> SelectListOfModelsAsync()
+        {
+            return await DbContext.Models
+                .OrderBy(x => x.Manufacturer)
+                .ThenBy(x => x.Type)
+                .Select(x => new SelectListItem 
+                { 
+                    Value = x.Id, 
+                    Text = x.Manufacturer + " " + x.Type 
+                }).ToListAsync();
+       
+        }
     }
 }

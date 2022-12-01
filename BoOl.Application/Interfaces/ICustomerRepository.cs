@@ -15,6 +15,6 @@ namespace BoOl.Application.Interfaces
         Task AddAsync(Customer t);
         Task DeleteAsync(int id);
         Task<int> CountAsync(string searchString);
-        Task<IEnumerable<SelectedModel>> SelectAsync();
+        Task<IEnumerable<SelectListItem>> SelectAsync();
     }
 }

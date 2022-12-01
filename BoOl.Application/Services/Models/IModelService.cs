@@ -1,4 +1,5 @@
-﻿using BoOl.Application.Models.Models;
+﻿using BoOl.Application.Models;
+using BoOl.Application.Models.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,5 +13,6 @@ namespace BoOl.Application.Services.Models
         Task<int> Create(ModelDto dto);
         Task Update(ModelDto dto);
         Task Delete(int id);
+        Task<IEnumerable<SelectListItem>> SelectListOfModelsAsync();
     }
 }

@@ -86,16 +86,11 @@ namespace BoOl.Persistence.Repositories
                 .CountAsync();
         }
 
-        public async Task<IEnumerable<SelectedModel>> SelectAsync()
+        public async Task<IEnumerable<SelectListItem>> SelectAsync()
         {
             var productsList = await DbContext.Customers.Select(
                x => new { Value = x.Id, Text = x.LastName + " " + x.FirstName + " " + x.MiddleName}).ToListAsync();
-            List<SelectedModel> models = new List<SelectedModel>();
-
-            foreach (var item in productsList)
-            {
-                models.Add(new SelectedModel(item.Value, item.Text));
-            }
+            List<SelectListItem> models = new List<SelectListItem>();
             return models;
         }
 

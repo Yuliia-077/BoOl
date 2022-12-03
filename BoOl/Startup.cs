@@ -1,6 +1,7 @@
 using BoOl.Application.Interfaces;
 using BoOl.Application.Services.Customers;
 using BoOl.Application.Services.Models;
+using BoOl.Application.Services.Orders;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
 using BoOl.Application.Validations.Models;
@@ -44,6 +45,7 @@ namespace BoOl
             #region Services
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IModelService, ModelService>();
+            services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IServiceService, ServiceService>();
             services.AddTransient<IStorageService, StorageService>();
             #endregion
@@ -52,6 +54,7 @@ namespace BoOl
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<ICustomServiceRepository, CustomServiceRepository>();
             services.AddTransient<IModelRepository, ModelRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<IStorageRepository, StorageRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();

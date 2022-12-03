@@ -1,5 +1,4 @@
 ﻿using BoOl.Application.Interfaces;
-using BoOl.Application.Models;
 using BoOl.Application.Models.Storages;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;

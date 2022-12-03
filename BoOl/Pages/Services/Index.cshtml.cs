@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 namespace BoOl.Pages.Services
 {
     //перелік усіх послуг
-    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IServiceService _serviceService;

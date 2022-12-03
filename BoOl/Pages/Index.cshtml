@@ -10,52 +10,87 @@
 <header class="page-header header container-fluid">
     <div class="overlay">
         <div class="description">
-            <h1><small>CRM-система</small></h1>
-            <h1>BoOl</h1>
-            <br />
-            <b><i class="far fa-clock"></i> Час роботи: Пн-Пт 9:00-18:00</b>
-            <br />
-            <b><i class="fas fa-phone"></i> Номер телефону: +380666666666</b>
-            <br />
-            <b><i class="fas fa-map-marker-alt"></i> Адреса: вулиця Університетська, 28, Чернівці</b>
-            <br />
-            <br />
-            <a href="#service" class="btn btn-light">Переглянути послуги</a>
+            <h1 class="pb-2 shadow-4-strong"><strong>CRM-система BoOl</strong></h1>
+            <h4 class="pb-4">Сервіс з надання послуг по ремонту техніки</h4>
+            <a asp-page="/Services/Index" class="btn btn-light">Переглянути послуги</a>
         </div>
     </div>
 </header>
 <script src="/js/site.js"></script>
-<div class="container-fluid">
-    <a name="service"></a>
-
-    <hr />
-    <h1 class="text-center">Послуги</h1>
-    <hr />
-    <div class="d-flex justify-content-end">
-        <form>
-            <div class="input-group mt-2 mb-3">
-                <input type="text" class="form-check" asp-for="SearchString" aria-describedby="button-addon" placeholder="Пошук по назві">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon">Шукати</button>
-            </div>
-        </form>
-    </div>
-    <div class="overflow-auto">
-        <div class="row">
-            <div class="d-flex">
-                @foreach (var item in Model.Services)
-                {
-                    <div class="col-1">
-                        <div class="card border border-secondary text-center mr-1">
-                            <div class="card-header">
-                                <b style="font-size:large">@Html.DisplayFor(modelItem => item.Name)</b>
-                            </div>
-                            <div class="card-body">
-                                <b>Ціна: @Html.DisplayFor(modelItem => item.Price)</b>
-                            </div>
+@if (Model.Services != null)
+{
+    <div class="container">
+        <a name="service"></a>
+        <hr />
+        <h1 class="text-center">Найпопулярніші послуги</h1>
+        <hr />
+        <div class="d-flex flex-wrap">
+            @foreach (var item in Model.Services)
+            {
+                <div class="col-md-4 align-self-stretch mb-4">
+                    <div class="card border border-secondary m-1" style="height: 100%">
+                        <div class="card-body">
+                            <b style="font-size:large">@Html.DisplayFor(modelItem => item.Name)</b>
+                            <hr />
+                            <b>Ціна: @Html.DisplayFor(modelItem => item.Price)</b>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
-</div>
+}
+
+@if (Model.CountOfServices != default(int) || Model.CountOfOrders != default(int) || Model.CountOfCustomers != default(int))
+{
+    <div class="container">
+        <hr />
+        <h1 class="text-center">Статистика</h1>
+        <hr />
+        <div class="d-flex justify-content-around p-2">
+            @if (Model.CountOfCustomers != default(int))
+            {
+                <div class="align-content-center justify-content-center">
+                    <div class="rounded-circle shadow-4-strong card border border-secondary" style="width: 8rem; height: 8rem;">
+                        <div class="card-body text-center align-items-center d-flex justify-content-center">
+                            <h2>@Model.CountOfCustomers</h2>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="text-center">
+                        <p class="text-uppercase"><strong>клієнтів</strong></p>
+                    </div>
+                </div>
+            }
+            @if (Model.CountOfOrders != default(int))
+            {
+                <div class="align-content-center">
+                    <div class="rounded-circle shadow-4-strong card border border-secondary" style="width: 8rem; height: 8rem;">
+                        <div class="card-body text-center align-items-center d-flex justify-content-center">
+                            <h2>@Model.CountOfOrders</h2>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="text-center">
+                        <p class="text-uppercase"><strong>замовлень</strong></p>
+                    </div>
+                </div>
+            }
+            @if (Model.CountOfServices != default(int))
+            {
+                <div class="align-content-center">
+                    <div class="rounded-circle shadow-4-strong card border border-secondary" style="width: 8rem; height: 8rem;">
+                        <div class="card-body text-center align-items-center d-flex justify-content-center">
+                            <h2>@Model.CountOfServices</h2>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="text-center">
+                        <p class="text-uppercase"><strong>послуг</strong></p>
+                    </div>
+                </div>
+            }
+            </div>
+    </div>
+}
+

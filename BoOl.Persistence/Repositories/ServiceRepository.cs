@@ -1,5 +1,4 @@
 ﻿using BoOl.Application.Interfaces;
-using BoOl.Application.Models;
 using BoOl.Application.Models.Services;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
@@ -84,6 +83,20 @@ namespace BoOl.Persistence.Repositories
         public async Task<bool> ExistWithName(string name, int? id)
         {
             return await DbContext.Services.AnyAsync(x => x.Name == name && x.Id != id);
+        }
+
+        public async Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize)
+        {
+            return await DbContext.Services
+                .Include(x => x.CustomServices)
+                .OrderByDescending(x => x.CustomServices.Count())
+                .Take(pageSize)
+                .Select(x => new ServiceListItemDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price
+                }).ToListAsync();
         }
 
 

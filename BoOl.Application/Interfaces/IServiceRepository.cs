@@ -15,6 +15,7 @@ namespace BoOl.Application.Interfaces
         Task<int> CountAsync(string searchString);
         Task<bool> Exist(int id);
         Task<bool> ExistWithName(string name, int? id);
+        Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize);
         //Task<IEnumerable<SelectedModel>> SelectAsync();
     }
 }

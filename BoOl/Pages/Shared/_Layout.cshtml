@@ -23,7 +23,7 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse navbar-nav-scroll">
-                        <ul class="navbar-nav flex-grow-1">
+                        <ul class="navbar-nav d-flex justify-content-end">
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Account/Login" asp-page-handler="LogOut" onclick="return confirm('Ви дійсно хочете вийти?');">Вихід</a>
                             </li>
@@ -50,24 +50,29 @@
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Storages/Index">Склад</a>
                             </li>
-                            
+
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Services/Index">Послуги</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bolder" asp-page="/Types/Index">Моделі</a>
                             </li>
-                            </ul>
+                        </ul>
                     </div>
                 }
                 else
                 {
-                    <ul class="navbar-nav flex-row d-flex">
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                           <a class="nav-link font-weight-bolder" asp-page="/Account/Login">Вхід</a>
+                            <a class="nav-link font-weight-bolder" asp-page="/Services/Index">Послуги</a>
                         </li>
                     </ul>
-                }
+                    <ul class="navbar-nav flex-row d-flex justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bolder" asp-page="/Account/Login">Вхід</a>
+                        </li>
+                    </ul>
+                    }
             </div>
         </nav>
     </header>
@@ -77,7 +82,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - BoOl
+            &copy; 2022 - BoOl
         </div>
     </footer>
 

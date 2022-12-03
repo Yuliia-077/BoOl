@@ -42,7 +42,7 @@
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Storage.PurchasePrice" class="control-label col-md-3">Закупівельна ціна*</label>
                     <div class="input-group col-md-5">
-                        <input asp-for="Storage.PurchasePrice" class="form-control" id="Purchase" aria-describedby="button-addon3" />
+                        <input asp-for="Storage.PurchasePrice" class="form-control" id="Purchase" aria-describedby="button-addon3" type="number"/>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Purchase').value = ''">X</button>
                     </div>
                     <div class="col-md-3"><span asp-validation-for="Storage.PurchasePrice" class="text-danger"></span></div>
@@ -50,7 +50,7 @@
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Storage.WholesalePrice" class="control-label col-md-3">Оптова ціна*</label>
                     <div class="input-group col-md-5">
-                        <input asp-for="Storage.WholesalePrice" class="form-control" id="Wholesale" aria-describedby="button-addon4" />
+                        <input asp-for="Storage.WholesalePrice" class="form-control" id="Wholesale" aria-describedby="button-addon4" type="number"/>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('Wholesale').value = ''">X</button>
                     </div>
                     <div class="col-md-3"><span asp-validation-for="Storage.WholesalePrice" class="text-danger"></span></div>
@@ -58,7 +58,7 @@
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Storage.RetailPrice" class="control-label col-md-3">Роздрібна ціна*</label>
                     <div class="input-group col-md-5">
-                        <input asp-for="Storage.RetailPrice" class="form-control" id="Retail" aria-describedby="button-addon5" />
+                        <input asp-for="Storage.RetailPrice" class="form-control" id="Retail" aria-describedby="button-addon5" type="number"/>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon5" onclick="document.getElementById('Retail').value = ''">X</button>
                     </div>
                     <div class="col-md-3"><span asp-validation-for="Storage.RetailPrice" class="text-danger"></span></div>
@@ -75,7 +75,7 @@
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Storage.Quantity" class="control-label col-md-3">Кількість*</label>
                     <div class="input-group col-md-5">
-                        <input asp-for="Storage.Quantity" class="form-control" id="Quantity" aria-describedby="button-addon7" />
+                        <input asp-for="Storage.Quantity" class="form-control" id="Quantity" aria-describedby="button-addon7" type="number"/>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon7" onclick="document.getElementById('Quantity').value = ''">X</button>
                     </div>
                     <div class="col-md-3"><span asp-validation-for="Storage.Quantity" class="text-danger"></span></div>

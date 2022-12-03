@@ -12,5 +12,6 @@ namespace BoOl.Application.Services.Services
         Task<int> Create(ServiceDto dto);
         Task Update(ServiceDto dto);
         Task Delete(int id);
+        Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize);
     }
 }

@@ -64,5 +64,10 @@ namespace BoOl.Application.Services.Services
             await _serviceRepository.DeleteAsync(id);
             await _serviceRepository.SaveChanges();
         }
+
+        public async Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize)
+        {
+            return await _serviceRepository.MostPopularServices(pageSize);
+        }
     }
 }

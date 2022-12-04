@@ -3,48 +3,49 @@
 @{
     ViewData["Title"] = "Log in";
 }
-<div class="row">
-    <div class="col-1 col-md-3"></div>
-    <div class="col-10 col-md-6">
-        <div class="card border-dark ml-10 mr-10">
-            <div class="card-header">
-                <h4 class="text-center">Вхід</h4>
-            </div>
-            <form method="post" asp-route-returnUrl="@Model.LoginView.ReturnUrl">
-                <div class="card-body">
-                    <div class="form-row ml-5 mr-5">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group col-12">
-                            <label asp-for="LoginView.Email" class="control-label">Електронна пошта *</label>
-                            <div class="input-group">
-                                <input asp-for="LoginView.Email" type="email" class="form-control" id="Email" aria-describedby="button-addon1" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Email').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="LoginView.Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group col-12">
-                            <label asp-for="LoginView.Password" class="control-label">Пароль *</label>
-                            <div class="input-group">
-                                <input asp-for="LoginView.Password" class="form-control" id="Pass" aria-describedby="button-addon3" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Pass').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="LoginView.Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-12">
-                            <label asp-for="LoginView.RememberMe" class="control-label">Запам'ятати?</label>
-                            <input asp-for="LoginView.RememberMe" />
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-                        <input type="submit" value="Увійти" class="btn btn-outline-success mr-1" />
-                        <a class="btn btn-outline-secondary" asp-page="/Index">Скасувати</a>
-                    </div>
-                </div>
-            </form>
+<div class="container">
+    <div class="card border-dark ml-5 mr-5">
+        <div class="card-header">
+            <h2 class="text-center">Вхід</h2>
         </div>
+        <form method="post" asp-route-returnUrl="@Model.LoginView.ReturnUrl">
+            <div class="card-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger d-flex justify-content-center"></div>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="LoginView.Email" class="control-label col-md-3">Електронна пошта*</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="LoginView.Email" type="email" class="form-control" id="Email" aria-describedby="button-addon1" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Email').value = ''">X</button>
+                    </div>
+                    <div class="col-md-2">
+                        <span asp-validation-for="LoginView.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="LoginView.Password" class="control-label col-md-3">Пароль*</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="LoginView.Password" class="form-control" id="Pass" aria-describedby="button-addon3" />
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Pass').value = ''">X</button>
+                    </div>
+                    <div class="col-md-2">
+                        <span asp-validation-for="LoginView.Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="LoginView.RememberMe" class="control-label col-md-3">Запам'ятати?</label>
+                    <div class="d-flex justifu-content-start col-md-5">
+                        <input asp-for="LoginView.RememberMe" />
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <input type="submit" value="Увійти" class="btn btn-outline-success mr-1" />
+                    <a class="btn btn-outline-secondary" asp-page="/Index">Скасувати</a>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="col-1 col-md-3"></div>
 </div>

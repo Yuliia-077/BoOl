@@ -4,6 +4,7 @@ using BoOl.Application.Services.Models;
 using BoOl.Application.Services.Orders;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
+using BoOl.Application.Services.Users;
 using BoOl.Application.Validations.Models;
 using BoOl.Application.Validations.Services;
 using BoOl.Domain;
@@ -48,6 +49,7 @@ namespace BoOl
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IServiceService, ServiceService>();
             services.AddTransient<IStorageService, StorageService>();
+            services.AddTransient<IUserService, UserService>();
             #endregion
 
             #region Repositories

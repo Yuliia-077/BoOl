@@ -1,33 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BoOl.Domain;
-using BoOl.Persistence.DatabaseContext;
-using Microsoft.AspNetCore.Identity;
+using BoOl.Application.Services.Users;
+using BoOl.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Account
 {
     //аутентифікація
     public class LoginModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly IUserService _userService;
         [BindProperty]
-        public Models.LoginViewModel LoginView { get; set; }
+        public LoginViewModel LoginView { get; set; }
 
-        public LoginModel(UserManager<User> userManager, SignInManager<User> signInManager, BoOlContext context)
+        public LoginModel(IUserService userService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-
+            _userService = userService;
         }
 
         public IActionResult OnGet(string returnUrl = null)
         {
-            LoginView = new Models.LoginViewModel();
+            LoginView = new LoginViewModel();
             LoginView.ReturnUrl = returnUrl;
             return Page();
         }
@@ -36,11 +29,9 @@ namespace BoOl.Pages.Account
         {
             if (ModelState.IsValid)
             {
-                var result =
-                    await _signInManager.PasswordSignInAsync(LoginView.Email, LoginView.Password, LoginView.RememberMe, false);
-                if (result.Succeeded)
+                if (await _userService.LogIn(LoginView.AsDto()))
                 {
-                    // проверяем, принадлежит ли URL приложению
+                    // перевіряємo, чи належить URL додатку
                     if (!string.IsNullOrEmpty(LoginView.ReturnUrl) && Url.IsLocalUrl(LoginView.ReturnUrl))
                     {
                         return Redirect(LoginView.ReturnUrl);
@@ -60,7 +51,7 @@ namespace BoOl.Pages.Account
 
         public async Task<IActionResult> OnGetLogOut()
         {
-            await _signInManager.SignOutAsync();
+            await _userService.LogOut();
             return RedirectToPage("Login");
         }
     }

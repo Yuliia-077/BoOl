@@ -27,7 +27,7 @@ namespace BoOl.Application.Models.Customers
 
         public IList<ProductByCustomerListItemDto> Products { get; set; }
 
-        public IList<OrderByCustomerListItemDto> Orders { get; set; }
+        public IList<OrderListItemDto> Orders { get; set; }
 
     }
 }

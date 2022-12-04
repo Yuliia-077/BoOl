@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Orders;
+using BoOl.Models;
+using BoOl.Models.Orders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Orders
 {
@@ -16,16 +13,19 @@ namespace BoOl.Pages.Orders
     [Authorize(Roles = "Owner, Administrator, Technician")]
     public class DetailsModel : PageModel
     {
-        private readonly IRepository<Order> _repository;
-        public int CountOfServices { get; set; }
+        private readonly IOrderService _orderService;
+        private readonly int _pageSize = 4;
 
-        [BindProperty]
-        public Order Order { get; set; }
-
-        public DetailsModel(BoOlContext context)
+        public DetailsModel(IOrderService orderService)
         {
-            _repository = new OrderRepository(context);
+            _orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
         }
+
+        public int TotalPages { get; private set; }
+        public OrderDetails Order { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public ListQuery Query { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,19 +34,26 @@ namespace BoOl.Pages.Orders
                 return NotFound();
             }
 
-            Order = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            if (Query.CurrentPage == default(int))
+            {
+                Query.CurrentPage = 1;
+            }
 
-            if (Order == null)
+            var item = await _orderService.GetDetails(id.Value, Query.CurrentPage, _pageSize);
+
+            if (item == null)
             {
                 return NotFound();
             }
-            CountOfServices = await _repository.CountAsync(id);
+
+            TotalPages = (int)Math.Ceiling(decimal.Divide(item.CountCustomServices, _pageSize));
+            Order = item.AsViewModel();
             return Page();
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            await _repository.DeleteAsync(id);
+            await _orderService.Delete(id);
             return RedirectToPage("./Index");
         }
     }

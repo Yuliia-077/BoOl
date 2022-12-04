@@ -5,142 +5,202 @@
     ViewData["Title"] = "Order";
 }
 
-<div class="row">
-    <div class="col-4 col-md-3">
-        <div class="card border border-secondary text-center">
-            <div class="card-header">
-                Кількість послуг:
-            </div>
-            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfServices</p>
-        </div>
-    </div>
-    <div class="col-8 col-md-9">
-        @if (!User.IsInRole("Administrator"))
-        {
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id"><i class="fas fa-plus"> Додати послугу</i></a>
-            </div>
-        }
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-12 col-md-6 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Інформація по замовленню №@Html.DisplayFor(model => model.Order.Id)</strong>
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-4">
-                        Клієнт:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Product.Customer.LastName) @Html.DisplayFor(model => model.Order.Product.Customer.FirstName) @Html.DisplayFor(model => model.Order.Product.Customer.MiddleName)
-                    </dd>
-                    <dt class="col-4">
-                        Техніка:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Product.Model.Manufacturer) @Html.DisplayFor(model => model.Order.Product.Model.Type) @Html.DisplayFor(model => model.Order.Product.SerialNumber)
-                    </dd>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 mt-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <h2>Інформація по замовленню №@Html.DisplayFor(model => model.Order.Id)</h2>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-4">
+                            Клієнт:
+                        </dt>
+                        <dd class="col-8 pb-1">
+                            @Html.DisplayFor(model => model.Order.CustomerName)
+                        </dd>
+                        <hr />
+                        <dt class="col-4">
+                            Техніка:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.ProductModel) @Html.DisplayFor(model => model.Order.SerialNumber)
+                        </dd>
 
-                    <dt class="col-4">
-                        Оплачено:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Payment)
-                    </dd>
+                        <dt class="col-4">
+                            Статус:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.Status)
+                        </dd>
 
-                    <dt class="col-4">
-                        Статус:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Status)
-                    </dd>
+                        <dt class="col-4">
+                            Оплачено:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.Payment)
+                        </dd>
 
-                    <dt class="col-4">
-                        Знижка:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Discount)
-                    </dd>
+                        <dt class="col-4">
+                            Ціна:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.TotalPrice)
+                        </dd>
 
-                    <dt class="col-4">
-                        Дата прийому:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.DateOfAdmission)
-                    </dd>
+                        <dt class="col-4">
+                            Ціна з знижкою:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.TotalPriceWithDiscount)
+                        </dd>
 
-                    <dt class="col-4">
-                        Дата видачі:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.DateOfIssue)
-                    </dd>
+                        <dt class="col-4">
+                            Знижка:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.Discount)
+                        </dd>
 
-                    <dt class="col-4">
-                        Працівник:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Order.Worker.LastName) @Html.DisplayFor(model => model.Order.Worker.FirstName) @Html.DisplayFor(model => model.Order.Worker.MiddleName)
-                    </dd>
-                </dl>
-            </div>
-            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Order.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Order.Id" onclick="return confirm('Ви дійсно хочете видалити дане замовлення?');"><i class="far fa-trash-alt"> Видалити</i></a>
+                        <dt class="col-4">
+                            Дата прийому:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.DateOfAdmission)
+                        </dd>
+
+                        <dt class="col-4">
+                            Дата видачі:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.DateOfIssue)
+                        </dd>
+
+                        <dt class="col-4">
+                            Працівник:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Order.WorkerName)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                    <a class="btn btn-outline-secondary m-1" asp-page="./Edit" asp-route-id="@Model.Order.Id" title="Редагувати"><i class="far fa-edit"></i></a>
+                    <a class="btn btn-outline-danger m-1" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Order.Id" title="Видалити" onclick="return confirm('Ви дійсно хочете видалити дане замовлення?');"><i class="far fa-trash-alt"></i></a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-12 col-md-6 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Послуги</strong>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Послуга
-                            </th>
-                            <th>
-                                Працівник
-                            </th>
-                            <th>
-                                Дата виконання
-                            </th>
-                            <th>
-                                Зроблено
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Order.CustomServices)
+        <div class="col-12 col-md-6 mt-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-4 d-flex justify-content-start">
+                            <h2>Послуги</h2>
+                        </div>
+                        @if (!User.IsInRole("Administrator"))
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Service.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Worker.LastName) @Html.DisplayFor(modelItem => item.Worker.FirstName) @Html.DisplayFor(modelItem => item.Worker.MiddleName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ExecutionDate.Date)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.IsDone)
-                                </td>
-                                <td>
-                                    <a asp-page="/CustomServices/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                </td>
-                            </tr>
+                            <div class="col-8 d-flex justify-content-end">
+                                <div class="d-grid gap-2 d-flex justify-content-end">
+                                    <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id" title="Додати послугу"><i class="fas fa-plus"></i></a>
+                                </div>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table" id="services">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Послуга
+                                </th>
+                                <th>
+                                    Працівник
+                                </th>
+                                <th>
+                                    Дата виконання
+                                </th>
+                                <th>
+                                    Зроблено
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Order.CustomServices)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ServiceName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.WorkerName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ExecutionDate.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsDone)
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-secondary" asp-page="/CustomServices/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                        @{
+                            int startPoint = 0, endPoint = 0, k = 15;
+                            if (Model.TotalPages > k)
+                            {
+                                if (Model.Query.CurrentPage - k / 2 >= 1 && Model.Query.CurrentPage + k / 2 < Model.TotalPages)
+                                {
+                                    startPoint = Model.Query.CurrentPage - k / 2;
+                                    endPoint = Model.Query.CurrentPage + k / 2;
+                                }
+                                else if (Model.Query.CurrentPage - k / 2 < 1)
+                                {
+                                    startPoint = 1;
+                                    endPoint = startPoint + k - 1;
+
+                                }
+                                else
+                                {
+                                    endPoint = Model.TotalPages;
+                                    startPoint = endPoint - k + 1;
+                                }
+                            }
+                            else
+                            {
+                                startPoint = 1;
+                                endPoint = Model.TotalPages;
+                            }
+
+                            for (var i = startPoint; i <= endPoint; i++)
+                            {
+                                if (i == startPoint && startPoint > 1)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Order.Id" asp-route-currentpage="@(i - 1)" asp-route-filter="@Model.Query.Filter" class="page-link">...</a>
+                                    </li>
+                                }
+                                <li class="page-item @(i == Model.Query.CurrentPage ? "active" : "")">
+                                    <a asp-page="./Details" asp-route-id="@Model.Order.Id" asp-route-currentpage="@i" asp-route-filter="@Model.Query.Filter" class="page-link">@i</a>
+                                </li>
+                                if (i == endPoint && endPoint < Model.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Order.Id" asp-route-currentpage="@(i + 1)" asp-route-filter="@Model.Query.Filter" class="page-link">...</a>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

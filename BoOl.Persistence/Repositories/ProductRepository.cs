@@ -20,5 +20,19 @@ namespace BoOl.Persistence.Repositories
         {
             return await DbContext.Products.AnyAsync(x => x.ModelId == modelId);
         }
+
+        public async Task<IEnumerable<SelectListItem>> SelectAsync(int customerId)
+        {
+            return await DbContext.Products
+                .Where(x => x.CustomerId == customerId)
+                .OrderBy(x => x.Model.Manufacturer)
+                .ThenBy(x => x.Model.Type)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.Id,
+                    Text = x.Model.Manufacturer + " " + x.Model.Type + " " + x.SerialNumber
+                })
+                .ToListAsync();
+        }
     }
 }

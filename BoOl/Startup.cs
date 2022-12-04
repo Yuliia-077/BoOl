@@ -2,6 +2,7 @@ using BoOl.Application.Interfaces;
 using BoOl.Application.Services.Customers;
 using BoOl.Application.Services.Models;
 using BoOl.Application.Services.Orders;
+using BoOl.Application.Services.Products;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
 using BoOl.Application.Services.Users;
@@ -47,6 +48,7 @@ namespace BoOl
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IModelService, ModelService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IServiceService, ServiceService>();
             services.AddTransient<IStorageService, StorageService>();
             services.AddTransient<IUserService, UserService>();

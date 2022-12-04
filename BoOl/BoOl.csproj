@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Orders\" />
     <Folder Include="Models\Products\" />
   </ItemGroup>
 

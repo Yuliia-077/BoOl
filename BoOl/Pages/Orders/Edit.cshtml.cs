@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Orders;
+using BoOl.Application.Services.Products;
+using BoOl.Models.Orders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Orders
 {
@@ -17,24 +13,18 @@ namespace BoOl.Pages.Orders
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Order> _repository;
-        private readonly IRepository<Product> _repositoryProduct;
-        private readonly IRepository<Customer> _repositoryCustomer;
-        private readonly UserRepository _repositoryUser;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+
+        public EditModel(IOrderService orderService,
+            IProductService productService)
+        {
+            _orderService = orderService;
+            _productService = productService;
+        }
 
         [BindProperty]
         public Order Order { get; set; }
-        [BindProperty]
-        public int CustomerId { get; set; }
-
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new OrderRepository(context);
-            _repositoryProduct = new ProductRepository(context);
-            _repositoryCustomer = new CustomerRepository(context);
-            _repositoryUser = new UserRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -43,14 +33,11 @@ namespace BoOl.Pages.Orders
                 return NotFound();
             }
 
-            Order = await _repository.GetByIdAsync(Convert.ToInt32(id));
-            CustomerId = Order.Product.CustomerId;
+            var order = await _orderService.GetById(id.Value);
+            Order = order.AsViewModel();
 
-            if (Order == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(CustomerId), "Value", "Text");
+            await GetProductsList();
+
             return Page();
         }
 
@@ -60,12 +47,17 @@ namespace BoOl.Pages.Orders
         {
             if (!ModelState.IsValid)
             {
-                ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(CustomerId), "Value", "Text");
+                await GetProductsList();
                 return Page();
             }
 
-            await _repository.UpdateAsync(Order);
+            await _orderService.Update(Order.AsDto());
             return RedirectToPage("./Details", new {Order.Id});
+        }
+
+        private async Task GetProductsList()
+        {
+            ViewData["ProductId"] = new SelectList(await _productService.SelectListOfProductsByCustomerIdAsync(Order.CustomerId), "Value", "Text");
         }
     }
 }

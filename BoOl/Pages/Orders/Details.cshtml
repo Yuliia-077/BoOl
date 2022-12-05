@@ -20,7 +20,7 @@
                         <dd class="col-8 pb-1">
                             @Html.DisplayFor(model => model.Order.CustomerName)
                         </dd>
-                        <hr />
+
                         <dt class="col-4">
                             Техніка:
                         </dt>
@@ -73,7 +73,7 @@
                         <dt class="col-4">
                             Дата видачі:
                         </dt>
-                        <dd class="col-8">
+                        <dd class="col-8" typeof="date">
                             @Html.DisplayFor(model => model.Order.DateOfIssue)
                         </dd>
 
@@ -101,9 +101,7 @@
                         @if (!User.IsInRole("Administrator"))
                         {
                             <div class="col-8 d-flex justify-content-end">
-                                <div class="d-grid gap-2 d-flex justify-content-end">
-                                    <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id" title="Додати послугу"><i class="fas fa-plus"></i></a>
-                                </div>
+                                <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id" title="Додати послугу"><i class="fas fa-plus"></i></a>
                             </div>
                         }
                     </div>
@@ -138,7 +136,7 @@
                                         @Html.DisplayFor(modelItem => item.WorkerName)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.ExecutionDate.Date)
+                                        @Html.DisplayFor(modelItem => item.ExecutionDate)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IsDone)

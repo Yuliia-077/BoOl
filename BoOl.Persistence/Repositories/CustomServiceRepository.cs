@@ -1,5 +1,6 @@
 ﻿using BoOl.Application.Interfaces;
 using BoOl.Application.Models.CustomServices;
+using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,65 @@ namespace BoOl.Persistence.Repositories
                     ServiceId = cs.ServiceId,
                     ServiceName = cs.Service.Name
                 }).ToListAsync();
+        }
+        
+        public async Task<CustomServiceDetailsDto> GetDetails(int id)
+        {
+            return await DbContext.CustomServices
+                .Where(x => x.Id == id)
+                .Select(cs => new CustomServiceDetailsDto
+                {
+                    Id = cs.Id,
+                    IsDone = cs.IsDone,
+                    ExecutionDate = cs.ExecutionDate,
+                    WorkerId = cs.WorkerId,
+                    WorkerName = cs.Worker.LastName + " " + cs.Worker.FirstName,
+                    ServiceId = cs.ServiceId,
+                    ServiceName = cs.Service.Name,
+                    OrderId = cs.OrderId,
+                    Price = cs.Price
+                }).SingleOrDefaultAsync();
+        }
+
+        public Task<CustomService> Get(int id)
+        {
+            return Get<CustomService>(id);
+        }
+
+        public async Task<CustomServiceDto> GetByIdAsync(int id)
+        {
+            var item = await DbContext.CustomServices
+                .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (item == null)
+            {
+                return null;
+            }
+
+            return new CustomServiceDto
+            {
+                Id = item.Id,
+                IsDone = item.IsDone,
+                ExecutionDate = item.ExecutionDate,
+                ServiceId = item.ServiceId,
+                OrderId = item.OrderId
+            };
+        }
+
+        public async Task AddAsync(CustomService item)
+        {
+            await Create<CustomService>(item);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var item = await Get(id);
+            if (item != null)
+            {
+                var parts = DbContext.Parts.Where(x => x.CustomServiceId == id);
+                DbContext.Parts.RemoveRange(parts);
+                DbContext.CustomServices.Remove(item);
+            }
         }
     }
 }

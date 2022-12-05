@@ -1,4 +1,5 @@
-﻿using BoOl.Application.Models.Storages;
+﻿using BoOl.Application.Models;
+using BoOl.Application.Models.Storages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace BoOl.Application.Services.Storages
         Task<int> Create(StorageDto dto, string userEmail);
         Task Update(StorageDto dto);
         Task Delete(int id);
+        Task<IList<SelectListItem>> SelectAsync();
     }
 }

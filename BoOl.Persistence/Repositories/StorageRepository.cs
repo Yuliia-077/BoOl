@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Interfaces;
+using BoOl.Application.Models;
 using BoOl.Application.Models.Storages;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
@@ -144,19 +145,14 @@ namespace BoOl.Persistence.Repositories
             };
         }
 
-        //public async Task<IEnumerable<SelectedModel>> SelectAsync()
-        //{
-        //    var deliveryList = await DbContext.Storages.Include(s => s.Model)
-        //        .Where(s => s.Quantity >= 1).Select(
-        //       x => new { Value = x.Id, Text = x.Name + " " + x.Model.Manufacturer + " " + x.Model.Type })
-        //        .ToListAsync();
-        //    List<SelectedModel> models = new List<SelectedModel>();
-
-        //    foreach (var item in deliveryList)
-        //    {
-        //        models.Add(new SelectedModel(item.Value, item.Text));
-        //    }
-        //    return models;
-        //}
+        public async Task<IList<SelectListItem>> SelectAsync()
+        {
+            return await DbContext.Storages
+                .Where(s => s.Quantity >= 1)
+                .Select(x => new SelectListItem{ 
+                   Value = x.Id, 
+                   Text = x.Name + " " + x.Model.Manufacturer + " " + x.Model.Type })
+                .ToListAsync();
+        }
     }
 }

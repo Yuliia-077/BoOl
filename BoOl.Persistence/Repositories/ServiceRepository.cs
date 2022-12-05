@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Interfaces;
+using BoOl.Application.Models;
 using BoOl.Application.Models.Services;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
@@ -99,18 +100,24 @@ namespace BoOl.Persistence.Repositories
                 }).ToListAsync();
         }
 
+        public async Task<IList<SelectListItem>> SelectAsync()
+        {
+            return await DbContext.Services
+                .OrderBy(x => x.Name)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.Id,
+                    Text = x.Name
+                })
+                .ToListAsync();
+        }
 
-        //public async Task<IEnumerable<SelectedModel>> SelectAsync()
-        //{
-        //    var productsList = await DbContext.Services
-        //        .Select(x => new { Value = x.Id, Text = x.Name }).ToListAsync();
-        //    List<SelectedModel> models = new List<SelectedModel>();
-
-        //    foreach (var item in productsList)
-        //    {
-        //        models.Add(new SelectedModel(item.Value, item.Text));
-        //    }
-        //    return models;
-        //}
+        public async Task<double> GetPriceById(int id)
+        {
+            return await DbContext.Services
+                .Where(x => x.Id == id)
+                .Select(x => x.Price)
+                .SingleOrDefaultAsync();
+        }
     }
 }

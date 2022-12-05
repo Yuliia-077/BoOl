@@ -14,7 +14,7 @@ namespace BoOl.Pages.Orders
     public class DetailsModel : PageModel
     {
         private readonly IOrderService _orderService;
-        private readonly int _pageSize = 4;
+        private readonly int _pageSize = 3;
 
         public DetailsModel(IOrderService orderService)
         {

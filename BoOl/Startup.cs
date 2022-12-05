@@ -1,7 +1,9 @@
 using BoOl.Application.Interfaces;
 using BoOl.Application.Services.Customers;
+using BoOl.Application.Services.CustomServices;
 using BoOl.Application.Services.Models;
 using BoOl.Application.Services.Orders;
+using BoOl.Application.Services.Parts;
 using BoOl.Application.Services.Products;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
@@ -46,8 +48,10 @@ namespace BoOl
 
             #region Services
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<ICustomServicesService, CustomServicesService>();
             services.AddTransient<IModelService, ModelService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IPartService, PartService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IServiceService, ServiceService>();
             services.AddTransient<IStorageService, StorageService>();

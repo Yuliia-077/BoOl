@@ -1,13 +1,15 @@
+using BoOl.Application.Services.CustomServices;
+using BoOl.Application.Services.Parts;
+using BoOl.Models;
+using BoOl.Models.CustomServices;
+using BoOl.Models.Parts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BoOl.Domain;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BoOl.Pages.CustomServices
 {
@@ -15,16 +17,23 @@ namespace BoOl.Pages.CustomServices
     [Authorize(Roles = "Owner, Administrator, Technician")]
     public class DetailsModel : PageModel
     {
-        private readonly IRepository<CustomService> _repository;
-        private readonly IRepository<Part> _partsRepository;
-        public int CountOfParts { get; set; }
-        public CustomService CustomService { get; set; }
+        private readonly ICustomServicesService _customServicesService;
+        private readonly IPartService _partService;
+        private readonly int _pageSize = 3;
 
-        public DetailsModel(BoOlContext context)
+        public DetailsModel(ICustomServicesService customServicesService,
+            IPartService partService)
         {
-            _repository = new CustomServiceRepository(context);
-            _partsRepository = new PartRepository(context);
+            _customServicesService = customServicesService;
+            _partService = partService;
         }
+
+        public IList<Part> Parts { get; set; }
+        public CustomServiceDetails CustomService { get; set; }
+        public int TotalPages { get; private set; }
+
+        [BindProperty(SupportsGet = true)]
+        public ListQuery Query { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,30 +42,44 @@ namespace BoOl.Pages.CustomServices
                 return NotFound();
             }
 
-            CustomService = await _repository.GetByIdAsync(Convert.ToInt32(id));
-            CountOfParts = CustomService.Parts.Count();
+            var item = await _customServicesService.GetDetails(id.Value);
 
-            if (CustomService == null)
+            if (item == null)
             {
                 return NotFound();
             }
+
+            CustomService = item.AsViewModel();
+
+            if (Query.CurrentPage == default(int))
+            {
+                Query.CurrentPage = 1;
+            }
+
+            var parts = await _partService.GetListAsync(id.Value, Query.CurrentPage, _pageSize);
+            TotalPages = (int)Math.Ceiling(decimal.Divide(await _partService.Count(id.Value), _pageSize));
+
+            Parts = parts.Select(x => x.AsViewModel()).ToList();
+
             return Page();
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            CustomService = await _repository.GetByIdAsync(Convert.ToInt32(id));
-
-            await _repository.DeleteAsync(id);
+            await _partService.Delete(id);
             return RedirectToPage("/Orders/Details", new { id = CustomService.OrderId});
         }
 
-        public async Task<IActionResult> OnGetDeletePartAsync(int id)
+        public async Task<IActionResult> OnGetDeletePartAsync(int id, int customServiceId)
         {
-            CustomService = await _repository.GetByIdAsync(Convert.ToInt32(id));
-
-            await _partsRepository.DeleteAsync(id);
-            return RedirectToPage("./Details", new { id = CustomService.Id });
+            await _partService.Delete(id);
+            return RedirectToPage("./Details", new { id = customServiceId });
+        }
+        
+        public async Task<IActionResult> OnGetReturnToStorageAsync(int id, int customServiceId)
+        {
+            await _partService.DeleteWithReturnToStorage(id);
+            return RedirectToPage("./Details", new { id = customServiceId });
         }
     }
 }

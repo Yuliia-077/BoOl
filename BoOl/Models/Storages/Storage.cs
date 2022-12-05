@@ -23,6 +23,7 @@ namespace BoOl.Models.Storages
         [Required(ErrorMessage = "Введіть роздрібну ціну!")]
         public double RetailPrice { get; set; }
         [Required(ErrorMessage = "Оберіть дату і час прибуття!")]
+        [DataType(DataType.Date)]
         public DateTime DateOfArrival { get; set; }
         [Required(ErrorMessage = "Оберіть модель!")]
         public int ModelId { get; set; }

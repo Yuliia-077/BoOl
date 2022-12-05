@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.CustomServices;
+using BoOl.Application.Services.Services;
+using BoOl.Models.CustomServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.CustomServices
 {
@@ -16,18 +14,18 @@ namespace BoOl.Pages.CustomServices
     [Authorize(Roles = "Owner, Technician")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<CustomService> _repository;
-        private readonly IRepository<Service> _repositoryService;
-        private readonly UserRepository _repositoryUser;
+        private readonly ICustomServicesService _customServicesService;
+        private readonly IServiceService _serviceService;
+
+        public CreateModel(ICustomServicesService customServicesService,
+            IServiceService serviceService)
+        {
+            _customServicesService = customServicesService;
+            _serviceService = serviceService;
+        }
+
         [BindProperty]
         public CustomService CustomService { get; set; }
-
-        public CreateModel(BoOlContext context)
-        {
-            _repository = new CustomServiceRepository(context);
-            _repositoryService = new ServiceRepository(context);
-            _repositoryUser = new UserRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -37,11 +35,11 @@ namespace BoOl.Pages.CustomServices
                 return NotFound();
             }
             CustomService = new CustomService();
-            CustomService.OrderId = Convert.ToInt32(id);
-            ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
-            var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
-            CustomService.WorkerId = Convert.ToInt32(user.WorkerId);
+            CustomService.OrderId = id.Value;
             CustomService.ExecutionDate = DateTime.Now.Date;
+
+            await GetServices();
+
             return Page();
         }
 
@@ -49,13 +47,18 @@ namespace BoOl.Pages.CustomServices
         {
             if (!ModelState.IsValid)
             {
-                ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
+                await GetServices();
                 return Page();
             }
 
-            await _repository.AddAsync(CustomService);
+            var id = await _customServicesService.Create(CustomService.AsDto(), User.Identity.Name);
 
-            return RedirectToPage("./Details", new { id = CustomService.Id });
+            return RedirectToPage("./Details", new { id = id });
+        }
+
+        private async Task GetServices()
+        {
+            ViewData["ServiceId"] = new SelectList(await _serviceService.Select(), "Value", "Text");
         }
     }
 }

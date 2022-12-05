@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.CustomServices;
+using BoOl.Application.Services.Services;
+using BoOl.Models.CustomServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.CustomServices
 {
@@ -17,16 +13,18 @@ namespace BoOl.Pages.CustomServices
     [Authorize(Roles = "Owner, Technician")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<CustomService> _repository;
-        private readonly IRepository<Service> _repositoryService;
+        private readonly ICustomServicesService _customServicesService;
+        private readonly IServiceService _serviceService;
+
+        public EditModel(ICustomServicesService customServicesService,
+            IServiceService serviceService)
+        {
+            _customServicesService = customServicesService;
+            _serviceService = serviceService;
+        }
+
         [BindProperty]
         public CustomService CustomService { get; set; }
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new CustomServiceRepository(context);
-            _repositoryService = new ServiceRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -35,13 +33,16 @@ namespace BoOl.Pages.CustomServices
                 return NotFound();
             }
 
-            CustomService = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var item = await _customServicesService.GetById(id.Value);
 
-            if (CustomService == null)
+            if (item == null)
             {
                 return NotFound();
             }
-            ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
+
+            CustomService = item.AsViewModel();
+            await GetServices(); 
+            
             return Page();
         }
 
@@ -49,13 +50,18 @@ namespace BoOl.Pages.CustomServices
         {
             if (!ModelState.IsValid)
             {
-                ViewData["ServiceId"] = new SelectList(await _repositoryService.SelectAsync(null), "Value", "Text");
+                await GetServices(); 
                 return Page();
             }
 
-            await _repository.UpdateAsync(CustomService);
+            await _customServicesService.Update(CustomService.AsDto());
 
             return RedirectToPage("./Details", new { id = CustomService.Id});
+        }
+
+        private async Task GetServices()
+        {
+            ViewData["ServiceId"] = new SelectList(await _serviceService.Select(), "Value", "Text");
         }
     }
 }

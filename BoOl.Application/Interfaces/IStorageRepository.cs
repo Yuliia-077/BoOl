@@ -1,4 +1,5 @@
-﻿using BoOl.Application.Models.Storages;
+﻿using BoOl.Application.Models;
+using BoOl.Application.Models.Storages;
 using BoOl.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,5 +18,6 @@ namespace BoOl.Application.Interfaces
         Task<bool> ExistItemsWithModelsInStorage(int modelId);
         Task<bool> Exist(int id);
         Task<bool> IsUnique(StorageDto dto);
+        Task<IList<SelectListItem>> SelectAsync();
     }
 }

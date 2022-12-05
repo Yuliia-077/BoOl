@@ -2,6 +2,7 @@
 using BoOl.Models.CustomServices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace BoOl.Models.Orders
@@ -18,7 +19,9 @@ namespace BoOl.Models.Orders
         public string SerialNumber { get; set; }
         public int WorkerId { get; set; }
         public string WorkerName { get; set; }
+        [DataType(DataType.Date)]
         public DateTime DateOfAdmission { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? DateOfIssue { get; set; }
         public double TotalPrice { get; set; }
         public double? TotalPriceWithDiscount { get; set; }

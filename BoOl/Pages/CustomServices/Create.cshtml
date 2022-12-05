@@ -2,60 +2,48 @@
 @model BoOl.Pages.CustomServices.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Custom Service";
 }
 
-<div class="row">
-    <div class="col-1 col-md-3"></div>
-    <div class="col-10 col-md-6">
-        <div class="card border-dark">
-            <div class="card-header">
-                <h4 class="text-center">Додати послугу до замовлення №@Html.DisplayFor(modelItem => Model.CustomService.OrderId)</h4>
+<div class="container">
+    <div class="card border-dark ml-5 mr-5">
+        <div class="card-header">
+            <h2 class="text-center">Додати послугу до замовлення №@Html.DisplayFor(modelItem => Model.CustomService.OrderId)</h2>
             </div>
             <form method="post">
                 <div class="card-body">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
                     </div>
-                    <div class="form-row">
-                        <input asp-for="CustomService.OrderId" hidden />
-                        <input asp-for="CustomService.WorkerId" hidden />
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="CustomService.OrderId" hidden />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group col-12">
-                            <label asp-for="CustomService.ServiceId" class="control-label">Послуга *</label>
-                            <div class="input-group">
-                                <select asp-for="CustomService.ServiceId" class="form-control" asp-items="ViewBag.ServiceId" id="ServiceId" aria-describedby="button-addon1"></select>
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('ServiceId').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="CustomService.ServiceId" class="text-danger"></span>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="CustomService.ServiceId" class="control-label col-md-2">Послуга*</label>
+                        <div class="input-group col-md-5">
+                            <select asp-for="CustomService.ServiceId" class="form-control" asp-items="ViewBag.ServiceId" id="ServiceId" aria-describedby="button-addon1"></select>
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('ServiceId').value = ''">X</button>
                         </div>
-                        <div class="form-group col-3">
-                            <label asp-for="CustomService.IsDone" class="control-label">Зроблено</label>
-                            <div class="input-group">
-                                <input asp-for="CustomService.IsDone" class="form-control" />
-                            </div>
+                        <div class="col-md-2"><span asp-validation-for="CustomService.ServiceId" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="CustomService.ExecutionDate" class="control-label col-md-2">Дата прийому*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="CustomService.ExecutionDate" type="date" class="form-control" id="Date" aria-describedby="button-addon1" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Date').value = ''">X</button>
                         </div>
-                        <div class="form-group col-9">
-                            <label asp-for="CustomService.Price" class="control-label">Ціна *</label>
-                            <div class="input-group">
-                                <input asp-for="CustomService.Price" class="form-control" id="Price" aria-describedby="button-addon3" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Price').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="CustomService.Price" class="text-danger"></span>
+                        <div class="col-md-2"><span asp-validation-for="CustomService.ExecutionDate" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="CustomService.IsDone" class="control-label col-md-2">Зроблено</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="CustomService.IsDone"/>
                         </div>
-                        <div class="form-group col-12">
-                            <label asp-for="CustomService.ExecutionDate" class="control-label">Дата прийому *</label>
-                            <div class="input-group">
-                                <input asp-for="CustomService.ExecutionDate" type="date" class="form-control" id="Date" aria-describedby="button-addon1" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Date').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="CustomService.ExecutionDate" class="text-danger"></span>
-                        </div>
+                        <div class="col-md-2"></div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
                         <a class="btn btn-outline-secondary" asp-page="/Orders/Details" asp-route-id="@Model.CustomService.OrderId">Скасувати</a>
                     </div>
@@ -63,8 +51,6 @@
             </form>
         </div>
     </div>
-    <div class="col-1 col-md-3"></div>
-</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

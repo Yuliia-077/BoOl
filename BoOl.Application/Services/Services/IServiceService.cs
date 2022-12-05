@@ -1,4 +1,5 @@
-﻿using BoOl.Application.Models.Services;
+﻿using BoOl.Application.Models;
+using BoOl.Application.Models.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace BoOl.Application.Services.Services
         Task Update(ServiceDto dto);
         Task Delete(int id);
         Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize);
+        Task<IList<SelectListItem>> Select();
     }
 }

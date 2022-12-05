@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Interfaces;
+using BoOl.Application.Models;
 using BoOl.Application.Models.Services;
 using BoOl.Domain;
 using System;
@@ -68,6 +69,11 @@ namespace BoOl.Application.Services.Services
         public async Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize)
         {
             return await _serviceRepository.MostPopularServices(pageSize);
+        }
+
+        public async Task<IList<SelectListItem>> Select()
+        {
+            return await _serviceRepository.SelectAsync();
         }
     }
 }

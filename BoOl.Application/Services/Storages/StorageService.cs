@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Interfaces;
+using BoOl.Application.Models;
 using BoOl.Application.Models.Storages;
 using BoOl.Domain;
 using System;
@@ -88,6 +89,11 @@ namespace BoOl.Application.Services.Storages
         public async Task Delete(int id)
         {
             await _storageRepository.DeleteAsync(id);
+        }
+
+        public async Task<IList<SelectListItem>> SelectAsync()
+        {
+            return await _storageRepository.SelectAsync();
         }
     }
 }

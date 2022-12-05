@@ -1,132 +1,172 @@
 ﻿@page
 @model BoOl.Pages.CustomServices.DetailsModel
 @{
-    ViewData["Title"] = @Html.DisplayFor(model => model.CustomService.Service.Name);
+    ViewData["Title"] = @Html.DisplayFor(model => model.CustomService.ServiceName);
 }
 
-<div class="row">
-    <div class="col-4 col-md-3">
-        <div class="card border border-secondary text-center">
-            <div class="card-header">
-                Кількість запчастин:
-            </div>
-            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfParts</p>
-        </div>
-    </div>
-    <div class="col-8 col-md-9">
-        @if (!User.IsInRole("Administrator"))
-        {
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-secondary mt-1" asp-page="/Parts/Create" asp-route-id="@Model.CustomService.Id"><i class="fas fa-plus"> Додати запчастину</i></a>
-            </div>
-        }
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-12 col-md-4 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Інформація по послузі</strong>
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-6">
-                        Послуга
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.CustomService.Service.Name)
-                    </dd>
+<div class="container">
+    <a class="btn btn-outline-secondary" asp-page="/Orders/Details" asp-route-id="@Model.CustomService.OrderId" title="Детальні інформація по замовленню"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+    <div class="row">
+        <div class="col-12 col-md-4 mt-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <h2>Інформація по послузі</h2>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-6">
+                            Послуга
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.CustomService.ServiceName)
+                        </dd>
 
-                    <dt class="col-6">
-                        Ціна
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.CustomService.Price)
-                    </dd>
+                        <dt class="col-6">
+                            Ціна
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.CustomService.Price)
+                        </dd>
 
-                    <dt class="col-6">
-                        № замовлення
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.CustomService.OrderId)
-                    </dd>
+                        <dt class="col-6">
+                            № замовлення
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.CustomService.OrderId)
+                        </dd>
 
-                    <dt class="col-6">
-                        Виконувач
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.CustomService.Worker.LastName) @Html.DisplayFor(model => model.CustomService.Worker.FirstName) @Html.DisplayFor(model => model.CustomService.Worker.MiddleName)
-                    </dd>
+                        <dt class="col-6">
+                            Виконувач
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.CustomService.WorkerName)
+                        </dd>
 
-                    <dt class="col-6">
-                        Зроблено
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.CustomService.IsDone)
-                    </dd>
+                        <dt class="col-6">
+                            Зроблено
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.CustomService.IsDone)
+                        </dd>
 
-                    <dt class="col-6">
-                        Дата виконання
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.CustomService.ExecutionDate)
-                    </dd>
-                </dl>
-            </div>
-            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
-                @if (!User.IsInRole("Administrator"))
-                {
-                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.CustomService.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.CustomService.Id" onclick="return confirm('Ви дійсно хочете видалити дану послугу?');"><i class="far fa-trash-alt"> Видалити</i></a>
-                }
+                        <dt class="col-6">
+                            Дата виконання
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.CustomService.ExecutionDate)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    @if (!User.IsInRole("Owner") || !User.IsInRole("Technician"))
+                    {
+                        <a class="btn btn-outline-secondary m-1" asp-page="./Edit" asp-route-id="@Model.CustomService.Id" title="Редагувати"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-outline-danger m-1" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.CustomService.Id" title="Видалити" onclick="return confirm('Ви дійсно хочете видалити дану послугу?');"><i class="far fa-trash-alt"></i></a>
+                    }
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-8 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Запчастини</strong>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Назва
-                            </th>
-                            <th>
-                                Серійний номер
-                            </th>
-                            <th>
-                                Пошкоджений
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.CustomService.Parts)
+        <div class="col-12 col-md-8 mt-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-4 d-flex justify-content-start">
+                            <h2>Запчастини</h2>
+                        </div>
+                        @if (!User.IsInRole("Owner") || !User.IsInRole("Technician"))
                         {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Storage.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SerialNumber)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.IsInjured)
-                            </td>
-                            @if (!User.IsInRole("Administrator"))
-                            {
-                                <td>
-                                    <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="DeletePart" asp-route-id="@item.Id" onclick="return confirm('Ви дійсно хочете видалити дану запчастину?');"><i class="far fa-trash-alt"> Видалити</i></a>
-                                </td>
-                            }
-                        </tr>
+                            <div class="col-8 d-flex justify-content-end">
+                                <a class="btn btn-secondary" asp-page="/Parts/Create" asp-route-id="@Model.CustomService.Id" title="Додати запчастину"><i class="fas fa-plus"></i></a>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Назва
+                                </th>
+                                <th>
+                                    Пошкоджений
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Parts)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StorageName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsInjured)
+                                    </td>
+                                    @if (!User.IsInRole("Owner") || !User.IsInRole("Technician"))
+                                    {
+                                        <td>
+                                            <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="DeletePart" asp-route-id="@item.Id" asp-route-customServiceId="@Model.CustomService.Id" onclick="return confirm('Ви дійсно хочете видалити дану запчастину?');" title="Видалити"><i class="far fa-trash-alt"></i></a>
+                                            <a class="btn btn-outline-secondary" asp-page="./Details" asp-page-handler="ReturnToStorage" asp-route-id="@item.Id" asp-route-customServiceId="@Model.CustomService.Id" onclick="return confirm('Ви дійсно хочете повернути на склад дану запчастину?');" title="Повернути на склад"><i class="fa fa-archive" aria-hidden="true"></i></a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                        @{
+                            int startPoint = 0, endPoint = 0, k = 15;
+                            if (Model.TotalPages > k)
+                            {
+                                if (Model.Query.CurrentPage - k / 2 >= 1 && Model.Query.CurrentPage + k / 2 < Model.TotalPages)
+                                {
+                                    startPoint = Model.Query.CurrentPage - k / 2;
+                                    endPoint = Model.Query.CurrentPage + k / 2;
+                                }
+                                else if (Model.Query.CurrentPage - k / 2 < 1)
+                                {
+                                    startPoint = 1;
+                                    endPoint = startPoint + k - 1;
+
+                                }
+                                else
+                                {
+                                    endPoint = Model.TotalPages;
+                                    startPoint = endPoint - k + 1;
+                                }
+                            }
+                            else
+                            {
+                                startPoint = 1;
+                                endPoint = Model.TotalPages;
+                            }
+
+                            for (var i = startPoint; i <= endPoint; i++)
+                            {
+                                if (i == startPoint && startPoint > 1)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.CustomService.Id" asp-route-currentpage="@(i - 1)" class="page-link">...</a>
+                                    </li>
+                                }
+                                <li class="page-item @(i == Model.Query.CurrentPage ? "active" : "")">
+                                    <a asp-page="./Details" asp-route-id="@Model.CustomService.Id" asp-route-currentpage="@i" class="page-link">@i</a>
+                                </li>
+                                if (i == endPoint && endPoint < Model.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.CustomService.Id" asp-route-currentpage="@(i + 1)" class="page-link">...</a>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

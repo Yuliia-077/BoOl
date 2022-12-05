@@ -14,7 +14,9 @@ namespace BoOl.Models.Orders
         public string Status { get; set; }
 
         [Required(ErrorMessage = "Введіть дату!")]
+        [DataType(DataType.Date)]
         public DateTime DateOfAdmission { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? DateOfIssue { get; set; }
 
         [Required(ErrorMessage = "Оберіть працівника!")]

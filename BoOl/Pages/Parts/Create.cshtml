@@ -6,52 +6,50 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="card border-dark">
-    <div class="card-header">
-        <h4 class="text-center">Додати запчастину</h4>
-        <h5 class="text-center">Послуга: @Html.DisplayFor(modelItem => Model.CustomService.Service.Name)</h5>
-    </div>
-    <form method="post">
-        <div class="card-body">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
-            </div>
-            <div class="form-row">
+<div class="container">
+    <div class="card border-dark">
+        <div class="card-header">
+            <h2 class="text-center">Додати запчастину</h2>
+        </div>
+        <form method="post">
+            <div class="card-body">
+                <div class="d-flex justify-content-end">
+                    <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                </div>
                 <input asp-for="Part.CustomServiceId" hidden />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Part.SerialNumber" class="control-label">Серійний номер *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Part.SerialNumber" class="control-label col-md-2">Серійний номер*</label>
+                    <div class="input-group col-md-5">
                         <input asp-for="Part.SerialNumber" class="form-control" id="SerialNumber" aria-describedby="button-addon1" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('SerialNumber').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Part.SerialNumber" class="text-danger"></span>
+                    <div class="col-md-2"><span asp-validation-for="Part.SerialNumber" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Part.StorageId" class="control-label">Постачання *</label>
-                    <div class="input-group">
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Part.StorageId" class="control-label col-md-2">Постачання*</label>
+                    <div class="input-group col-md-5">
                         <select asp-for="Part.StorageId" asp-items="ViewBag.StorageId" class="form-control" aria-describedby="button-addon2" id="Storage"></select>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Storage').value = ''">X</button>
                     </div>
-                    <span asp-validation-for="Part.StorageId" class="text-danger"></span>
+                    <div class="col-md-2"><span asp-validation-for="Part.StorageId" class="text-danger"></span></div>
                 </div>
-                <div class="form-group col-12">
-                    <label asp-for="Part.IsInjured" class="control-label">Пошкоджений</label>
-                    <div class="input-group">
-                        <input asp-for="Part.IsInjured" class="form-control" id="Inf" aria-describedby="button-addon3" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Inf').value = ''">X</button>
+                <div class="form-group row d-flex justify-content-center">
+                    <label asp-for="Part.IsInjured" class="control-label col-md-2">Пошкоджений</label>
+                    <div class="input-group col-md-5">
+                        <input asp-for="Part.IsInjured" id="Inf" aria-describedby="button-addon3" />
                     </div>
-                    <span asp-validation-for="Part.IsInjured" class="text-danger"></span>
+                    <div class="col-md-2"><span asp-validation-for="Part.IsInjured" class="text-danger"></span></div>
                 </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
-                <a class="btn btn-outline-secondary" asp-page="/CustomServices/Details" asp-route-id="@Model.Part.CustomService.Id">Скасувати</a>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                    <a class="btn btn-outline-secondary" asp-page="/CustomServices/Details" asp-route-id="@Model.Part.CustomServiceId">Скасувати</a>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 @section Scripts {

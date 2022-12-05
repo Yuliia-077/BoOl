@@ -1,4 +1,5 @@
-﻿using BoOl.Application.Models.Services;
+﻿using BoOl.Application.Models;
+using BoOl.Application.Models.Services;
 using BoOl.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace BoOl.Application.Interfaces
         Task<bool> Exist(int id);
         Task<bool> ExistWithName(string name, int? id);
         Task<IList<ServiceListItemDto>> MostPopularServices(int pageSize);
-        //Task<IEnumerable<SelectedModel>> SelectAsync();
+        Task<IList<SelectListItem>> SelectAsync();
+        Task<double> GetPriceById(int id);
     }
 }

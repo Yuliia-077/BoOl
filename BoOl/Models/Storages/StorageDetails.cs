@@ -1,5 +1,6 @@
 ﻿using BoOl.Application.Models.Storages;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BoOl.Models.Storages
 {
@@ -19,6 +20,7 @@ namespace BoOl.Models.Storages
 
         public double RetailPrice { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime DateOfArrival { get; set; }
 
         public int ModelId { get; set; }

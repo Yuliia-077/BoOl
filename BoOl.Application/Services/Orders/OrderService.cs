@@ -1,5 +1,6 @@
 ﻿using BoOl.Application.Interfaces;
 using BoOl.Application.Models.Orders;
+using BoOl.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,12 +11,15 @@ namespace BoOl.Application.Services.Orders
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ICustomServiceRepository _customServiceRepository;
+        private readonly IUserRepository _userRepository;
 
         public OrderService(IOrderRepository orderRepository,
-            ICustomServiceRepository customServiceRepository)
+            ICustomServiceRepository customServiceRepository,
+            IUserRepository userRepository)
         {
             _orderRepository = orderRepository;
             _customServiceRepository = customServiceRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<int> CountAll()
@@ -68,6 +72,30 @@ namespace BoOl.Application.Services.Orders
             item.DateOfIssue = dto.DateOfIssue;
 
             await _orderRepository.SaveChanges();
+        }
+
+        public async Task<int> Create(OrderDto dto, string userEmail)
+        {
+            var workerId = await _userRepository.GetWorkerIdByUserEmail(userEmail);
+            if (workerId == null)
+            {
+                throw new ArgumentNullException("Користувача не знайдено.");
+            }
+
+            var item = new Order
+            {
+                Payment = dto.Payment,
+                Status = dto.Status,
+                Discount = dto.Discount,
+                ProductId = dto.ProductId,
+                DateOfAdmission = dto.DateOfAdmission,
+                DateOfIssue = dto.DateOfIssue,
+                WorkerId = workerId.Value
+            };
+
+            await _orderRepository.AddAsync(item);
+            await _orderRepository.SaveChanges();
+            return item.Id;
         }
     }
 }

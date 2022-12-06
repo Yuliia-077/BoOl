@@ -13,5 +13,6 @@ namespace BoOl.Application.Services.Orders
         Task<OrderDetailsDto> GetDetails(int id, int currentPage, int pageSize);
         Task<OrderDto> GetById(int id);
         Task Update(OrderDto dto);
+        Task<int> Create(OrderDto dto, string userEmail);
     }
 }

@@ -3,61 +3,57 @@
 @{
     ViewData["Title"] = "Sign in";
 }
-<div class="row">
-    <div class="col-1 col-md-3"></div>
-    <div class="col-10 col-md-6">
-        <div class="card border-dark">
-            <div class="card-header">
-                <h4 class="text-center">Реєстрація</h4>
-            </div>
-            <form method="post">
-                <div class="card-body ml-5 mr-5">
-                    <div class="form-row">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input asp-for="RegisterUser.WorkerId" type="hidden" />
-                        <div class="form-group col-12">
-                            <label asp-for="RegisterUser.Email" class="control-label">Електронна пошта *</label>
-                            <div class="input-group">
-                                <input asp-for="RegisterUser.Email" type="email" class="form-control" id="Email" aria-describedby="button-addon1" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Email').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="RegisterUser.Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-12">
-                            <label asp-for="RegisterUser.Password" class="control-label">Пароль *</label>
-                            <div class="input-group">
-                                <input asp-for="RegisterUser.Password" class="form-control" id="Pass" aria-describedby="button-addon3" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Pass').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="RegisterUser.Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-12">
-                            <label asp-for="RegisterUser.PasswordConfirm" class="control-label">Підтвердити пароль *</label>
-                            <div class="input-group">
-                                <input asp-for="RegisterUser.PasswordConfirm" class="form-control" id="PassC" aria-describedby="button-addon4" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('PassC').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="RegisterUser.PasswordConfirm" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            @foreach (var role in Model.RegisterUser.AllRoles)
-                            {
-                                if (role.Name != "Owner")
-                                {
-                                    <input type="checkbox" name="RegisterUser.UserRoles" value="@role.Name" />@role.Name <br />
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-                        <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
-                        <a class="btn btn-outline-secondary" asp-page="/Index">Скасувати</a>
-                    </div>
-                </div>
-            </form>
-        </div>
+<div class="container">
+<div class="card border-dark ml-5 mr-5">
+    <div class="card-header">
+        <h2 class="text-center">Реєстрація</h2>
     </div>
-    <div class="col-1 col-md-3"></div>
+    <form method="post">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="RegisterUser.WorkerId" type="hidden" />
+            <div class="form-group row d-flex justify-content-center">
+                <label asp-for="RegisterUser.Email" class="control-label col-md-3">Електронна пошта*</label>
+                <div class="input-group col-md-5">
+                    <input asp-for="RegisterUser.Email" type="email" class="form-control" id="Email" aria-describedby="button-addon1" />
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Email').value = ''">X</button>
+                </div>
+                <div class="col-md-3"><span asp-validation-for="RegisterUser.Email" class="text-danger"></span></div>
+            </div>
+            <div class="form-group row d-flex justify-content-center">
+                <label asp-for="RegisterUser.Password" class="control-label col-md-3">Пароль*</label>
+                <div class="input-group col-md-5">
+                    <input asp-for="RegisterUser.Password" class="form-control" id="Pass" aria-describedby="button-addon3" />
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Pass').value = ''">X</button>
+                </div>
+                <div class="col-md-3"><span asp-validation-for="RegisterUser.Password" class="text-danger"></span></div>
+            </div>
+            <div class="form-group row d-flex justify-content-center">
+                <label asp-for="RegisterUser.PasswordConfirm" class="control-label col-md-3">Підтвердити пароль*</label>
+                <div class="input-group col-md-5">
+                    <input asp-for="RegisterUser.PasswordConfirm" class="form-control" id="PassC" aria-describedby="button-addon4" />
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('PassC').value = ''">X</button>
+                </div>
+                <div class="col-md-3"><span asp-validation-for="RegisterUser.PasswordConfirm" class="text-danger"></span></div>
+            </div>
+            @foreach (var role in Model.RegisterUser.AllRoles)
+            {
+                if (role.Name != "Owner")
+                {
+                    <div class="form-group row d-flex justify-content-center">
+                        <div class="col-md-3">
+                            <input type="checkbox" name="RegisterUser.UserRoles" value="@role.Name" />@role.Name <br />
+                        </div>
+                        <div class="col-md-8"></div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-end">
+                <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                <a class="btn btn-outline-secondary" asp-page="/Index">Скасувати</a>
+            </div>
+        </div>
+    </form>
 </div>

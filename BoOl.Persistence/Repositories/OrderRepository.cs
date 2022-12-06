@@ -40,6 +40,11 @@ namespace BoOl.Persistence.Repositories
                 .CountAsync();
         }
 
+        public async Task AddAsync(Order item)
+        {
+            await Create<Order>(item);
+        }
+
         public async Task Delete(int id)
         {
             var customServices = DbContext.CustomServices.Where(x => x.OrderId == id);

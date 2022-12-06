@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Services.Customers;
+using BoOl.Models;
 using BoOl.Models.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,34 +24,24 @@ namespace BoOl.Pages.Customers
         }
 
         public int CountOfCustomers { get; set; }
+        public int TotalPages { get; private set; }
         public IList<CustomerListItem> Customers { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
+        public ListQuery Query { get; set; }
 
-        public int PageIndex { get; set; }
-        public bool ShowPrevious => PageIndex > 1;
-        public bool ShowNext => PageIndex < (int)Math.Ceiling(decimal.Divide(CountOfCustomers, _pageSize));
-
-        public async Task OnGetAsync(string currentFilter, int pageIndex = 1, string searchString = null)
+        public async Task OnGetAsync()
         {
-            PageIndex = pageIndex;
-
-            if (searchString != null)
+            if (Query.CurrentPage == default(int))
             {
-                pageIndex = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
+                Query.CurrentPage = 1;
             }
 
-            SearchString = searchString;
+            CountOfCustomers = await _customerService.Count(Query.Filter);
+            TotalPages = (int)Math.Ceiling(decimal.Divide(CountOfCustomers, _pageSize));
+            var customers = await _customerService.GetListItems(Query.CurrentPage, _pageSize, Query.Filter);
 
-            CountOfCustomers = await _customerService.Count(searchString);
-            var customers = await _customerService.GetListItems(pageIndex, _pageSize, searchString);
-
-             Customers = customers.Select(x => x.AsViewModel()).ToList();
+            Customers = customers.Select(x => x.AsViewModel()).ToList();
         }
     }
 }

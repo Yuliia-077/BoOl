@@ -5,297 +5,263 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.Worker.LastName);
 }
 
-<div class="row">
-    <div class="col d-flex">
-        @if (Model.CountOfOrders != 0)
-        {
-            <div class="card border border-secondary text-center mr-3">
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 mt-1">
+            <div class="card border-dark">
                 <div class="card-header">
-                    Кількість прийнятих замовлень:
+                    <div class="row">
+                        <div class="col-10 d-flex justify-content-start">
+                            <h2>Особиста інформація</h2>
+                        </div>
+                        @if (Model.Worker.User == null)
+                        {
+                            <div class="col-2 d-flex justify-content-end">
+                                <a class="btn btn-secondary mt-1" asp-page="/Account/Register" asp-route-id="@Model.Worker.Id" title="Додати акаунт"><i class="fas fa-plus"></i></a>
+                            </div>
+                        }
+                    </div>
                 </div>
                 <div class="card-body">
-                    <b class="font-weight-bold" style="font-size:xx-large">@Model.CountOfOrders</b>
-                </div>
-            </div>
-        }
-        @if (Model.CountOfStorage != 0)
-        {
-            <div class="card border border-secondary text-center mr-3">
-                <div class="card-header">
-                    Кількість прийнятих поставок:
-                </div>
-                <div class="card-body">
-                    <b class="font-weight-bold" style="font-size:xx-large">@Model.CountOfStorage</b>
-                </div>
-            </div>
-        }
-        @if (Model.CountOfServices != 0)
-        {
-            <div class="card border border-secondary text-center mr-3">
-                <div class="card-header">
-                    Кількість виконаних послуг:
-                </div>
-                <div class="card-body">
-                    <b class="font-weight-bold" style="font-size:xx-large">@Model.CountOfServices</b>
-                </div>
-            </div>
-        }
-    </div>
-    @if (Model.Worker.User == null)
-    {
-        <div class="col-12 col-md-3">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-secondary mt-1" asp-page="/Account/Register" asp-route-id="@Model.Worker.Id"><i class="fas fa-plus"> Додати акаунт</i></a>
-            </div>
-        </div>
-
-    }
-</div>
-<div class="row">
-    <div class="col-12 col-md-6 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Особиста інформація</strong>
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-4">
-                        ПІБ:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.LastName)  @Html.DisplayFor(model => model.Worker.FirstName)  @Html.DisplayFor(model => model.Worker.MiddleName)
-                    </dd>
-
-                    <dt class="col-4">
-                        Посада:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.Position.Name)
-                    </dd>
-
-                    <dt class="col-4">
-                        Стала зарплата:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.Position.Salary)
-                    </dd>
-
-                    <dt class="col-4">
-                        Відсоток від роботи:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.Position.PercentageOfWork)
-                    </dd>
-
-                    <dt class="col-4">
-                        Номер телефону:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.PhoneNumber)
-                    </dd>
-                    @if (Model.Worker.User != null)
-                    {
+                    <dl class="row">
                         <dt class="col-4">
-                            Електронна пошта:
+                            ПІБ:
                         </dt>
                         <dd class="col-8">
-                            @Html.DisplayFor(model => model.Worker.User.Email)
+                            @Html.DisplayFor(model => model.Worker.LastName)  @Html.DisplayFor(model => model.Worker.FirstName)  @Html.DisplayFor(model => model.Worker.MiddleName)
                         </dd>
 
-                    }
-                    <dt class="col-4">
-                        Дата народження:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.DateOfBirth)
-                    </dd>
-                    <dt class="col-4">
-                        Адреса:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.Address)
-                    </dd>
+                        <dt class="col-4">
+                            Посада:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.Position.Name)
+                        </dd>
 
-                    <dt class="col-4">
-                        Освіта:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.Education)
-                    </dd>
+                        <dt class="col-4">
+                            Стала зарплата:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.Position.Salary)
+                        </dd>
 
-                    <dt class="col-4">
-                        Дата прийому на роботу:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.DateOfEmployment)
-                    </dd>
+                        <dt class="col-4">
+                            Відсоток від роботи:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.Position.PercentageOfWork)
+                        </dd>
 
-                    <dt class="col-4">
-                        Дата звільнення:
-                    </dt>
-                    <dd class="col-8">
-                        @Html.DisplayFor(model => model.Worker.DateOfQuit)
-                    </dd>
-                </dl>
-            </div>
-            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Worker.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" onclick="return confirm('Ви дійсно хочете видалити даного співробітника?');" asp-route-id="@Model.Worker.Id"><i class="far fa-trash-alt"> Видалити</i></a>
+                        <dt class="col-4">
+                            Номер телефону:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.PhoneNumber)
+                        </dd>
+                        @if (Model.Worker.User != null)
+                        {
+                            <dt class="col-4">
+                                Електронна пошта:
+                            </dt>
+                            <dd class="col-8">
+                                @Html.DisplayFor(model => model.Worker.User.Email)
+                            </dd>
+
+                        }
+                        <dt class="col-4">
+                            Дата народження:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.DateOfBirth)
+                        </dd>
+                        <dt class="col-4">
+                            Адреса:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.Address)
+                        </dd>
+
+                        <dt class="col-4">
+                            Освіта:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.Education)
+                        </dd>
+
+                        <dt class="col-4">
+                            Дата прийому на роботу:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.DateOfEmployment)
+                        </dd>
+
+                        <dt class="col-4">
+                            Дата звільнення:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.DateOfQuit)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer d-grid gap-2 d-flex justify-content-end">
+                    <a class="btn btn-outline-secondary m-2" asp-page="./Edit" asp-route-id="@Model.Worker.Id" title="Редагувати"><i class="far fa-edit"></i></a>
+                    <a class="btn btn-outline-danger m-2" asp-page="./Details" asp-page-handler="Delete" title="Видалити" onclick="return confirm('Ви дійсно хочете видалити даного співробітника?');" asp-route-id="@Model.Worker.Id"><i class="far fa-trash-alt"></i></a>
+                </div>
             </div>
         </div>
+
+        @if (Model.CountOfOrders != 0)
+        {
+            <div class="col-12 col-md-6 mt-1">
+                <div class="card border-dark">
+                    <div class="card-header">
+                        <h2>Замовлення</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Номер
+                                    </th>
+                                    <th>
+                                        Статус
+                                    </th>
+                                    <th>
+                                        Оплачено
+                                    </th>
+                                    <th>
+                                        Дата прийому
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Worker.Orders)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Id)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Payment)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateOfAdmission)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-outline-secondary" asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        @if (Model.CountOfServices != 0)
+        {
+            <div class="col-12 col-md-6 mt-1">
+                <div class="card border-dark">
+                    <div class="card-header">
+                        <h2>Послуги по замовленню</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Номер замовлення
+                                    </th>
+                                    <th>
+                                        Послуга
+                                    </th>
+                                    <th>
+                                        Виконано
+                                    </th>
+                                    <th>
+                                        Дата виконання
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Worker.CustomServices)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OrderId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Service.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsDone)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ExecutionDate)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-outline-secondary" asp-page="/CustomServices/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.CountOfStorage != 0)
+        {
+            <div class="col-12 col-md-6 mt-1">
+                <div class="card border-dark">
+                    <div class="card-header">
+                        <h2>Прийом поставок</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Назва
+                                    </th>
+                                    <th>
+                                        Кількість
+                                    </th>
+                                    <th>
+                                        Дата
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Worker.Storages)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Quantity)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateOfArrival)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-outline-secondary" asp-page="/Srorages/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-
-    @if (Model.CountOfOrders != 0)
-    {
-        <div class="col-12 col-md-6 mt-1">
-            <div class="card border-dark">
-                <div class="card-header">
-                    <strong>Замовлення</strong>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Номер
-                                </th>
-                                <th>
-                                    Статус
-                                </th>
-                                <th>
-                                    Оплачено
-                                </th>
-                                <th>
-                                    Дата прийому
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Worker.Orders)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Id)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Payment)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DateOfAdmission)
-                                    </td>
-                                    <td>
-                                        <a asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    }
-
-
-    @if (Model.CountOfServices != 0)
-    {
-        <div class="col-12 col-md-6 mt-1">
-            <div class="card border-dark">
-                <div class="card-header">
-                    <strong>Послуги по замовленню</strong>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Номер замовлення
-                                </th>
-                                <th>
-                                    Послуга
-                                </th>
-                                <th>
-                                    Виконано
-                                </th>
-                                <th>
-                                    Дата виконання
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Worker.CustomServices)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.OrderId)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Service.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IsDone)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ExecutionDate)
-                                    </td>
-                                    <td>
-                                        <a asp-page="/CustomServices/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (Model.CountOfStorage != 0)
-    {
-        <div class="col-12 col-md-6 mt-1">
-            <div class="card border-dark">
-                <div class="card-header">
-                    <strong>Прийом поставок</strong>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Назва
-                                </th>
-                                <th>
-                                    Кількість
-                                </th>
-                                <th>
-                                    Дата
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Worker.Storages)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Quantity)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DateOfArrival)
-                                    </td>
-                                    <td>
-                                        <a asp-page="/Srorages/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    }
 </div>

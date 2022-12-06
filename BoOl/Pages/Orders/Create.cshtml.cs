@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BoOl.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Repository;
 using BoOl.Persistence.DatabaseContext;
+using BoOl.Application.Services.Products;
+using BoOl.Application.Services.Orders;
+using BoOl.Application.Services.Customers;
+using BoOl.Models.Orders;
+using BoOl.Models.Customers;
 
 namespace BoOl.Pages.Orders
 {
@@ -17,56 +21,62 @@ namespace BoOl.Pages.Orders
     [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<Order> _repository;
-        private readonly IRepository<Product> _repositoryProduct;
-        private readonly IRepository<Customer> _repositoryCustomer;
-        private readonly UserRepository _repositoryUser;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
+
+        public CreateModel(IOrderService orderService,
+            IProductService productService,
+            ICustomerService customerService)
+        {
+            _customerService = customerService;
+            _productService = productService;
+            _orderService = orderService;
+        }
 
         [BindProperty]
         public Order Order { get; set; }
-        [BindProperty]
-        public int CustomerId { get; set; }
-
         public Customer Customer { get; set; }
-
-        public CreateModel(BoOlContext context)
-        {
-            _repository = new OrderRepository(context);
-            _repositoryProduct = new ProductRepository(context);
-            _repositoryCustomer = new CustomerRepository(context);
-            _repositoryUser = new UserRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
-
                 return NotFound();
             }
-            CustomerId = Convert.ToInt32(id);
-            Order = new Order();
-            Customer = await _repositoryCustomer.GetByIdAsync(CustomerId);
-            Order.Discount = Customer.Discount;
-            Order.DateOfAdmission = DateTime.Now.Date;
-            ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(id), "Value", "Text");
-            var user = await _repositoryUser.GetByIdAsync(User.Identity.Name);
-            Order.WorkerId = Convert.ToInt32(user.WorkerId);
+
+            await Get(id.Value);
+
+            Order = new Order()
+            {
+                CustomerId = id.Value,
+                Discount = Customer.Discount,
+                DateOfAdmission = DateTime.Now.Date
+            };
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Order.AsDto();
+
             if (!ModelState.IsValid)
             {
-                Customer = await _repositoryCustomer.GetByIdAsync(CustomerId);
-                ViewData["ProductId"] = new SelectList(await _repositoryProduct.SelectAsync(CustomerId), "Value", "Text");
+                await Get(Order.CustomerId);
                 return Page();
             }
 
-            await _repository.AddAsync(Order);
+            var id = await _orderService.Create(dto, User.Identity.Name);
 
-            return RedirectToPage("./Details", new { id = Order.Id});
+            return RedirectToPage("./Details", new { id = id});
+        }
+
+        private async Task Get(int id)
+        {
+            var item = await _customerService.GetById(id);
+            Customer = item.AsViewModel();
+            ViewData["ProductId"] = new SelectList(await _productService.SelectListOfProductsByCustomerIdAsync(id), "Value", "Text");
         }
     }
 }

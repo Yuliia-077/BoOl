@@ -10,6 +10,7 @@ using BoOl.Domain;
 using BoOl.Repository;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Persistence.DatabaseContext;
+using BoOl.Application.Services.Models;
 
 namespace BoOl.Pages.Products
 {
@@ -19,16 +20,17 @@ namespace BoOl.Pages.Products
     {
         private readonly IRepository<Product> _repository;
         private readonly IRepository<Customer> _repositoryCustomer;
-        private readonly IRepository<Model> _repositoryModel;
+        private readonly IModelService _modelService;
         public Customer Customer { get; set; }
         [BindProperty]
         public Product Product { get; set; }
 
-        public CreateModel(BoOlContext context)
+        public CreateModel(BoOlContext context,
+            IModelService modelService)
         {
             _repository = new ProductRepository(context);
             _repositoryCustomer = new CustomerRepository(context);
-            _repositoryModel = new ModelRepository(context);
+            _modelService = modelService;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -44,7 +46,7 @@ namespace BoOl.Pages.Products
             Product.Customer = customer;
             Product.CustomerId = customer.Id;
 
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
+            ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
             return Page();
         }
 

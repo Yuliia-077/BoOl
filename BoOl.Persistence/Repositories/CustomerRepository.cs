@@ -35,7 +35,11 @@ namespace BoOl.Persistence.Repositories
         public async Task<IList<CustomerListItemDto>> GetAllAsync(int currentPage, int pageSize, string searchString)
         {
             return await DbContext.Customers
-                .Where(s => string.IsNullOrEmpty(searchString) || s.LastName.Contains(searchString))
+                .Where(s => string.IsNullOrEmpty(searchString) 
+                    || (s.LastName.Contains(searchString) 
+                        || s.FirstName.Contains(searchString) 
+                        || s.Email.Contains(searchString)
+                        || s.PhoneNumber.Contains(searchString)))
                 .OrderBy(c => c.LastName)
                 .Skip((currentPage - 1) * pageSize)
                 .Take(pageSize)
@@ -82,7 +86,11 @@ namespace BoOl.Persistence.Repositories
         public async Task<int> CountAsync(string searchString)
         {
             return await DbContext.Customers
-                .Where(s => string.IsNullOrEmpty(searchString) || s.LastName.Contains(searchString))
+                .Where(s => string.IsNullOrEmpty(searchString)
+                    || (s.LastName.Contains(searchString)
+                        || s.FirstName.Contains(searchString)
+                        || s.Email.Contains(searchString)
+                        || s.PhoneNumber.Contains(searchString)))
                 .CountAsync();
         }
 

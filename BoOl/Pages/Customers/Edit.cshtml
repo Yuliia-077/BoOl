@@ -4,93 +4,93 @@
 @{
     ViewData["Title"] = "Edit";
 }
-<div class="card border-dark">
-    <div class="card-header">
-        <h4 class="text-center">Редагувати клієнта</h4>
+<div class="container">
+    <div class="card border-dark">
+        <div class="card-header">
+            <h2 class="text-center">Редагувати клієнта</h2>
+        </div>
+        <form method="post">
+            <div class="card-body">
+                <div class="d-flex justify-content-end">
+                    <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
+                </div>
+                    <input type="hidden" asp-for="Customer.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.LastName" class="control-label col-md-3">Прізвище*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.LastName" class="form-control" id="LastName" aria-describedby="button-addon1" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('LastName').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.LastName" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.PhoneNumber" class="control-label col-md-3">Номер телефону*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.PhoneNumber" class="form-control" id="PhoneNumber" aria-describedby="button-addon2" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('PhoneNumber').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.PhoneNumber" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.FirstName" class="control-label col-md-3">Ім'я*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.FirstName" class="form-control" id="FirstName" aria-describedby="button-addon3" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('FirstName').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.FirstName" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.DateOfBirth" class="control-label col-md-3">Дата народження*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.DateOfBirth" type="date" class="form-control" id="DateOfBirth" aria-describedby="button-addon4" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('DateOfBirth').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.DateOfBirth" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.MiddleName" class="control-label col-md-3">По-батькові*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.MiddleName" class="form-control" id="MiddleName" aria-describedby="button-addon5" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon5" onclick="document.getElementById('MiddleName').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.MiddleName" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.Discount" class="control-label col-md-3">Знижка</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.Discount" class="form-control" id="Discount" aria-describedby="button-addon6" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon6" onclick="document.getElementById('Discount').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.Discount" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.Email" class="control-label col-md-3">Електронна пошта*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.Email" class="form-control" id="Email" aria-describedby="button-addon7" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon7" onclick="document.getElementById('Email').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.Email" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Customer.Address" class="control-label col-md-3">Адреса*</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Customer.Address" class="form-control" id="Address" aria-describedby="button-addon8" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon8" onclick="document.getElementById('Address').value = ''">X</button>
+                        </div>
+                        <div class="col-md-3"><span asp-validation-for="Customer.Address" class="text-danger"></span></div>
+                    </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
+                    <a class="btn btn-outline-secondary" asp-page="./Details" asp-route-id="@Model.Customer.Id">Скасувати</a>
+                </div>
+            </div>
+        </form>
     </div>
-    <form method="post">
-        <div class="card-body">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
-            </div>
-            <div class="form-row">
-                <input type="hidden" asp-for="Customer.Id" />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group col-sm-6">
-                    <label asp-for="Customer.LastName" class="control-label">Прізвище *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.LastName" class="form-control" id="LastName" aria-describedby="button-addon1" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('LastName').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.LastName" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.PhoneNumber" class="control-label">Номер телефону *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.PhoneNumber" class="form-control" id="PhoneNumber" aria-describedby="button-addon2" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('PhoneNumber').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.PhoneNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.FirstName" class="control-label">Ім'я *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.FirstName" class="form-control" id="FirstName" aria-describedby="button-addon3" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('FirstName').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.FirstName" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.DateOfBirth" class="control-label">Дата народження *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.DateOfBirth" type="date" class="form-control" id="DateOfBirth" aria-describedby="button-addon4" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon4" onclick="document.getElementById('DateOfBirth').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.DateOfBirth" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.MiddleName" class="control-label">По-батькові *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.MiddleName" class="form-control" id="MiddleName" aria-describedby="button-addon5" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon5" onclick="document.getElementById('MiddleName').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.MiddleName" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.Discount" class="control-label">Знижка</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.Discount" class="form-control" id="Discount" aria-describedby="button-addon6" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon6" onclick="document.getElementById('Discount').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.Discount" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.Email" class="control-label">Електронна пошта *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.Email" class="form-control" id="Email" aria-describedby="button-addon7" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon7" onclick="document.getElementById('Email').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Customer.Address" class="control-label">Адреса *</label>
-                    <div class="input-group">
-                        <input asp-for="Customer.Address" class="form-control" id="Address" aria-describedby="button-addon8" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon8" onclick="document.getElementById('Address').value = ''">X</button>
-                    </div>
-                    <span asp-validation-for="Customer.Address" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-grid gap-2 d-flex justify-content-end">
-                <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
-                <a class="btn btn-outline-secondary" asp-page="./Details" asp-route-id="@Model.Customer.Id">Скасувати</a>
-            </div>
-        </div>
-    </form>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

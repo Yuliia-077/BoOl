@@ -5,57 +5,51 @@
     ViewData["Title"] = "Edit";
 }
 
-<div class="row">
-    <div class="col-1 col-md-3"></div>
-    <div class="col-10 col-md-6">
+<div class="container">
         <div class="card border-dark ml-5 mr-5">
             <div class="card-header">
-                <h4 class="text-center">Редагувати посаду</h4>
+                <h2 class="text-center">Редагувати посаду</h2>
             </div>
             <form method="post">
                 <div class="card-body">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
                     </div>
-                    <div class="form-row">
-                        <input type="hidden" asp-for="Position.Id" />
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group col-12">
-                            <label asp-for="Position.Name" class="control-label">Посада *</label>
-                            <div class="input-group">
-                                <input asp-for="Position.Name" class="form-control" id="Name" aria-describedby="button-addon1" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Position.Name" class="text-danger"></span>
+                    <input type="hidden" asp-for="Position.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Position.Name" class="control-label col-md-3">Посада *</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Position.Name" class="form-control" id="Name" aria-describedby="button-addon1" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('Name').value = ''">X</button>
                         </div>
-                        <div class="form-group col-12">
-                            <label asp-for="Position.Salary" class="control-label">Зарплата *</label>
-                            <div class="input-group">
-                                <input asp-for="Position.Salary" class="form-control" id="Salary" aria-describedby="button-addon2" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Salary').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Position.Salary" class="text-danger"></span>
+                        <div class="col-md-3"><span asp-validation-for="Position.Name" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Position.Salary" class="control-label col-md-3">Зарплата *</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Position.Salary" class="form-control" id="Salary" aria-describedby="button-addon2" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Salary').value = ''">X</button>
                         </div>
-                        <div class="form-group col-12">
-                            <label asp-for="Position.PercentageOfWork" class="control-label">Процент від роботи *</label>
-                            <div class="input-group">
-                                <input asp-for="Position.PercentageOfWork" class="form-control" id="Percentage" aria-describedby="button-addon3" />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Percentage').value = ''">X</button>
-                            </div>
-                            <span asp-validation-for="Position.PercentageOfWork" class="text-danger"></span>
+                        <div class="col-md-3"><span asp-validation-for="Position.Salary" class="text-danger"></span></div>
+                    </div>
+                    <div class="form-group row d-flex justify-content-center">
+                        <label asp-for="Position.PercentageOfWork" class="control-label col-md-3">Процент від роботи *</label>
+                        <div class="input-group col-md-5">
+                            <input asp-for="Position.PercentageOfWork" class="form-control" id="Percentage" aria-describedby="button-addon3" />
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon3" onclick="document.getElementById('Percentage').value = ''">X</button>
                         </div>
+                        <div class="col-md-3"><span asp-validation-for="Position.PercentageOfWork" class="text-danger"></span></div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="d-grid gap-2 d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />
                         <a class="btn btn-outline-secondary" asp-page="/Workers/Index">Скасувати</a>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
-    <div class="col-1 col-md-3"></div>
 </div>
 
 @section Scripts {

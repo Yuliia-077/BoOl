@@ -5,138 +5,77 @@
     ViewData["Title"] = "Workers";
 }
 
-<div class="row">
-    <div class="col-6 col-md-3">
-        <div class="card border border-secondary text-center">
-            <div class="card-header">
-                Кількість 
-                посад:
-            </div>
-            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfPosition</p>
-        </div>
-    </div>
-    <div class="col-6 col-md-4">
-        <div class="card border border-secondary text-center">
-            <div class="card-header">
-                Кількість 
-                співробітників:
-            </div>
-            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfWorkers</p>
-        </div>
-    </div>
-    <div class="col-6 col-md-5">
-            <form class="card border border-secondary text-center">
-                <div class="card-header">
-                    Пошук по посаді
-                </div>
-                <div class="input-group mt-2 mb-3 justify-content-center">
-                    <input type="text" class="form-check" asp-for="SearchPosition" aria-describedby="button-addon">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon">Шукати</button>
-                </div>
-            </form>
-        </div>
-    <div class="col-6 col-md-12">
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="/Positions/Create"><i class="fas fa-plus"> Додати посаду</i></a>
-        </div>
-        <div class="d-grid gap-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mt-1" asp-page="./Create"><i class="fas fa-plus"> Додати співробітника</i></a>
-        </div>
-    </div>
-</div>
-<div class="row">
-    @foreach (var position in Model.Positions)
-    {
-        <div class="col-md-6 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <h1>@position.Name</h1>
-                <div class="d-grid gap-2 d-flex justify-content-end">
-                    <a class="btn btn-outline-secondary" asp-page="/Positions/Edit" asp-route-id="@position.Id"><i class="far fa-edit"> Редагувати</i></a>
-                    <a class="btn btn-outline-danger" asp-page="./Index" asp-page-handler="Delete" onclick="return confirm('Ви дійсно хочете видалити дану посаду?');" asp-route-id="@position.Id"><i class="far fa-trash-alt"> Видалити</i></a>
-                </div>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                П.І.Б.
-                            </th>
-                            <th>
-                                Номер телефону
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in position.Workers)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                                </td>
-                                <td>
-                                    <a asp-page="./Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-     </div>
-    }
-</div>
+<div class="container">
 
-@*<div class="row">
-        <div class="col-11">
-            <h1 class="text-center">Працівники</h1>
-        </div>
-        <div class="col-1">
-            <a asp-page="Create"><i class="fas fa-plus"></i></a>
+    <div class="card border-dark">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-4 d-flex justify-content-start">
+                    <form class="form-inline m-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control" asp-for="SearchPosition" placeholder="Пошук" aria-describedby="button-addon">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon" title="Пошук"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-8 d-flex justify-content-end">
+                    <a class="btn btn-secondary m-2" asp-page="/Positions/Create"><i class="fas fa-plus"> Додати посаду</i></a>
+                    <a class="btn btn-secondary m-2" asp-page="./Create"><i class="fas fa-plus"> Додати співробітника</i></a>
+                </div>
+            </div>
         </div>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Прізвище
-                </th>
-                <th>
-                   Ім'я
-                </th>
-                <th>
-                    Номер телефону
-                </th>
-                <th>
-                    Посада
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model.Worker) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Position.Name)
-                </td>
-                <td>
-                    <a asp-page="./Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>*@
+
+    <div class="row d-flex justify-content-center">
+        @foreach (var position in Model.Positions)
+        {
+            <div class="col-md-12 mt-2">
+                <div class="card border-dark">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-4 d-flex justify-content-start">
+                                <h2>@position.Name</h2>
+                            </div>
+                            <div class="col-8 d-flex justify-content-end">
+                                <a class="btn btn-outline-secondary m-2" asp-page="/Positions/Edit" asp-route-id="@position.Id" title="Редагувати"><i class="far fa-edit"></i></a>
+                                <a class="btn btn-outline-danger m-2" asp-page="./Index" asp-page-handler="Delete" onclick="return confirm('Ви дійсно хочете видалити дану посаду?');" title="Видалити" asp-route-id="@position.Id"><i class="far fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        П.І.Б.
+                                    </th>
+                                    <th>
+                                        Номер телефону
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in position.Workers)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-outline-secondary" asp-page="./Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>

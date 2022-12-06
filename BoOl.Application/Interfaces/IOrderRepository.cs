@@ -9,6 +9,7 @@ namespace BoOl.Application.Interfaces
     {
         Task<int> CountAllAsync();
         Task<int> Count(string searchString);
+        Task AddAsync(Order item);
         Task<IList<OrderListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString);
         Task<OrderDetailsDto> GetDetails(int id);
         Task<Order> Get(int id);

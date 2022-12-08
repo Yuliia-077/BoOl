@@ -4,7 +4,7 @@ namespace BoOl.Application.Models.Customers
 {
     public class CustomerDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string LastName { get; set; }
 

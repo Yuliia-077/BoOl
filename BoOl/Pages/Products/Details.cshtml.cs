@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Products;
+using BoOl.Application.Validations.Products;
+using BoOl.Models;
+using BoOl.Models.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Products
 {
@@ -16,15 +14,21 @@ namespace BoOl.Pages.Products
     [Authorize(Roles = "Owner, Administrator")]
     public class DetailsModel : PageModel
     {
-        private readonly IRepository<Product> _repository;
-        public int CountOfOrders { get; set; }
+        private readonly IProductService _productService;
+        private readonly IProductValidation _productValidation;
+        private readonly int _pageSize = 3;
 
-        public DetailsModel(BoOlContext context)
+        public DetailsModel(IProductService productService, IProductValidation productValidation)
         {
-            _repository = new ProductRepository(context);
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _productValidation = productValidation ?? throw new ArgumentNullException(nameof(productValidation));
         }
 
-        public Product Product { get; set; }
+        public int TotalPages { get; private set; }
+        public ProductDetails Product { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public ListQuery Query { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,22 +37,41 @@ namespace BoOl.Pages.Products
                 return NotFound();
             }
 
-            Product = await _repository.GetByIdAsync(Convert.ToInt32(id));
-            CountOfOrders = Product.Orders.Count();
-
-            if (Product == null)
-            {
-                return NotFound();
-            }
+            await Get(id.Value);
             return Page();
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            Product = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var error = await _productValidation.ValidationForDelete(id);
 
-            await _repository.DeleteAsync(id);
+            if (error != null)
+            {
+                ModelState.AddModelError("Product", error);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                await Get(id);
+                return Page();
+            }
+
+            await _productService.Delete(id);
+
             return RedirectToPage("/Customers/Details", new { id = Product.CustomerId });
+        }
+
+        private async Task Get(int id)
+        {
+            if (Query.CurrentPage == default(int))
+            {
+                Query.CurrentPage = 1;
+            }
+
+            var item = await _productService.GetDetails(id, Query.CurrentPage, _pageSize);
+
+            TotalPages = (int)Math.Ceiling(decimal.Divide(item.CountOfOrders, _pageSize));
+            Product = item.AsViewModel();
         }
     }
 }

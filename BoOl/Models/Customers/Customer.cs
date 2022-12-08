@@ -6,7 +6,7 @@ namespace BoOl.Models.Customers
 {
     public class Customer
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Довжина рядка повинна бути від 3 символів!")]
         [Required(ErrorMessage = "Введіть прізвище!")]
@@ -25,6 +25,7 @@ namespace BoOl.Models.Customers
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Введіть дату народження!")]
+        [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
 
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Довжина рядка повинна бути від 3 символів!")]

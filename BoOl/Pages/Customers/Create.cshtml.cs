@@ -1,4 +1,5 @@
 ﻿using BoOl.Application.Services.Customers;
+using BoOl.Application.Validations.Customers;
 using BoOl.Models.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,12 @@ namespace BoOl.Pages.Customers
     public class CreateModel : PageModel
     {
         private readonly ICustomerService _customerService;
-        public CreateModel(ICustomerService customerService)
+        private readonly ICustomerValidation _customerValidation;
+        public CreateModel(ICustomerService customerService,
+            ICustomerValidation customerValidation)
         {
             _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+            _customerValidation = customerValidation ?? throw new ArgumentNullException(nameof(customerValidation));
         }
 
         [BindProperty]
@@ -28,12 +32,20 @@ namespace BoOl.Pages.Customers
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Customer.AsDto();
+            var error = await _customerValidation.ValidationForCreateOrUpdate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Customer", error);
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var customerID = await _customerService.Create(Customer.AsDto());
+            var customerID = await _customerService.Create(dto);
             return RedirectToPage("./Details", new { id = customerID});
         }
     }

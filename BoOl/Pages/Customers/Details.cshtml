@@ -5,38 +5,15 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.Customer.LastName);
 }
 <div class="container">
-    @*<div class="row">
-        <div class="col-4 col-md-3">
-            <div class="card border border-secondary text-center">
-                <div class="card-header">
-                    Кількість техніки:
-                </div>
-                <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfProducts</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-3">
-            <div class="card border border-secondary text-center">
-                <div class="card-header">
-                    Кількість замовлень:
-                </div>
-                <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfOrders</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-6">
-            <div class="d-flex justify-content-end">
-                <a class="btn btn-secondary mt-1" asp-page="/Products/Create" asp-route-id="@Model.Customer.Id" title="Додати техніку"><i class="fas fa-plus"></i></a>
-            </div>
-            <div class="d-flex justify-content-end">
-                <a class="btn btn-secondary mt-1" asp-page="/Orders/Create" asp-route-id="@Model.Customer.Id" title="Додати замовлення"><i class="fas fa-plus"></i></a>
-            </div>
-        </div>
-    </div>
-    <br />*@
     <div class="row">
         <div class="col-12 col-md-6 mt-1">
             <div class="card border-dark">
                 <div class="card-header">
                     <h2>Особиста інформація</h2>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Customer" class="text-danger"></span>
                 </div>
                 <div class="card-body">
                     <dl class="row">
@@ -110,14 +87,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Products)
+                            @foreach (var item in Model.Customer.Products)
                             {
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.SerialNumber)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Model.Manufacturer) @Html.DisplayFor(modelItem => item.Model.Type)
+                                        @Html.DisplayFor(modelItem => item.Model)
                                     </td>
                                     <td>
                                         <a class="btn btn-outline-secondary" asp-page="/Products/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
@@ -128,7 +105,54 @@
                     </table>
                 </div>
                 <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                        @{
+                            int startPoint = 0, endPoint = 0, k = 15;
+                            if (Model.ProductsTotalPages > k)
+                            {
+                                if (Model.ProductsCurrentPage - k / 2 >= 1 && Model.ProductsCurrentPage + k / 2 < Model.ProductsTotalPages)
+                                {
+                                    startPoint = Model.ProductsCurrentPage - k / 2;
+                                    endPoint = Model.ProductsCurrentPage + k / 2;
+                                }
+                                else if (Model.ProductsCurrentPage - k / 2 < 1)
+                                {
+                                    startPoint = 1;
+                                    endPoint = startPoint + k - 1;
 
+                                }
+                                else
+                                {
+                                    endPoint = Model.ProductsTotalPages;
+                                    startPoint = endPoint - k + 1;
+                                }
+                            }
+                            else
+                            {
+                                startPoint = 1;
+                                endPoint = Model.ProductsTotalPages;
+                            }
+
+                            for (var i = startPoint; i <= endPoint; i++)
+                            {
+                                if (i == startPoint && startPoint > 1)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Customer.Id" asp-route-productscurrentpage="@(i - 1)" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" class="page-link">...</a>
+                                    </li>
+                                }
+                                <li class="page-item @(i == Model.ProductsCurrentPage ? "active" : "")">
+                                    <a asp-page="./Details" asp-route-id="@Model.Customer.Id" asp-route-productscurrentpage="@i" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" class="page-link">@i</a>
+                                </li>
+                                if (i == endPoint && endPoint < Model.ProductsTotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Customer.Id" asp-route-productscurrentpage="@(i + 1)" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" class="page-link">...</a>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
                 </div>
             </div>
         </div>
@@ -149,9 +173,6 @@
                         <thead>
                             <tr>
                                 <th>
-                                    №Замовлення
-                                </th>
-                                <th>
                                     Техніка
                                 </th>
                                 <th>
@@ -164,16 +185,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var product in Model.Products)
-                            {
-                                @foreach (var item in product.Orders)
+                                @foreach (var item in Model.Customer.Orders)
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Id)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Product.SerialNumber)
+                                            @Html.DisplayFor(modelItem => item.ProductModel)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Status)
@@ -186,12 +202,58 @@
                                         </td>
                                     </tr>
                                 }
-                            }
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                        @{
+                            int startPoint1 = 0, endPoint1 = 0, k1 = 15;
+                            if (Model.OrdersTotalPages > k1)
+                            {
+                                if (Model.OrdersCurrentPage - k1 / 2 >= 1 && Model.OrdersCurrentPage + k1 / 2 < Model.OrdersTotalPages)
+                                {
+                                    startPoint1 = Model.OrdersCurrentPage - k1 / 2;
+                                    endPoint1 = Model.OrdersCurrentPage + k1 / 2;
+                                }
+                                else if (Model.OrdersCurrentPage - k1 / 2 < 1)
+                                {
+                                    startPoint1 = 1;
+                                    endPoint1 = startPoint1 + k1 - 1;
 
+                                }
+                                else
+                                {
+                                    endPoint1 = Model.OrdersTotalPages;
+                                    startPoint1 = endPoint1 - k1 + 1;
+                                }
+                            }
+                            else
+                            {
+                                startPoint1 = 1;
+                                endPoint1 = Model.OrdersTotalPages;
+                            }
+
+                            for (var i = startPoint1; i <= endPoint1; i++)
+                            {
+                                if (i == startPoint1 && startPoint1 > 1)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Customer.Id" asp-route-orderscurrentpage="@(i - 1)" asp-route-productscurrentpage="@Model.ProductsCurrentPage" class="page-link">...</a>
+                                    </li>
+                                }
+                                <li class="page-item @(i == Model.OrdersCurrentPage ? "active" : "")">
+                                    <a asp-page="./Details" asp-route-id="@Model.Customer.Id" asp-route-orderscurrentpage="@i" asp-route-productscurrentpage="@Model.ProductsCurrentPage" class="page-link">@i</a>
+                                </li>
+                                if (i == endPoint1 && endPoint1 < Model.OrdersTotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Customer.Id" asp-route-orderscurrentpage="@(i + 1)" asp-route-productscurrentpage="@Model.ProductsCurrentPage" class="page-link">...</a>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
                 </div>
             </div>
         </div>

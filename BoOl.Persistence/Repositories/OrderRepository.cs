@@ -16,19 +16,40 @@ namespace BoOl.Persistence.Repositories
     {
         public OrderRepository(IOptions<DatabaseOptions> databaseOptions, BoOlContext context) : base(databaseOptions, context) { }
 
-        public async Task<int> Count(string searchString)
+        public async Task<bool> ExistForCustomerId(int customerId)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.Product.CustomerId == customerId);
+        }
+        
+        public async Task<bool> ExistForProductId(int productId)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.ProductId == productId);
+        }
+
+        public async Task<int> Count(string searchString, int? customerId = null, int? productId = null)
         {
             return await (
                     from o in DbContext.Orders
                     join m in DbContext.Models on o.Product.ModelId equals m.Id
                     join c in DbContext.Customers on o.Product.CustomerId equals c.Id
-                    where string.IsNullOrEmpty(searchString) || (
-                        o.Status.Contains(searchString) ||
-                        m.Manufacturer.Contains(searchString) ||
-                        m.Type.Contains(searchString) ||
-                        c.LastName.Contains(searchString) ||
-                        c.FirstName.Contains(searchString)
-                        )
+                    where (string.IsNullOrEmpty(searchString) 
+                        || (
+                            o.Status.Contains(searchString) ||
+                            m.Manufacturer.Contains(searchString) ||
+                            m.Type.Contains(searchString) ||
+                            c.LastName.Contains(searchString) ||
+                            c.FirstName.Contains(searchString)
+                            ))
+                    && (!customerId.HasValue
+                        || (
+                            c.Id == customerId.Value
+                        ))
+                    && (!productId.HasValue
+                        || (
+                            o.ProductId == productId.Value
+                        ))
                     select o.Id
                     )
                     .CountAsync();
@@ -64,16 +85,16 @@ namespace BoOl.Persistence.Repositories
             var item = await DbContext.Orders
                 .Where(x => x.Id == id)
                 .Select(x => new OrderDto
-                    {
-                        Id = x.Id,
-                        DateOfAdmission = x.DateOfAdmission,
-                        DateOfIssue = x.DateOfIssue,
-                        Discount = x.Discount,
-                        Payment = x.Payment,
-                        ProductId = x.ProductId,
-                        Status = x.Status,
-                        CustomerId = x.Product.CustomerId
-                    }
+                {
+                    Id = x.Id,
+                    DateOfAdmission = x.DateOfAdmission,
+                    DateOfIssue = x.DateOfIssue,
+                    Discount = x.Discount,
+                    Payment = x.Payment,
+                    ProductId = x.ProductId,
+                    Status = x.Status,
+                    CustomerId = x.Product.CustomerId
+                }
                 )
                 .SingleOrDefaultAsync();
 
@@ -126,19 +147,28 @@ namespace BoOl.Persistence.Repositories
                     }).SingleOrDefaultAsync();
         }
 
-        public async Task<IList<OrderListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString)
+        public async Task<IList<OrderListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString, int? customerId = null, int? productId = null)
         {
             return await (
                     from o in DbContext.Orders
                     join m in DbContext.Models on o.Product.ModelId equals m.Id
                     join c in DbContext.Customers on o.Product.CustomerId equals c.Id
-                    where string.IsNullOrEmpty(searchString) || (
+                    where (string.IsNullOrEmpty(searchString)
+                    || (
                         o.Status.Contains(searchString) ||
                         m.Manufacturer.Contains(searchString) ||
                         m.Type.Contains(searchString) ||
                         c.LastName.Contains(searchString) ||
                         c.FirstName.Contains(searchString)
-                        )
+                        ))
+                    && (!customerId.HasValue
+                    || (
+                        c.Id == customerId.Value
+                    ))
+                    && (!productId.HasValue
+                    || (
+                        o.ProductId == productId.Value
+                    ))
                     orderby o.DateOfAdmission descending
                     select new
                     {
@@ -148,7 +178,8 @@ namespace BoOl.Persistence.Repositories
                         CustomerId = c.Id,
                         CustomerName = c.LastName + " " + c.FirstName,
                         ProductId = o.ProductId,
-                        ProductModel = m.Manufacturer + " " + m.Type
+                        ProductModel = m.Manufacturer + " " + m.Type,
+                        DateOfAdmission = o.DateOfAdmission
 
                     })
                     .Skip((currentPage - 1) * pageSize)
@@ -161,7 +192,8 @@ namespace BoOl.Persistence.Repositories
                         CustomerId = x.CustomerId,
                         CustomerName = x.CustomerName,
                         ProductId = x.ProductId,
-                        ProductModel = x.ProductModel
+                        ProductModel = x.ProductModel,
+                        DateOfAdmission = x.DateOfAdmission
                     })
                     .ToListAsync();
         }

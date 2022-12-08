@@ -11,5 +11,8 @@ namespace BoOl.Application.Services.Customers
         Task<int> Count(string searchString);
         Task<int> Create(CustomerDto dto);
         Task Update(CustomerDto dto);
+        Task<CustomerDetailsDto> GetDetails(int id, int orderCurrentPage, int partCurrentPage, int pageSize);
+        Task Delete(int id);
+        Task<string> GetName(int id);
     }
 }

@@ -10,10 +10,16 @@ namespace BoOl.Application.Services.Customers
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository,
+            IOrderRepository orderRepository,
+            IProductRepository productRepository)
         {
             _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _productRepository = productRepository;
         }
 
         public async Task<IList<CustomerListItemDto>> GetListItems(int currentPage, int pageSize, string searchString)
@@ -52,11 +58,11 @@ namespace BoOl.Application.Services.Customers
 
         public async Task Update(CustomerDto dto)
         {
-            var item = await _customerRepository.Get(dto.Id);
+            var item = await _customerRepository.Get(dto.Id.Value);
 
             if (item == null)
             {
-                throw new ArgumentNullException("Користувача не знайдено.");
+                throw new ArgumentNullException("Клієнта не знайдено.");
             }
 
             item.Address = dto.Address;
@@ -69,6 +75,35 @@ namespace BoOl.Application.Services.Customers
             item.PhoneNumber = dto.PhoneNumber;
 
             await _customerRepository.SaveChanges();
+        }
+
+        public async Task<CustomerDetailsDto> GetDetails(int id, int orderCurrentPage, int partCurrentPage, int pageSize)
+        {
+            var item = await _customerRepository.GetDetails(id);
+
+            if (item == null)
+            {
+                throw new ArgumentNullException("Клієнта не знайдено.");
+            }
+
+            item.Products = await _productRepository.GetListByCustomerId(partCurrentPage, pageSize, id);
+            item.CountOfProducts = await _productRepository.CountByCustomerId(id);
+
+            item.Orders = await _orderRepository.GetListAsync(orderCurrentPage, pageSize, null, id);
+            item.CountOfOrders = await _orderRepository.Count(null, id);
+
+            return item;
+        }
+
+        public async Task Delete(int id)
+        {
+            await _customerRepository.DeleteAsync(id);
+            await _customerRepository.SaveChanges();
+        }
+
+        public async Task<string> GetName(int id)
+        {
+            return await _customerRepository.GetName(id);
         }
     }
 }

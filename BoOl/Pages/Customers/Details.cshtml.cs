@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Customers;
+using BoOl.Application.Validations.Customers;
+using BoOl.Models.Customers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Customers
 {
@@ -16,20 +13,25 @@ namespace BoOl.Pages.Customers
     [Authorize(Roles = "Owner, Administrator")]
     public class DetailsModel : PageModel
     {
-        private readonly IRepository<Customer> _repositoryCustomer;
-        private readonly IRepository<Product> _repositoryProduct;
-        public IEnumerable<Product> Products { get; set; }
-        public int CountOfProducts { get; set; }
-        public int CountOfOrders { get; set; }
+        private readonly ICustomerService _customerService;
+        private readonly ICustomerValidation _customerValidation;
+        private readonly int _pageSize = 3;
 
-        [BindProperty]
-        public Customer Customer { get; set; }
-
-        public DetailsModel(BoOlContext context)
+        public DetailsModel(ICustomerService customerService,
+            ICustomerValidation customerValidation)
         {
-            _repositoryCustomer = new CustomerRepository(context);
-            _repositoryProduct = new ProductRepository(context);
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+            _customerValidation = customerValidation ?? throw new ArgumentNullException(nameof(customerValidation));
         }
+
+        public CustomerDetails Customer { get; set; }
+        public int OrdersTotalPages { get; private set; }
+        public int ProductsTotalPages { get; private set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int OrdersCurrentPage { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int ProductsCurrentPage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -38,27 +40,54 @@ namespace BoOl.Pages.Customers
                 return NotFound();
             }
 
-            Customer = await _repositoryCustomer.GetByIdAsync(Convert.ToInt32(id));
+            await Get(id.Value);
 
             if (Customer == null)
             {
                 return NotFound();
             }
-            CountOfProducts = await _repositoryProduct.CountAsync(id);
-            Products = await _repositoryProduct.GetAllAsync(Customer.Id);
 
-            foreach(var item in Products)
-            {
-                item.Orders.OrderByDescending(c => c.DateOfAdmission);
-                CountOfOrders += item.Orders.Count();
-            }
             return Page();
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            await _repositoryCustomer.DeleteAsync(id);
+            var error = await _customerValidation.ValidationForDelete(id);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Customer", error);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                await Get(id);
+                return Page();
+            }
+
+            await _customerService.Delete(id);
+
             return RedirectToPage("./Index");
+        }
+
+        private async Task Get(int id)
+        {
+            if (OrdersCurrentPage == default(int))
+            {
+                OrdersCurrentPage = 1;
+            }
+            
+            if (ProductsCurrentPage == default(int))
+            {
+                ProductsCurrentPage = 1;
+            }
+
+            var item = await _customerService.GetDetails(id, OrdersCurrentPage, ProductsCurrentPage, _pageSize);
+
+            ProductsTotalPages = (int)Math.Ceiling(decimal.Divide(item.CountOfProducts, _pageSize));
+            OrdersTotalPages = (int)Math.Ceiling(decimal.Divide(item.CountOfOrders, _pageSize));
+
+            Customer = item.AsViewModel();
         }
     }
 }

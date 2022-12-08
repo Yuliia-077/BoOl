@@ -1,4 +1,6 @@
-﻿namespace BoOl.Application.Models.Orders
+﻿using System;
+
+namespace BoOl.Application.Models.Orders
 {
     public class OrderListItemDto
     {
@@ -9,5 +11,6 @@
         public string CustomerName { get; set; }
         public int ProductId { get; set; }
         public string ProductModel { get; set; }
+        public DateTime DateOfAdmission { get; set; }
     }
 }

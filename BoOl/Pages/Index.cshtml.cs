@@ -34,7 +34,7 @@ namespace BoOl.Pages
         public async Task OnGetAsync()
         {
             var services = await _serviceService.MostPopularServices(_pageSize);
-            Services = services.Select(x => x.AsViewService()).ToList();
+            Services = services.Select(x => x.AsViewModel()).ToList();
             CountOfServices = await _serviceService.Count(null);
             CountOfCustomers = await _customerService.Count(null);
             CountOfOrders = await _orderService.CountAll();

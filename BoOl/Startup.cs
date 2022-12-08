@@ -8,7 +8,9 @@ using BoOl.Application.Services.Products;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
 using BoOl.Application.Services.Users;
+using BoOl.Application.Validations.Customers;
 using BoOl.Application.Validations.Models;
+using BoOl.Application.Validations.Products;
 using BoOl.Application.Validations.Services;
 using BoOl.Domain;
 using BoOl.Persistence;
@@ -41,7 +43,9 @@ namespace BoOl
             services.AddRazorPages();
 
             #region Validation
+            services.AddTransient<ICustomerValidation, CustomerValidation>();
             services.AddTransient<IModelValidation, ModelValidation>();
+            services.AddTransient<IProductValidation, ProductValidation>();
             services.AddTransient<IServiceValidation, ServiceValidation>();
             services.AddTransient<IStorageValidation, StorageValidation>();
             #endregion

@@ -2,7 +2,6 @@
 using BoOl.Application.Validations.Services;
 using BoOl.Models;
 using BoOl.Models.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
@@ -67,7 +66,7 @@ namespace BoOl.Pages.Services
             CountOfServices = await _serviceService.Count(filter);
             var services = await _serviceService.GetListItems(currentPage, _pageSize, filter);
             TotalPages = (int)Math.Ceiling(decimal.Divide(CountOfServices, _pageSize));
-            Services = services.Select(x => x.AsViewService()).ToList();
+            Services = services.Select(x => x.AsViewModel()).ToList();
         }
     }
 }

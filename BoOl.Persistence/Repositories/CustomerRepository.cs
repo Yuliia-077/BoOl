@@ -1,7 +1,6 @@
 ﻿using BoOl.Application.Interfaces;
 using BoOl.Application.Models;
 using BoOl.Application.Models.Customers;
-using BoOl.Application.Models.Products;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,22 @@ namespace BoOl.Persistence.Repositories
         {
             await Create<Customer>(item);
         }
-      
+
+        public async Task<bool> Exist(int id)
+        {
+            return await DbContext.Customers.Where(x => x.Id == id).AnyAsync();
+        }
+
+        public async Task<bool> ExistWithPhone(string phone, int? id = null)
+        {
+            return await DbContext.Customers.Where(x => x.PhoneNumber == phone && x.Id != id).AnyAsync();
+        }
+
+        public async Task<bool> ExistWithEmail(string email, int? id = null)
+        {
+            return await DbContext.Customers.Where(x => x.Email == email && x.Id != id).AnyAsync();
+        }
+
         public async Task DeleteAsync(int id)
         {
             var customer = await Get(id);
@@ -105,10 +119,6 @@ namespace BoOl.Persistence.Repositories
         public async Task<CustomerDetailsDto> GetDetails(int id)
         {
             var item = await DbContext.Customers
-                .Include(x => x.Products)
-                .ThenInclude(x => x.Model)
-                .Include(x => x.Products)
-                .ThenInclude(x => x.Orders)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return new CustomerDetailsDto
@@ -121,16 +131,16 @@ namespace BoOl.Persistence.Repositories
                 DateOfBirth = item.DateOfBirth,
                 Address = item.Address,
                 Email = item.Email,
-                Discount = item.Discount,
-                Products = item.Products.Select(x => new ProductByCustomerListItemDto
-                {
-                    Id = x.Id,
-                    SerialNumber = x.SerialNumber,
-                    ModelManufacturer = x.Model.Manufacturer,
-                    ModelType = x.Model.Type
-                }).ToList(),
-
+                Discount = item.Discount
             };
+        }
+
+        public async Task<string> GetName(int id)
+        {
+            return await DbContext.Customers
+                .Where(x => x.Id == id)
+                .Select(x => x.LastName + " " + x.FirstName)
+                .FirstOrDefaultAsync();
         }
     }
 }

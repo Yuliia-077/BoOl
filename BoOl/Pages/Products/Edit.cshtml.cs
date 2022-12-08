@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
 using BoOl.Repository;
 using Microsoft.AspNetCore.Authorization;
 using BoOl.Persistence.DatabaseContext;
+using BoOl.Models.Products;
+using BoOl.Application.Services.Products;
+using BoOl.Application.Services.Models;
+using BoOl.Application.Validations.Products;
 
 namespace BoOl.Pages.Products
 {
@@ -17,16 +20,21 @@ namespace BoOl.Pages.Products
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Product> _repository;
-        private readonly IRepository<Model> _repositoryModel;
+        private readonly IProductService _productService;
+        private readonly IModelService _modelService;
+        private readonly IProductValidation _productValidation;
+
+        public EditModel(IProductService productService,
+            IModelService modelService,
+            IProductValidation productValidation)
+        {
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _modelService = modelService ?? throw new ArgumentNullException(nameof(modelService));
+            _productValidation = productValidation ?? throw new ArgumentNullException(nameof(productValidation));
+        }
+
         [BindProperty]
         public Product Product { get; set; }
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new ProductRepository(context);
-            _repositoryModel = new ModelRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -35,25 +43,36 @@ namespace BoOl.Pages.Products
                 return NotFound();
             }
 
-            Product = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var item = await _productService.GetById(id.Value);
 
-            if (Product == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            ViewData["ModelId"] = new SelectList(await _repositoryModel.SelectAsync(null), "Value", "Text");
+            Product = item.AsViewModel();
+            ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Product.AsDto();
+            var error = await _productValidation.ValidationForCreateOrUpdate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Product", error);
+            }
+
             if (!ModelState.IsValid)
             {
+                ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
                 return Page();
             }
 
-            await _repository.UpdateAsync(Product);
+            await _productService.Update(dto);
 
             return RedirectToPage("./Details", new { id = Product.Id });
         }

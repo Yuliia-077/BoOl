@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Models.Orders;
+using System;
 using System.ComponentModel.DataAnnotations;
-using BoOl.Application.Models.Orders;
 
 namespace BoOl.Models.Orders
 {
@@ -16,6 +13,8 @@ namespace BoOl.Models.Orders
         public string CustomerName { get; set; }
         public int ProductId { get; set; }
         public string ProductModel { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DateOfAdmission { get; set; }
     }
 
     public static partial class ViewModelMapperExtensions
@@ -30,7 +29,8 @@ namespace BoOl.Models.Orders
                 CustomerId = dto.CustomerId,
                 CustomerName = dto.CustomerName,
                 ProductId = dto.ProductId,
-                ProductModel = dto.ProductModel
+                ProductModel = dto.ProductModel,
+                DateOfAdmission = dto.DateOfAdmission
             };
         }
     }

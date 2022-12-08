@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Customers;
+using BoOl.Application.Services.Models;
+using BoOl.Application.Services.Products;
+using BoOl.Application.Validations.Products;
+using BoOl.Models.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Application.Services.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Products
 {
@@ -18,20 +16,24 @@ namespace BoOl.Pages.Products
     [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<Product> _repository;
-        private readonly IRepository<Customer> _repositoryCustomer;
+        private readonly IProductService _productService;
         private readonly IModelService _modelService;
-        public Customer Customer { get; set; }
+        private readonly ICustomerService _customerService;
+        private readonly IProductValidation _productValidation;
+
+        public CreateModel(IProductService productService,
+            IModelService modelService,
+            ICustomerService customerService,
+            IProductValidation productValidation)
+        {
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _modelService = modelService ?? throw new ArgumentNullException(nameof(modelService));
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+            _productValidation = productValidation ?? throw new ArgumentNullException(nameof(productValidation));
+        }
+
         [BindProperty]
         public Product Product { get; set; }
-
-        public CreateModel(BoOlContext context,
-            IModelService modelService)
-        {
-            _repository = new ProductRepository(context);
-            _repositoryCustomer = new CustomerRepository(context);
-            _modelService = modelService;
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -41,10 +43,7 @@ namespace BoOl.Pages.Products
             }
 
             Product = new Product();
-            var customer = await _repositoryCustomer.GetByIdAsync(Convert.ToInt32(id));
-
-            Product.Customer = customer;
-            Product.CustomerId = customer.Id;
+            Product.CustomerName = await _customerService.GetName(id.Value);
 
             ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
             return Page();
@@ -52,12 +51,21 @@ namespace BoOl.Pages.Products
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Product.AsDto();
+            var error = await _productValidation.ValidationForCreateOrUpdate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Product", error);
+            }
+
             if (!ModelState.IsValid)
             {
+                ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
                 return Page();
             }
 
-            await _repository.AddAsync(Product);
+            var id = await _productService.Create(dto);
 
             return RedirectToPage("/Customers/Details", new { id = Product.CustomerId});
         }

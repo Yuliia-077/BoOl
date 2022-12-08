@@ -5,101 +5,147 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.Product.SerialNumber);
 }
 
-<div class="row">
-    <div class="col-4 col-md-3">
-        <div class="card border border-secondary text-center">
-            <div class="card-header">
-                Кількість замовлень:
-            </div>
-            <p class="font-weight-bold" style="font-size:xx-large">@Model.CountOfOrders</p>
-        </div>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-12 col-md-4 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Інформація по техніці</strong>
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-6">
-                        Власник:
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.Product.Customer.LastName) @Html.DisplayFor(model => model.Product.Customer.FirstName) @Html.DisplayFor(model => model.Product.Customer.MiddleName)
-                    </dd>
+<div class="container">
+    <a class="btn btn-outline-secondary" asp-page="/Customers/Details" asp-route-id="@Model.Product.CustomerId" title="Детальна інформація по клієнту"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+      <div class="row">
+        <div class="col-12 col-md-4 mt-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <h2>Інформація по техніці</h2>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row d-center justify-content-center p-2">
+                        <span asp-validation-for="Product" class="text-danger"></span>
+                    </div>
+                    <dl class="row">
+                        <dt class="col-6">
+                            Власник:
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.Product.CustomerName)
+                        </dd>
 
-                    <dt class="col-6">
-                        Серійний номер:
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.Product.SerialNumber)
-                    </dd>
+                        <dt class="col-6">
+                            Серійний номер:
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.Product.SerialNumber)
+                        </dd>
 
-                    <dt class="col-6">
-                        Модель:
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.Product.Model.Manufacturer)  @Html.DisplayFor(model => model.Product.Model.Type)
-                    </dd>
+                        <dt class="col-6">
+                            Модель:
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.Product.Model)
+                        </dd>
 
-                    <dt class="col-6">
-                        Додаткова інформація:
-                    </dt>
-                    <dd class="col-6">
-                        @Html.DisplayFor(model => model.Product.AdditionalInf)
-                    </dd>
-                </dl>
-            </div>
-            <div class="card-footer d-grid gap-2 d-flex justify-content-end">
-                <a class="btn btn-outline-secondary" asp-page="./Edit" asp-route-id="@Model.Product.Id"><i class="far fa-edit"> Редагувати</i></a>
-                <a class="btn btn-outline-danger" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Product.Id" onclick="return confirm('Ви дійсно хочете видалити дану техніку?');"><i class="far fa-trash-alt"> Видалити</i></a>
+                        <dt class="col-6">
+                            Додаткова інформація:
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.Product.AdditionalInf)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <a class="btn btn-outline-secondary m-2" asp-page="./Edit" asp-route-id="@Model.Product.Id" title="Редагувати"><i class="far fa-edit"></i></a>
+                    <a class="btn btn-outline-danger m-2" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Product.Id" onclick="return confirm('Ви дійсно хочете видалити дану техніку?');" title="Видалити"><i class="far fa-trash-alt"></i></a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-8 mt-1">
-        <div class="card border-dark">
-            <div class="card-header">
-                <strong>Замовлення</strong>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Статус
-                            </th>
-                            <th>
-                                Оплачено
-                            </th>
-                            <th>
-                                Сума
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Product.Orders)
-                        {
+        <div class="col-12 col-md-8 mt-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <h2>Замовлення</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Payment)
-                                </td>
-                                <td>
-                                    
-                                </td>
-                                <td>
-                                    <a asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                </td>
+                                <th>
+                                    Статус
+                                </th>
+                                <th>
+                                    Оплачено
+                                </th>
+                                <th>
+                                    Дата прийняття
+                                </th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Product.Orders)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Payment)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DateOfAdmission)
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-secondary " asp-page="/Orders/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <ul class="pagination justify-content-center">
+                        @{
+                            int startPoint = 0, endPoint = 0, k = 15;
+                            if (Model.TotalPages > k)
+                            {
+                                if (Model.Query.CurrentPage - k / 2 >= 1 && Model.Query.CurrentPage + k / 2 < Model.TotalPages)
+                                {
+                                    startPoint = Model.Query.CurrentPage - k / 2;
+                                    endPoint = Model.Query.CurrentPage + k / 2;
+                                }
+                                else if (Model.Query.CurrentPage - k / 2 < 1)
+                                {
+                                    startPoint = 1;
+                                    endPoint = startPoint + k - 1;
+
+                                }
+                                else
+                                {
+                                    endPoint = Model.TotalPages;
+                                    startPoint = endPoint - k + 1;
+                                }
+                            }
+                            else
+                            {
+                                startPoint = 1;
+                                endPoint = Model.TotalPages;
+                            }
+
+                            for (var i = startPoint; i <= endPoint; i++)
+                            {
+                                if (i == startPoint && startPoint > 1)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Product.Id" asp-route-currentpage="@(i - 1)" class="page-link">...</a>
+                                    </li>
+                                }
+                                <li class="page-item @(i == Model.Query.CurrentPage ? "active" : "")">
+                                    <a asp-page="./Details" asp-route-id="@Model.Product.Id" asp-route-currentpage="@i" class="page-link">@i</a>
+                                </li>
+                                if (i == endPoint && endPoint < Model.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a asp-page="./Details" asp-route-id="@Model.Product.Id" asp-route-currentpage="@(i + 1)" class="page-link">...</a>
+                                    </li>
+                                }
+                            }
                         }
-                    </tbody>
-                </table>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

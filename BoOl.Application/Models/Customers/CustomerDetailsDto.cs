@@ -25,7 +25,11 @@ namespace BoOl.Application.Models.Customers
 
         public double? Discount { get; set; }
 
-        public IList<ProductByCustomerListItemDto> Products { get; set; }
+        public int CountOfProducts { get; set; }
+
+        public int CountOfOrders { get; set; }
+
+        public IList<ProductListItemDto> Products { get; set; }
 
         public IList<OrderListItemDto> Orders { get; set; }
 

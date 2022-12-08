@@ -11,7 +11,7 @@ namespace BoOl.Models.Services
 
     public static partial class ViewModelMapperExtensions
     {
-        public static ServiceListItem AsViewService(this ServiceListItemDto dto)
+        public static ServiceListItem AsViewModel(this ServiceListItemDto dto)
         {
             return new ServiceListItem
             {

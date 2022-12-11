@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Positions;
+using BoOl.Application.Validations.Positions;
+using BoOl.Models.Positions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Positions
 {
@@ -17,11 +13,14 @@ namespace BoOl.Pages.Positions
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Position> _repository;
+        private readonly IPositionService _positionService;
+        private readonly IPositionValidation _positionValidation;
 
-        public EditModel(BoOlContext context)
+        public EditModel(IPositionService positionService,
+            IPositionValidation positionValidation)
         {
-            _repository = new PositionRepository(context);
+            _positionService = positionService ?? throw new ArgumentNullException(nameof(positionService));
+            _positionValidation = positionValidation ?? throw new ArgumentNullException(nameof(positionValidation));
         }
 
         [BindProperty]
@@ -34,23 +33,34 @@ namespace BoOl.Pages.Positions
                 return NotFound();
             }
 
-            Position = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var item = await _positionService.GetById(id.Value);
 
-            if (Position == null)
+            if (item == null)
             {
                 return NotFound();
             }
+
+            Position = item.AsViewModel();
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Position.AsDto();
+
+            var error = await _positionValidation.ValidationForCreateOrUpdate(dto);
+            if (error != null)
+            {
+                ModelState.AddModelError("Position", error);
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            await _repository.UpdateAsync(Position);
+            await _positionService.Update(dto);
 
             return RedirectToPage("/Workers/Index");
         }

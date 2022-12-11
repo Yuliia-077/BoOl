@@ -16,6 +16,9 @@
                 </div>
                 <input asp-for="Worker.Id" type="hidden" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Worker" class="text-danger"></span>
+                </div>
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Worker.LastName" class="control-label col-md-3">Прізвище*</label>
                     <div class="input-group col-md-5">
@@ -90,7 +93,7 @@
                     <div class="col-md-3"><span asp-validation-for="Worker.DateOfEmployment" class="text-danger"></span></div>
                 </div>
                 <div class="form-group row d-flex justify-content-center">
-                    <label asp-for="Worker.DateOfQuit" class="control-label col-md-3">Дата звільнення*</label>
+                    <label asp-for="Worker.DateOfQuit" class="control-label col-md-3">Дата звільнення</label>
                     <div class="input-group col-md-5">
                         <input asp-for="Worker.DateOfQuit" type="date" class="form-control" id="DateOfQuit" aria-describedby="button-addon8" />
                         <button class="btn btn-outline-secondary" type="button" id="button-addon8" onclick="document.getElementById('DateOfQuit').value = ''">X</button>

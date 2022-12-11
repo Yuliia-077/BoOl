@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Workers;
+using BoOl.Application.Validations.Workers;
+using BoOl.Models.Workers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Workers
 {
@@ -16,17 +13,29 @@ namespace BoOl.Pages.Workers
     [Authorize(Roles = "Owner, Administrator")]
     public class DetailsModel : PageModel
     {
-        private readonly IRepository<Worker> _repository;
-        public int CountOfOrders { get; set; }
-        public int CountOfStorage { get; set; }
-        public int CountOfServices { get; set; }
+        private readonly IWorkerService _workerService;
+        private readonly IWorkerValidation _workerValidation;
+        private readonly int _pageSize = 6;
 
-        public DetailsModel(BoOlContext context)
+        public DetailsModel(IWorkerService workerService,
+            IWorkerValidation workerValidation)
         {
-            _repository = new WorkerRepository(context);
+            _workerService = workerService;
+            _workerValidation = workerValidation;
         }
 
-        public Worker Worker { get; set; }
+        public WorkerDetails Worker { get; set; }
+
+        public int OrdersTotalPages { get; private set; }
+        public int StoragesTotalPages { get; private set; }
+        public int CustomServicesTotalPages { get; private set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int OrdersCurrentPage { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int StoragesCurrentPage { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int CustomServicesCurrentPage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -35,24 +44,60 @@ namespace BoOl.Pages.Workers
                 return NotFound();
             }
 
-            Worker = await _repository.GetByIdAsync(Convert.ToInt32(id));
-            Worker.Orders = Worker.Orders.OrderByDescending(c => c.DateOfAdmission.Date).ToList();
+            await Get(id.Value);
 
             if (Worker == null)
             {
                 return NotFound();
             }
 
-            CountOfOrders = Worker.Orders.Count();
-            CountOfServices = Worker.CustomServices.Count();
-            CountOfStorage = Worker.Storages.Count();
             return Page();
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            await _repository.DeleteAsync(id);
+            var error = await _workerValidation.ValidationForDelete(id);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Worker", error);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                await Get(id);
+                return Page();
+            }
+
+            await _workerService.Delete(id);
+
             return RedirectToPage("./Index");
+        }
+
+        private async Task Get(int id)
+        {
+            if (OrdersCurrentPage == default(int))
+            {
+                OrdersCurrentPage = 1;
+            }
+
+            if (StoragesCurrentPage == default(int))
+            {
+                StoragesCurrentPage = 1;
+            }
+
+            if (CustomServicesCurrentPage == default(int))
+            {
+                CustomServicesCurrentPage = 1;
+            }
+
+            var item = await _workerService.GetDetails(id, OrdersCurrentPage, StoragesCurrentPage, CustomServicesCurrentPage, _pageSize);
+
+            StoragesTotalPages = (int)Math.Ceiling(decimal.Divide(item.CountOfStorages, _pageSize));
+            OrdersTotalPages = (int)Math.Ceiling(decimal.Divide(item.CountOfOrders, _pageSize));
+            CustomServicesTotalPages = (int)Math.Ceiling(decimal.Divide(item.CountOfCustomServices, _pageSize));
+
+            Worker = item.AsViewModel();
         }
     }
 }

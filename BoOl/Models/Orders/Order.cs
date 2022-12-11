@@ -8,6 +8,8 @@ namespace BoOl.Models.Orders
     {
         public int Id { get; set; }
         public bool Payment { get; set; }
+
+        [Range(0, 100, ErrorMessage = "Знижка має бути в діапазоні від 0 до 100.")]
         public double? Discount { get; set; }
 
         [Required(ErrorMessage = "Оберіть статус!")]

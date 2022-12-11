@@ -10,20 +10,32 @@
     <div class="card border-dark">
         <div class="card-header">
             <div class="row">
-                <div class="col-4 d-flex justify-content-start">
-                    <form class="form-inline m-2">
+                <div class="col-md-6 d-flex justify-content-start">
+                    @if (Model.Query.IsActive == true)
+                    {
+                        <a class="btn btn-outline-secondary m-2" asp-page="./Index" asp-route-filter="@Model.Query.Filter" asp-route-isactive="false">Неактивні користувачі</a>
+                    }
+                    @if (Model.Query.IsActive == false)
+                    {
+                        <a class="btn btn-outline-secondary m-2" asp-page="./Index" asp-route-filter="@Model.Query.Filter" asp-route-isactive="true">Активні користувачі</a>
+                    }
+                    <form class="form-inline">
                         <div class="form-group">
-                            <input type="text" class="form-control" asp-for="SearchPosition" placeholder="Пошук" aria-describedby="button-addon">
+                            <input type="text" class="form-control" asp-for="Query.Filter" placeholder="Пошук" aria-describedby="button-addon">
                             <button class="btn btn-outline-secondary" type="submit" id="button-addon" title="Пошук"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </div>
                     </form>
                 </div>
-                <div class="col-8 d-flex justify-content-end">
+                <div class="col-md-6 d-flex justify-content-end">
                     <a class="btn btn-secondary m-2" asp-page="/Positions/Create"><i class="fas fa-plus"> Додати посаду</i></a>
                     <a class="btn btn-secondary m-2" asp-page="./Create"><i class="fas fa-plus"> Додати співробітника</i></a>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="row d-center justify-content-center p-2">
+        <span asp-validation-for="Positions" class="text-danger"></span>
     </div>
 
     <div class="row d-flex justify-content-center">
@@ -42,37 +54,40 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        П.І.Б.
-                                    </th>
-                                    <th>
-                                        Номер телефону
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in position.Workers)
-                                {
+                    @if (position.Workers.Count() > 0)
+                    {
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-outline-secondary" asp-page="./Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                                        </td>
+                                        <th>
+                                            П.І.Б.
+                                        </th>
+                                        <th>
+                                            Номер телефону
+                                        </th>
+                                        <th></th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in position.Workers)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-outline-secondary" asp-page="./Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
                 </div>
             </div>
         }

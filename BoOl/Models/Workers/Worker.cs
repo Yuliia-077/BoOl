@@ -1,10 +1,10 @@
-﻿using BoOl.Application.Models.Customers;
+﻿using BoOl.Application.Models.Workers;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BoOl.Models.Customers
+namespace BoOl.Models.Workers
 {
-    public class Customer
+    public class Worker
     {
         public int? Id { get; set; }
 
@@ -20,31 +20,36 @@ namespace BoOl.Models.Customers
         [Required(ErrorMessage = "Введіть по-батькові!")]
         public string MiddleName { get; set; }
 
+        [StringLength(13, MinimumLength = 13, ErrorMessage = "Довжина рядка повинна бути 13 символів!")]
         [Required(ErrorMessage = "Введіть номер телефону!")]
         [Phone]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Введіть дату народження!")]
-        [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
 
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Довжина рядка повинна бути від 3 символів!")]
         [Required(ErrorMessage = "Введіть адресу!")]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Введіть електронну пошту!")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [StringLength(200, MinimumLength = 3, ErrorMessage = "Довжина рядка повинна бути від 3 символів!")]
+        [Required(ErrorMessage = "Введіть освіту!")]
+        public string Education { get; set; }
 
-        [Range(0, 100, ErrorMessage = "Знижка має бути в діапазоні від 0 до 100.")]
-        public double? Discount { get; set; }
+        [Required(ErrorMessage = "Введіть дату прийому на роботу!")]
+        public DateTime DateOfEmployment { get; set; }
+
+        public DateTime? DateOfQuit { get; set; }
+
+        [Required(ErrorMessage = "Оберіть посаду!")]
+        public int PositionId { get; set; }
     }
 
     public static partial class ViewModelMapperExtensions
     {
-        public static CustomerDto AsDto(this Customer request)
+        public static WorkerDto AsDto(this Worker request)
         {
-            return new CustomerDto
+            return new WorkerDto
             {
                 Id = request.Id,
                 LastName = request.LastName,
@@ -53,14 +58,16 @@ namespace BoOl.Models.Customers
                 PhoneNumber = request.PhoneNumber,
                 DateOfBirth = request.DateOfBirth,
                 Address = request.Address,
-                Email = request.Email,
-                Discount = request.Discount
+                Education = request.Education,
+                DateOfEmployment = request.DateOfEmployment,
+                DateOfQuit = request.DateOfQuit,
+                PositionId = request.PositionId
             };
         }
 
-        public static Customer AsViewModel(this CustomerDto dto)
+        public static Worker AsViewModel(this WorkerDto dto)
         {
-            return new Customer
+            return new Worker
             {
                 Id = dto.Id,
                 LastName = dto.LastName,
@@ -69,8 +76,10 @@ namespace BoOl.Models.Customers
                 PhoneNumber = dto.PhoneNumber,
                 DateOfBirth = dto.DateOfBirth,
                 Address = dto.Address,
-                Email = dto.Email,
-                Discount = dto.Discount
+                Education = dto.Education,
+                DateOfEmployment = dto.DateOfEmployment,
+                DateOfQuit = dto.DateOfQuit,
+                PositionId = dto.PositionId
             };
         }
     }

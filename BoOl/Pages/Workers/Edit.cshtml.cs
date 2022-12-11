@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Positions;
+using BoOl.Application.Services.Workers;
+using BoOl.Application.Validations.Workers;
+using BoOl.Models.Workers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Workers
 {
@@ -17,43 +14,57 @@ namespace BoOl.Pages.Workers
     [Authorize(Roles = "Owner, Administrator")]
     public class EditModel : PageModel
     {
-        private readonly IRepository<Worker> _repository;
-        private readonly IRepository<Position> _repositoryPosition;
+        private readonly IWorkerService _workerService;
+        private readonly IPositionService _positionService;
+        private readonly IWorkerValidation _workerValidation;
+
+        public EditModel(IWorkerService workerService,
+            IPositionService positionService,
+            IWorkerValidation workerValidation)
+        {
+            _positionService = positionService;
+            _workerService = workerService;
+            _workerValidation = workerValidation;
+        }
+
         [BindProperty]
         public Worker Worker { get; set; }
-
-        public EditModel(BoOlContext context)
-        {
-            _repository = new WorkerRepository(context);
-            _repositoryPosition = new PositionRepository(context);
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound("Id не забезпечено.");
             }
 
-            Worker = await _repository.GetByIdAsync(Convert.ToInt32(id));
+            var dto = await _workerService.GetById(id.Value);
+            ViewData["PositionId"] = new SelectList(await _positionService.SelectListOfPositionsAsync(), "Value", "Text");
 
-            if (Worker == null)
+            if (dto == null)
             {
-                return NotFound();
+                return NotFound($"Для даного Id = {id} співробітника не існує.");
             }
-
-            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(null), "Value", "Text");
+            Worker = dto.AsViewModel();
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Worker.AsDto();
+            var error = await _workerValidation.ValidationForCreateOrUpdate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Worker", error);
+            }
+
             if (!ModelState.IsValid)
             {
+                ViewData["PositionId"] = new SelectList(await _positionService.SelectListOfPositionsAsync(), "Value", "Text");
                 return Page();
             }
 
-            await _repository.UpdateAsync(Worker);
+            await _workerService.Update(Worker.AsDto());
 
             return RedirectToPage("./Details", new { id = Worker.Id });
         }

@@ -8,7 +8,9 @@ namespace BoOl.Application.Interfaces
     public interface ICustomServiceRepository : IBaseRepository
     {
         Task<bool> ExistWithServiceId(int serviceId);
-        Task<IList<CustomServiceListItemDto>> GetListAsync(int orderId, int currentPage, int pageSize);
+        Task<bool> ExistByWorkerId(int workerId);
+        Task<int> CountByWorkerId(int workerId);
+        Task<IList<CustomServiceListItemDto>> GetListAsync(int currentPage, int pageSize, int? orderId = null, int? workerId = null);
         Task DeleteAsync(int id);
         Task AddAsync(CustomService item);
         Task<CustomServiceDto> GetByIdAsync(int id);

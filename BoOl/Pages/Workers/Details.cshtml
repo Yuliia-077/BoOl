@@ -14,7 +14,7 @@
                         <div class="col-10 d-flex justify-content-start">
                             <h2>Особиста інформація</h2>
                         </div>
-                        @if (Model.Worker.User == null)
+                        @if (Model.Worker.Email == null && Model.Worker.IsActive)
                         {
                             <div class="col-2 d-flex justify-content-end">
                                 <a class="btn btn-secondary mt-1" asp-page="/Account/Register" asp-route-id="@Model.Worker.Id" title="Додати акаунт"><i class="fas fa-plus"></i></a>
@@ -23,6 +23,9 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row d-center justify-content-center p-2">
+                        <span asp-validation-for="Worker" class="text-danger"></span>
+                    </div>
                     <dl class="row">
                         <dt class="col-4">
                             ПІБ:
@@ -35,21 +38,21 @@
                             Посада:
                         </dt>
                         <dd class="col-8">
-                            @Html.DisplayFor(model => model.Worker.Position.Name)
+                            @Html.DisplayFor(model => model.Worker.PositionName)
                         </dd>
 
                         <dt class="col-4">
                             Стала зарплата:
                         </dt>
                         <dd class="col-8">
-                            @Html.DisplayFor(model => model.Worker.Position.Salary)
+                            @Html.DisplayFor(model => model.Worker.Salary)
                         </dd>
 
                         <dt class="col-4">
                             Відсоток від роботи:
                         </dt>
                         <dd class="col-8">
-                            @Html.DisplayFor(model => model.Worker.Position.PercentageOfWork)
+                            @Html.DisplayFor(model => model.Worker.PercentageOfWork)
                         </dd>
 
                         <dt class="col-4">
@@ -58,13 +61,13 @@
                         <dd class="col-8">
                             @Html.DisplayFor(model => model.Worker.PhoneNumber)
                         </dd>
-                        @if (Model.Worker.User != null)
+                        @if (Model.Worker.Email != null)
                         {
                             <dt class="col-4">
                                 Електронна пошта:
                             </dt>
                             <dd class="col-8">
-                                @Html.DisplayFor(model => model.Worker.User.Email)
+                                @Html.DisplayFor(model => model.Worker.Email)
                             </dd>
 
                         }
@@ -101,6 +104,13 @@
                         <dd class="col-8">
                             @Html.DisplayFor(model => model.Worker.DateOfQuit)
                         </dd>
+
+                        <dt class="col-4">
+                            Активний співробітник:
+                        </dt>
+                        <dd class="col-8">
+                            @Html.DisplayFor(model => model.Worker.IsActive)
+                        </dd>
                     </dl>
                 </div>
                 <div class="card-footer d-grid gap-2 d-flex justify-content-end">
@@ -110,7 +120,7 @@
             </div>
         </div>
 
-        @if (Model.CountOfOrders != 0)
+        @if (Model.Worker.CountOfOrders != 0)
         {
             <div class="col-12 col-md-6 mt-1">
                 <div class="card border-dark">
@@ -159,12 +169,62 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="card-footer">
+                        <ul class="pagination justify-content-center">
+                            @{
+                                int startPoint1 = 0, endPoint1 = 0, k1 = 15;
+                                if (Model.OrdersTotalPages > k1)
+                                {
+                                    if (Model.OrdersCurrentPage - k1 / 2 >= 1 && Model.OrdersCurrentPage + k1 / 2 < Model.OrdersTotalPages)
+                                    {
+                                        startPoint1 = Model.OrdersCurrentPage - k1 / 2;
+                                        endPoint1 = Model.OrdersCurrentPage + k1 / 2;
+                                    }
+                                    else if (Model.OrdersCurrentPage - k1 / 2 < 1)
+                                    {
+                                        startPoint1 = 1;
+                                        endPoint1 = startPoint1 + k1 - 1;
+
+                                    }
+                                    else
+                                    {
+                                        endPoint1 = Model.OrdersTotalPages;
+                                        startPoint1 = endPoint1 - k1 + 1;
+                                    }
+                                }
+                                else
+                                {
+                                    startPoint1 = 1;
+                                    endPoint1 = Model.OrdersTotalPages;
+                                }
+
+                                for (var i = startPoint1; i <= endPoint1; i++)
+                                {
+                                    if (i == startPoint1 && startPoint1 > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@(i - 1)" asp-route-StoragesCurrentPage="@Model.StoragesCurrentPage" asp-route-CustomServicesCurrentPage="@Model.CustomServicesCurrentPage" class="page-link">...</a>
+                                        </li>
+                                    }
+                                    <li class="page-item @(i == Model.OrdersCurrentPage ? "active" : "")">
+                                        <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@i" asp-route-StoragesCurrentPage="@Model.StoragesCurrentPage" asp-route-CustomServicesCurrentPage="@Model.CustomServicesCurrentPage" class="page-link">@i</a>
+                                    </li>
+                                    if (i == endPoint1 && endPoint1 < Model.OrdersTotalPages)
+                                    {
+                                        <li class="page-item">
+                                            <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@(i + 1)" asp-route-StoragesCurrentPagee="@Model.StoragesCurrentPage"  asp-route-CustomServicesCurrentPage="@Model.CustomServicesCurrentPage" class="page-link">...</a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         }
 
 
-        @if (Model.CountOfServices != 0)
+        @if (Model.Worker.CountOfCustomServices != 0)
         {
             <div class="col-12 col-md-6 mt-1">
                 <div class="card border-dark">
@@ -175,9 +235,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>
-                                        Номер замовлення
-                                    </th>
                                     <th>
                                         Послуга
                                     </th>
@@ -194,10 +251,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.OrderId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Service.Name)
+                                            @Html.DisplayFor(modelItem => item.ServiceName)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.IsDone)
@@ -213,11 +267,61 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="card-footer">
+                        <ul class="pagination justify-content-center">
+                            @{
+                                int startPoint2 = 0, endPoint2 = 0, k2 = 15;
+                                if (Model.CustomServicesTotalPages > k2)
+                                {
+                                    if (Model.CustomServicesCurrentPage - k2 / 2 >= 1 && Model.CustomServicesCurrentPage + k2 / 2 < Model.CustomServicesTotalPages)
+                                    {
+                                        startPoint2 = Model.CustomServicesCurrentPage - k2 / 2;
+                                        endPoint2 = Model.CustomServicesCurrentPage + k2 / 2;
+                                    }
+                                    else if (Model.CustomServicesCurrentPage - k2 / 2 < 1)
+                                    {
+                                        startPoint2 = 1;
+                                        endPoint2 = startPoint2 + k2 - 1;
+
+                                    }
+                                    else
+                                    {
+                                        endPoint2 = Model.CustomServicesTotalPages;
+                                        startPoint2 = endPoint2 - k2 + 1;
+                                    }
+                                }
+                                else
+                                {
+                                    startPoint2 = 1;
+                                    endPoint2 = Model.CustomServicesTotalPages;
+                                }
+
+                                for (var i = startPoint2; i <= endPoint2; i++)
+                                {
+                                    if (i == startPoint2 && startPoint2 > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" asp-route-StoragesCurrentPage="@Model.StoragesCurrentPage" asp-route-CustomServicesCurrentPage="@(i - 1)" class="page-link">...</a>
+                                        </li>
+                                    }
+                                    <li class="page-item @(i == Model.CustomServicesCurrentPage ? "active" : "")">
+                                        <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" asp-route-StoragesCurrentPage="@Model.StoragesCurrentPage" asp-route-CustomServicesCurrentPage="@i" class="page-link">@i</a>
+                                    </li>
+                                    if (i == endPoint2 && endPoint2 < Model.CustomServicesTotalPages)
+                                    {
+                                        <li class="page-item">
+                                            <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" asp-route-StoragesCurrentPagee="@Model.StoragesCurrentPage" asp-route-CustomServicesCurrentPage="@(i + 1)" class="page-link">...</a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         }
 
-        @if (Model.CountOfStorage != 0)
+        @if (Model.Worker.CountOfStorages != 0)
         {
             <div class="col-12 col-md-6 mt-1">
                 <div class="card border-dark">
@@ -230,6 +334,9 @@
                                 <tr>
                                     <th>
                                         Назва
+                                    </th>
+                                    <th>
+                                        Модель
                                     </th>
                                     <th>
                                         Кількість
@@ -247,18 +354,71 @@
                                             @Html.DisplayFor(modelItem => item.Name)
                                         </td>
                                         <td>
+                                            @Html.DisplayFor(modelItem => item.ModelManufacturer) @Html.DisplayFor(modelItem => item.ModelType)
+                                        </td>
+                                        <td>
                                             @Html.DisplayFor(modelItem => item.Quantity)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.DateOfArrival)
                                         </td>
                                         <td>
-                                            <a class="btn btn-outline-secondary" asp-page="/Srorages/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                                            <a class="btn btn-outline-secondary" asp-page="/Storages/Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
+                    </div>
+                    <div class="card-footer">
+                        <ul class="pagination justify-content-center">
+                            @{
+                                int startPoint3 = 0, endPoint3 = 0, k3 = 15;
+                                if (Model.StoragesTotalPages > k3)
+                                {
+                                    if (Model.StoragesCurrentPage - k3 / 2 >= 1 && Model.StoragesCurrentPage + k3 / 2 < Model.StoragesTotalPages)
+                                    {
+                                        startPoint3 = Model.StoragesCurrentPage - k3 / 2;
+                                        endPoint3 = Model.StoragesCurrentPage + k3 / 2;
+                                    }
+                                    else if (Model.StoragesCurrentPage - k3 / 2 < 1)
+                                    {
+                                        startPoint3 = 1;
+                                        endPoint3 = startPoint3 + k3 - 1;
+
+                                    }
+                                    else
+                                    {
+                                        endPoint3 = Model.StoragesTotalPages;
+                                        startPoint3 = endPoint3 - k3 + 1;
+                                    }
+                                }
+                                else
+                                {
+                                    startPoint3 = 1;
+                                    endPoint3 = Model.StoragesTotalPages;
+                                }
+
+                                for (var i = startPoint3; i <= endPoint3; i++)
+                                {
+                                    if (i == startPoint3 && startPoint3 > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" asp-route-StoragesCurrentPage="@(i - 1) " asp-route-CustomServicesCurrentPage="@Model.CustomServicesCurrentPage" class="page-link">...</a>
+                                        </li>
+                                    }
+                                    <li class="page-item @(i == Model.StoragesCurrentPage ? "active" : "")">
+                                        <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" asp-route-StoragesCurrentPage="@i" asp-route-CustomServicesCurrentPage="@Model.CustomServicesCurrentPage" class="page-link">@i</a>
+                                    </li>
+                                    if (i == endPoint3 && endPoint3 < Model.StoragesTotalPages)
+                                    {
+                                        <li class="page-item">
+                                            <a asp-page="./Details" asp-route-id="@Model.Worker.Id" asp-route-orderscurrentpage="@Model.OrdersCurrentPage" asp-route-StoragesCurrentPagee="@(i + 1)" asp-route-CustomServicesCurrentPage="@Model.CustomServicesCurrentPage" class="page-link">...</a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
                     </div>
                 </div>
             </div>

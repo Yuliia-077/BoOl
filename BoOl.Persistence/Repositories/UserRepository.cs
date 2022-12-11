@@ -15,5 +15,19 @@ namespace BoOl.Persistence.Repositories
             var user = await DbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
             return user.WorkerId;
         }
+
+        public async Task<bool> ExistAccount(int id)
+        {
+            return await DbContext.Users.AnyAsync(x => x.WorkerId == id);
+        }
+
+        public async Task DeleteAccount(int id)
+        {
+            var item = await DbContext.Users.FirstOrDefaultAsync(x => x.WorkerId == id);
+            if(item != null)
+            {
+                DbContext.Users.Remove(item);
+            }
+        }
     }
 }

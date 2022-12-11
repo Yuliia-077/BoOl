@@ -1,14 +1,13 @@
-﻿using System;
+﻿using BoOl.Application.Services.Positions;
+using BoOl.Application.Validations.Positions;
+using BoOl.Models.Positions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
 
 namespace BoOl.Pages.Workers
 {
@@ -16,38 +15,53 @@ namespace BoOl.Pages.Workers
     [Authorize(Roles = "Owner, Administrator")]
     public class IndexModel : PageModel
     {
-        private readonly IRepository<Position> _repository;
-        private readonly IRepository<Worker> _repositoryWorker;
-        public IEnumerable<Position> Positions { get; set; }
-        public int CountOfPosition { get; set; }
-        public int CountOfWorkers { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchPosition { get; set; }
+        private readonly IPositionService _positionService;
+        private readonly IPositionValidation _positionValidation;
 
-        public IndexModel(BoOlContext context)
+        public IList<PositionListItem> Positions { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public PositionListItemQuery Query { get; set; }
+
+        public IndexModel(IPositionService positionService,
+            IPositionValidation positionValidation)
         {
-            _repository = new PositionRepository(context);
-            _repositoryWorker = new WorkerRepository(context);
+            _positionService = positionService ?? throw new ArgumentNullException(nameof(positionService));
+            _positionValidation = positionValidation ?? throw new ArgumentNullException(nameof(positionValidation));
         }
 
         public async Task OnGetAsync()
         {
-            var positions = await _repository.GetAllAsync(null);
-            CountOfPosition = await _repository.CountAsync(null);
-            foreach (var position in positions)
+            if(Query?.IsActive == null)
             {
-                CountOfWorkers += position.Workers.Count();
+                Query.IsActive = true;
             }
-            if (!string.IsNullOrEmpty(SearchPosition))
-            {
-                positions = positions.Where(s => s.Name.Contains(SearchPosition));
-            }
-            Positions = positions.ToList();
+
+            var items = await _positionService.GetListAsync(Query.Filter, Query.IsActive.Value);
+            Positions = items.Select(x => x.AsViewModel()).ToList();
         }
 
-        public async Task<IActionResult> OnGetDelete(int? id)
+        public async Task<IActionResult> OnGetDelete(int id)
         {
-            await _repository.DeleteAsync(Convert.ToInt32(id));
+            var error = await _positionValidation.ValidationForDelete(id);
+            if (error != null)
+            {
+                ModelState.AddModelError("Positions", error);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                if (Query?.IsActive == null)
+                {
+                    Query.IsActive = true;
+                }
+
+                var items = await _positionService.GetListAsync(Query.Filter, Query.IsActive.Value);
+                Positions = items.Select(x => x.AsViewModel()).ToList();
+                return Page();
+            }
+
+            await _positionService.Delete(id);
             return RedirectToPage("./Index");
         }
     }

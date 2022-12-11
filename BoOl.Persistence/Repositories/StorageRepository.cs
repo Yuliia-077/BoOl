@@ -31,15 +31,18 @@ namespace BoOl.Persistence.Repositories
             }
         }
         
-        public async Task<IList<StorageListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString)
+        public async Task<IList<StorageListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString, int? workerId = null)
         {
             return await DbContext.Storages
                 .Include(s => s.Model)
-                .Where(s => string.IsNullOrEmpty(searchString) 
-                    || s.Name.Contains(searchString)
-                    || s.Model.Manufacturer.Contains(searchString)
-                    || s.Model.Type.Contains(searchString))
-                .OrderBy(c => c.Name)
+                .Where(s => (string.IsNullOrEmpty(searchString) 
+                            || s.Name.Contains(searchString)
+                            || s.Model.Manufacturer.Contains(searchString)
+                            || s.Model.Type.Contains(searchString))
+                        && (!workerId.HasValue
+                            || s.WorkerId == workerId.Value))
+                .OrderByDescending(x => x.DateOfArrival)
+                .ThenBy(c => c.Name)
                 .ThenBy(c => c.Model.Manufacturer)
                 .ThenBy(c => c.Model.Type)
                 .Skip((currentPage - 1) * pageSize)
@@ -51,7 +54,8 @@ namespace BoOl.Persistence.Repositories
                     ModelManufacturer = x.Model.Manufacturer,
                     ModelType = x.Model.Type,
                     Quantity = x.Quantity,
-                    RetailPrice = x.RetailPrice
+                    RetailPrice = x.RetailPrice,
+                    DateOfArrival = x.DateOfArrival
                 })
                 .ToListAsync();
         }
@@ -90,20 +94,27 @@ namespace BoOl.Persistence.Repositories
             return Get<Storage>(id);
         }
 
-        public async Task<int> CountAsync(string searchString)
+        public async Task<int> CountAsync(string searchString, int? workerId = null)
         {
             return await DbContext.Storages
                 .Include(s => s.Model)
-                .Where(s => string.IsNullOrEmpty(searchString) 
-                    || s.Name.Contains(searchString) 
-                    || s.Model.Manufacturer.Contains(searchString) 
-                    || s.Model.Type.Contains(searchString))
+                .Where(s => (string.IsNullOrEmpty(searchString)
+                            || s.Name.Contains(searchString)
+                            || s.Model.Manufacturer.Contains(searchString)
+                            || s.Model.Type.Contains(searchString))
+                        && (!workerId.HasValue
+                            || s.WorkerId == workerId.Value))
                 .CountAsync();
         }
 
         public async Task<bool> ExistItemsWithModelsInStorage(int modelId)
         {
             return await DbContext.Storages.AnyAsync(x => x.ModelId == modelId);
+        }
+        
+        public async Task<bool> ExistForWorkerId(int workerId)
+        {
+            return await DbContext.Storages.AnyAsync(x => x.WorkerId == workerId);
         }
 
         public async Task<bool> Exist(int id)

@@ -1,4 +1,6 @@
-﻿namespace BoOl.Application.Models.Storages
+﻿using System;
+
+namespace BoOl.Application.Models.Storages
 {
     public class StorageListItemDto
     {
@@ -13,5 +15,7 @@
         public string ModelManufacturer { get; set; }
 
         public string ModelType { get; set; }
+
+        public DateTime DateOfArrival { get; set; }
     }
 }

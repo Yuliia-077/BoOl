@@ -22,13 +22,19 @@ namespace BoOl.Persistence.Repositories
                 .AnyAsync(x => x.Product.CustomerId == customerId);
         }
         
+        public async Task<bool> ExistForWorkerId(int workerId)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.WorkerId == workerId);
+        }
+        
         public async Task<bool> ExistForProductId(int productId)
         {
             return await DbContext.Orders
                 .AnyAsync(x => x.ProductId == productId);
         }
 
-        public async Task<int> Count(string searchString, int? customerId = null, int? productId = null)
+        public async Task<int> Count(string searchString, int? customerId = null, int? productId = null, int? workerId = null)
         {
             return await (
                     from o in DbContext.Orders
@@ -49,6 +55,10 @@ namespace BoOl.Persistence.Repositories
                     && (!productId.HasValue
                         || (
                             o.ProductId == productId.Value
+                        ))
+                    && (!workerId.HasValue
+                        || (
+                            o.WorkerId == workerId.Value
                         ))
                     select o.Id
                     )
@@ -147,7 +157,7 @@ namespace BoOl.Persistence.Repositories
                     }).SingleOrDefaultAsync();
         }
 
-        public async Task<IList<OrderListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString, int? customerId = null, int? productId = null)
+        public async Task<IList<OrderListItemDto>> GetListAsync(int currentPage, int pageSize, string searchString, int? customerId = null, int? productId = null, int? workerId = null)
         {
             return await (
                     from o in DbContext.Orders
@@ -168,6 +178,10 @@ namespace BoOl.Persistence.Repositories
                     && (!productId.HasValue
                     || (
                         o.ProductId == productId.Value
+                    ))
+                    && (!workerId.HasValue
+                    || (
+                        o.WorkerId == workerId.Value
                     ))
                     orderby o.DateOfAdmission descending
                     select new

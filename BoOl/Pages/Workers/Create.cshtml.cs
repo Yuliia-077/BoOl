@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Positions;
+using BoOl.Application.Services.Workers;
+using BoOl.Application.Validations.Workers;
+using BoOl.Models.Workers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Workers
 {
@@ -17,35 +15,46 @@ namespace BoOl.Pages.Workers
     [Authorize(Roles = "Owner, Administrator")]
     public class CreateModel : PageModel
     {
-        private readonly IRepository<Worker> _repository;
-        private readonly IRepository<Position> _repositoryPosition;
+        private readonly IWorkerService _workerService;
+        private readonly IPositionService _positionService;
+        private readonly IWorkerValidation _workerValidation;
         [BindProperty]
         public Worker Worker { get; set; }
 
-        public CreateModel(BoOlContext context)
+        public CreateModel(IWorkerService workerService,
+            IPositionService positionService,
+            IWorkerValidation workerValidation)
         {
-            _repository = new WorkerRepository(context);
-            _repositoryPosition = new PositionRepository(context);
+            _positionService = positionService;
+            _workerService = workerService;
+            _workerValidation = workerValidation;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             Worker = new Worker();
             Worker.DateOfEmployment = DateTime.Now.Date;
-            ViewData["PositionId"] = new SelectList(await _repositoryPosition.SelectAsync(null), "Value", "Text");
+            ViewData["PositionId"] = new SelectList(await _positionService.SelectListOfPositionsAsync(), "Value", "Text");
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Worker.AsDto();
+            var error = await _workerValidation.ValidationForCreateOrUpdate(dto);
+            if (error != null)
+            {
+                ModelState.AddModelError("Worker", error);
+            }
             if (!ModelState.IsValid)
             {
+                ViewData["PositionId"] = new SelectList(await _positionService.SelectListOfPositionsAsync(), "Value", "Text");
                 return Page();
             }
 
-            await _repository.AddAsync(Worker);
+            var id = await _workerService.Create(dto);
 
-            return RedirectToPage("/Workers/Details", new { id = Worker.Id});
+            return RedirectToPage("/Workers/Details", new { id = id});
         }
     }
 }

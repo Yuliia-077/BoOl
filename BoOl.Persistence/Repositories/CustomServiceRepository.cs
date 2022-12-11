@@ -18,11 +18,22 @@ namespace BoOl.Persistence.Repositories
         {
             return await DbContext.CustomServices.AnyAsync(x => x.ServiceId == serviceId);
         }
+        
+        public async Task<bool> ExistByWorkerId(int workerId)
+        {
+            return await DbContext.CustomServices.AnyAsync(x => x.WorkerId == workerId);
+        }
 
-        public async Task<IList<CustomServiceListItemDto>> GetListAsync(int orderId, int currentPage, int pageSize)
+        public async Task<int> CountByWorkerId(int workerId)
+        {
+            return await DbContext.CustomServices.CountAsync(x => x.WorkerId == workerId);
+        }
+
+        public async Task<IList<CustomServiceListItemDto>> GetListAsync(int currentPage, int pageSize, int? orderId = null, int? workerId = null)
         {
             return await DbContext.CustomServices
-                .Where(x => x.OrderId == orderId)
+                .Where(x => (!orderId.HasValue || x.OrderId == orderId.Value)
+                        && (!workerId.HasValue || x.WorkerId == workerId.Value))
                 .OrderByDescending(cs => cs.ExecutionDate)
                 .Skip((currentPage - 1) * pageSize)
                 .Take(pageSize)

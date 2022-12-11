@@ -4,14 +4,18 @@ using BoOl.Application.Services.CustomServices;
 using BoOl.Application.Services.Models;
 using BoOl.Application.Services.Orders;
 using BoOl.Application.Services.Parts;
+using BoOl.Application.Services.Positions;
 using BoOl.Application.Services.Products;
 using BoOl.Application.Services.Services;
 using BoOl.Application.Services.Storages;
 using BoOl.Application.Services.Users;
+using BoOl.Application.Services.Workers;
 using BoOl.Application.Validations.Customers;
 using BoOl.Application.Validations.Models;
+using BoOl.Application.Validations.Positions;
 using BoOl.Application.Validations.Products;
 using BoOl.Application.Validations.Services;
+using BoOl.Application.Validations.Workers;
 using BoOl.Domain;
 using BoOl.Persistence;
 using BoOl.Persistence.DatabaseContext;
@@ -45,9 +49,11 @@ namespace BoOl
             #region Validation
             services.AddTransient<ICustomerValidation, CustomerValidation>();
             services.AddTransient<IModelValidation, ModelValidation>();
+            services.AddTransient<IPositionValidation, PositionValidation>();
             services.AddTransient<IProductValidation, ProductValidation>();
             services.AddTransient<IServiceValidation, ServiceValidation>();
             services.AddTransient<IStorageValidation, StorageValidation>();
+            services.AddTransient<IWorkerValidation, WorkerValidation>();
             #endregion
 
             #region Services
@@ -56,10 +62,12 @@ namespace BoOl
             services.AddTransient<IModelService, ModelService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IPartService, PartService>();
+            services.AddTransient<IPositionService, PositionService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IServiceService, ServiceService>();
             services.AddTransient<IStorageService, StorageService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IWorkerService, WorkerService>();
             #endregion
 
             #region Repositories
@@ -71,7 +79,9 @@ namespace BoOl
             services.AddTransient<IStorageRepository, StorageRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IPartRepository, PartRepository>();
+            services.AddTransient<IPositionRepository, PositionRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IWorkerRepository, WorkerRepository>();
             #endregion
         }
 

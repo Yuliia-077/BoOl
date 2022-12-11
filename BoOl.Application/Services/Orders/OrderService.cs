@@ -40,7 +40,7 @@ namespace BoOl.Application.Services.Orders
         public async Task<OrderDetailsDto> GetDetails(int id, int currentPage, int pageSize)
         {
             var item = await _orderRepository.GetDetails(id);
-            item.CustomServices = await _customServiceRepository.GetListAsync(id, currentPage, pageSize);
+            item.CustomServices = await _customServiceRepository.GetListAsync(currentPage, pageSize, id);
             return item;
         }
 

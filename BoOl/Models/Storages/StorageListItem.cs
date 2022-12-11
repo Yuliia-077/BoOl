@@ -1,4 +1,6 @@
 ﻿using BoOl.Application.Models.Storages;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BoOl.Models.Storages
 {
@@ -15,6 +17,9 @@ namespace BoOl.Models.Storages
         public string ModelManufacturer { get; set; }
 
         public string ModelType { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime DateOfArrival { get; set; }
     }
 
     public static partial class ViewModelMapperExtensions
@@ -28,7 +33,8 @@ namespace BoOl.Models.Storages
                 Quantity = dto.Quantity,
                 RetailPrice = dto.RetailPrice,
                 ModelManufacturer = dto.ModelManufacturer,
-                ModelType = dto.ModelType
+                ModelType = dto.ModelType,
+                DateOfArrival = dto.DateOfArrival
             };
         }
     }

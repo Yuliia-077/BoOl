@@ -14,6 +14,11 @@ namespace BoOl.Persistence.Repositories
     {
         public CustomServiceRepository(IOptions<DatabaseOptions> databaseOptions, BoOlContext context) : base(databaseOptions, context) { }
         
+        public async Task<bool> Exist(int id)
+        {
+            return await DbContext.CustomServices.AnyAsync(x => x.Id == id);
+        }
+        
         public async Task<bool> ExistWithServiceId(int serviceId)
         {
             return await DbContext.CustomServices.AnyAsync(x => x.ServiceId == serviceId);
@@ -22,6 +27,16 @@ namespace BoOl.Persistence.Repositories
         public async Task<bool> ExistByWorkerId(int workerId)
         {
             return await DbContext.CustomServices.AnyAsync(x => x.WorkerId == workerId);
+        }
+
+        public async Task<bool> ExistServiceForModule(int id, int modelId)
+        {
+            return await DbContext.CustomServices.AnyAsync(x => x.Id == id && x.Order.Product.ModelId == modelId);
+        }
+
+        public async Task<bool> IsDone(int id)
+        {
+            return await DbContext.CustomServices.Where(x => x.Id == id).Select(x => x.IsDone).FirstOrDefaultAsync();
         }
 
         public async Task<int> CountByWorkerId(int workerId)

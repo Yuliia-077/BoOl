@@ -49,7 +49,6 @@ namespace BoOl.Application.Services.Parts
         {
             var item = new Part
             {
-                Id = dto.Id,
                 IsInjured = dto.IsInjured,
                 SerialNumber = dto.SerialNumber,
                 StorageId = dto.StorageId,

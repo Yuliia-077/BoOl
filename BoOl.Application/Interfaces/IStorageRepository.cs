@@ -12,6 +12,7 @@ namespace BoOl.Application.Interfaces
         Task<StorageDto> GetByIdAsync(int id);
         Task<StorageDetailsDto> GetDetailsAsync(int id);
         Task<Storage> Get(int id);
+        Task<int> GetModuleId(int id);
         Task AddAsync(Storage t);
         Task DeleteAsync(int id);
         Task<int> CountAsync(string searchString, int? workerId = null);

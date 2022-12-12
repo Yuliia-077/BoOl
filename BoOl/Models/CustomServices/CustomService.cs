@@ -6,7 +6,7 @@ namespace BoOl.Models.CustomServices
 {
     public class CustomService
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public bool IsDone { get; set; }
         [Required(ErrorMessage = "Введіть дату виконання!")]
         [DataType(DataType.Date)]

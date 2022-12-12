@@ -89,6 +89,11 @@ namespace BoOl.Persistence.Repositories
             };
         }
 
+        public async Task<int> GetModuleId(int id)
+        {
+            return await DbContext.Storages.Where(x => x.Id == id).Select(x => x.ModelId).FirstOrDefaultAsync();
+        }
+
         public Task<Storage> Get(int id)
         {
             return Get<Storage>(id);

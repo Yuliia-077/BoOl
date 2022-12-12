@@ -98,7 +98,7 @@
                         <div class="col-4 d-flex justify-content-start">
                             <h2>Послуги</h2>
                         </div>
-                        @if (!User.IsInRole("Administrator"))
+                        @if (User.IsInRole("Technician") || User.IsInRole("Owner"))
                         {
                             <div class="col-8 d-flex justify-content-end">
                                 <a class="btn btn-secondary mt-1" asp-page="/CustomServices/Create" asp-route-id="@Model.Order.Id" title="Додати послугу"><i class="fas fa-plus"></i></a>

@@ -31,6 +31,12 @@ namespace BoOl.Persistence.Repositories
             return await DbContext.Products.AnyAsync(x => x.ModelId == modelId);
         }
 
+        public async Task<bool> ExistForCustomerId(int customerId, int productId)
+        {
+            return await DbContext.Products
+                .AnyAsync(x => x.CustomerId == customerId && x.Id == productId);
+        }
+
         public async Task<int> CountByCustomerId(int customerId)
         {
             return await DbContext.Products

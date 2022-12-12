@@ -17,7 +17,9 @@
                 <input asp-for="CustomService.Id" hidden />
                 <input asp-for="CustomService.OrderId" hidden />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="CustomService" class="text-danger"></span>
+                </div>
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="CustomService.ServiceId" class="control-label col-md-2">Послуга*</label>
                     <div class="input-group col-md-5">

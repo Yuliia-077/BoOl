@@ -13,10 +13,20 @@ namespace BoOl.Persistence.Repositories
     public class PartRepository : BaseRepository, IPartRepository
     {
         public PartRepository(IOptions<DatabaseOptions> databaseOptions, BoOlContext context) : base(databaseOptions, context) { }
+
+        public async Task<bool> Exist(int id)
+        {
+            return await DbContext.Parts.AnyAsync(x => x.Id == id);
+        }
         
         public async Task<bool> ExistWithStorageId(int storageId)
         {
             return await DbContext.CustomServices.AnyAsync(x => x.Parts.Any(y => y.StorageId == storageId));
+        }
+
+        public async Task<bool> ExistWithSerailNumber(string serialNumber, int? id)
+        {
+            return await DbContext.Parts.AnyAsync(x => x.Id != id && x.SerialNumber == serialNumber);
         }
 
         public async Task DeleteAsync(int id)

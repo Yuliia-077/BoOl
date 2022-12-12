@@ -57,7 +57,7 @@ namespace BoOl.Application.Services.CustomServices
 
         public async Task Update(CustomServiceDto dto)
         {
-            var item = await _customServiceRepository.Get(dto.Id);
+            var item = await _customServiceRepository.Get(dto.Id.Value);
             if(item == null)
             {
                 throw new ArgumentNullException("Послугудо замовлення не знайдено.");

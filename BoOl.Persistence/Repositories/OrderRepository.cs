@@ -1,6 +1,7 @@
 ﻿using BoOl.Application.Interfaces;
 using BoOl.Application.Models.CustomServices;
 using BoOl.Application.Models.Orders;
+using BoOl.Application.Shared;
 using BoOl.Domain;
 using BoOl.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,12 @@ namespace BoOl.Persistence.Repositories
     {
         public OrderRepository(IOptions<DatabaseOptions> databaseOptions, BoOlContext context) : base(databaseOptions, context) { }
 
+        public async Task<bool> Exist(int id)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.Id == id);
+        }
+        
         public async Task<bool> ExistForCustomerId(int customerId)
         {
             return await DbContext.Orders
@@ -32,6 +39,24 @@ namespace BoOl.Persistence.Repositories
         {
             return await DbContext.Orders
                 .AnyAsync(x => x.ProductId == productId);
+        }
+        
+        public async Task<bool> ExistActiveForProductId(int productId)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.ProductId == productId && x.Status != Status.Complete);
+        }
+
+        public async Task<bool> HasCustomServices(int id)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.Id == id && x.CustomServices.Count() > 0);
+        }
+        
+        public async Task<bool> NotAllCustomServicesCompleted(int id)
+        {
+            return await DbContext.Orders
+                .AnyAsync(x => x.Id == id && x.CustomServices.Any(y => y.IsDone == false));
         }
 
         public async Task<int> Count(string searchString, int? customerId = null, int? productId = null, int? workerId = null)
@@ -88,6 +113,14 @@ namespace BoOl.Persistence.Repositories
         public Task<Order> Get(int id)
         {
             return Get<Order>(id);
+        }
+
+        public async Task<int> GetProductId(int id)
+        {
+            return await DbContext.Orders
+                .Where(x => x.Id == id)
+                .Select(x => x.ProductId)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<OrderDto> GetById(int id)

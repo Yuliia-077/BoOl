@@ -1,5 +1,6 @@
 ﻿using BoOl.Application.Services.CustomServices;
 using BoOl.Application.Services.Services;
+using BoOl.Application.Validations.CustomServices;
 using BoOl.Models.CustomServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,15 @@ namespace BoOl.Pages.CustomServices
     {
         private readonly ICustomServicesService _customServicesService;
         private readonly IServiceService _serviceService;
+        private readonly ICustomServiceValidation _customServicesValidation;
 
         public EditModel(ICustomServicesService customServicesService,
-            IServiceService serviceService)
+            IServiceService serviceService,
+            ICustomServiceValidation customServicesValidation)
         {
             _customServicesService = customServicesService;
             _serviceService = serviceService;
+            _customServicesValidation = customServicesValidation;
         }
 
         [BindProperty]
@@ -48,6 +52,14 @@ namespace BoOl.Pages.CustomServices
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = CustomService.AsDto();
+            var error = await _customServicesValidation.ValidationForCreateOrUpdate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("CustomService", error);
+            }
+
             if (!ModelState.IsValid)
             {
                 await GetServices(); 

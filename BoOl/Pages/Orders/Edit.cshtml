@@ -19,7 +19,9 @@
                 <input asp-for="Order.WorkerId" hidden />
                 <input type="hidden" asp-for="Order.CustomerId" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Order" class="text-danger"></span>
+                </div>
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Order.ProductId" class="control-label col-md-3">Техніка*</label>
                     <div class="input-group col-md-5">
@@ -32,7 +34,7 @@
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Order.Status" class="control-label col-md-3">Статус*</label>
                     <div class="input-group col-md-5">
-                        <input asp-for="Order.Status" class="form-control" id="Status" aria-describedby="button-addon2" />
+                        <select asp-for="Order.Status" class="form-control" asp-items="ViewBag.Statuses" id="Status" aria-describedby="button-addon1"></select>
                         <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Status').value = ''">X</button>
                     </div>
                     <div class="col-md-3"><span asp-validation-for="Order.Status" class="text-danger"></span></div>
@@ -68,7 +70,7 @@
                     </div>
                     <div class="col-md-3"></div>
                 </div>
-                </div>
+            </div>
             <div class="card-footer">
                 <div class="d-grid gap-2 d-flex justify-content-end">
                     <input type="submit" value="Зберегти" class="btn btn-outline-success mr-1" />

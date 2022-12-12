@@ -7,8 +7,11 @@ namespace BoOl.Application.Interfaces
 {
     public interface ICustomServiceRepository : IBaseRepository
     {
+        Task<bool> Exist(int id);
         Task<bool> ExistWithServiceId(int serviceId);
         Task<bool> ExistByWorkerId(int workerId);
+        Task<bool> ExistServiceForModule(int id, int modelId);
+        Task<bool> IsDone(int id);
         Task<int> CountByWorkerId(int workerId);
         Task<IList<CustomServiceListItemDto>> GetListAsync(int currentPage, int pageSize, int? orderId = null, int? workerId = null);
         Task DeleteAsync(int id);

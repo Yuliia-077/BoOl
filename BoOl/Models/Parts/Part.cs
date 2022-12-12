@@ -5,7 +5,7 @@ namespace BoOl.Models.Parts
 {
     public class Part
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public bool IsInjured { get; set; }
 
         [Required(ErrorMessage = "Введіть серійний номер!")]

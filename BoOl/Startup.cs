@@ -11,7 +11,10 @@ using BoOl.Application.Services.Storages;
 using BoOl.Application.Services.Users;
 using BoOl.Application.Services.Workers;
 using BoOl.Application.Validations.Customers;
+using BoOl.Application.Validations.CustomServices;
 using BoOl.Application.Validations.Models;
+using BoOl.Application.Validations.Orders;
+using BoOl.Application.Validations.Parts;
 using BoOl.Application.Validations.Positions;
 using BoOl.Application.Validations.Products;
 using BoOl.Application.Validations.Services;
@@ -48,7 +51,10 @@ namespace BoOl
 
             #region Validation
             services.AddTransient<ICustomerValidation, CustomerValidation>();
+            services.AddTransient<ICustomServiceValidation, CustomServiceValidation>();
             services.AddTransient<IModelValidation, ModelValidation>();
+            services.AddTransient<IOrderValidation, OrderValidation>();
+            services.AddTransient<IPartValidation, PartValidation>();
             services.AddTransient<IPositionValidation, PositionValidation>();
             services.AddTransient<IProductValidation, ProductValidation>();
             services.AddTransient<IServiceValidation, ServiceValidation>();

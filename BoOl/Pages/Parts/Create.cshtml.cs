@@ -1,5 +1,6 @@
 ﻿using BoOl.Application.Services.Parts;
 using BoOl.Application.Services.Storages;
+using BoOl.Application.Validations.Parts;
 using BoOl.Models.Parts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +16,18 @@ namespace BoOl.Pages.Parts
     {
         private readonly IPartService _partService;
         private readonly IStorageService _storageService;
+        private readonly IPartValidation _partValidation;
 
         [BindProperty]
         public Part Part { get; set; }
 
         public CreateModel(IPartService partService,
-            IStorageService storageService)
+            IStorageService storageService,
+            IPartValidation partValidation)
         {
             _partService = partService;
             _storageService = storageService;
+            _partValidation = partValidation;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -42,6 +46,13 @@ namespace BoOl.Pages.Parts
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var dto = Part.AsDto();
+            var error = await _partValidation.ValidationForCreateOrUpdate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("", error);
+            }
             if (!ModelState.IsValid)
             {
                 ViewData["StorageId"] = new SelectList(await _storageService.SelectAsync(), "Value", "Text");

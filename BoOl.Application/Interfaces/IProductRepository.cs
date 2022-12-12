@@ -11,6 +11,7 @@ namespace BoOl.Application.Interfaces
         Task<bool> Exist(int id);
         Task<bool> ExistWithSerialNumber(string serial, int? id = null);
         Task<bool> ExistItemsWithModel(int modelId);
+        Task<bool> ExistForCustomerId(int customerId, int productId);
         Task<IEnumerable<SelectListItem>> SelectAsync(int customerId);
         Task<int> CountByCustomerId(int customerId);
         Task<IList<ProductListItemDto>> GetListByCustomerId(int currentPage, int pageSize, int customerId);

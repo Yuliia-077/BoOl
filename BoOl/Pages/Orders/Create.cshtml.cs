@@ -1,6 +1,8 @@
 ﻿using BoOl.Application.Services.Customers;
 using BoOl.Application.Services.Orders;
 using BoOl.Application.Services.Products;
+using BoOl.Application.Shared;
+using BoOl.Application.Validations.Orders;
 using BoOl.Models.Customers;
 using BoOl.Models.Orders;
 using Microsoft.AspNetCore.Authorization;
@@ -19,14 +21,17 @@ namespace BoOl.Pages.Orders
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
+        private readonly IOrderValidation _orderValidation;
 
         public CreateModel(IOrderService orderService,
             IProductService productService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IOrderValidation orderValidation)
         {
             _customerService = customerService;
             _productService = productService;
             _orderService = orderService;
+            _orderValidation = orderValidation;
         }
 
         [BindProperty]
@@ -46,7 +51,8 @@ namespace BoOl.Pages.Orders
             {
                 CustomerId = id.Value,
                 Discount = Customer.Discount,
-                DateOfAdmission = DateTime.Now.Date
+                DateOfAdmission = DateTime.Now.Date,
+                Status = Status.Open
             };
 
             return Page();
@@ -55,6 +61,13 @@ namespace BoOl.Pages.Orders
         public async Task<IActionResult> OnPostAsync()
         {
             var dto = Order.AsDto();
+
+            var error = await _orderValidation.ValidationForCreate(dto);
+
+            if (error != null)
+            {
+                ModelState.AddModelError("Order", error);
+            }
 
             if (!ModelState.IsValid)
             {

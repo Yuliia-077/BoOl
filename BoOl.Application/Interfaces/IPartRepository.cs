@@ -7,7 +7,9 @@ namespace BoOl.Application.Interfaces
 {
     public interface IPartRepository: IBaseRepository
     {
+        Task<bool> Exist(int id);
         Task<bool> ExistWithStorageId(int serviceId);
+        Task<bool> ExistWithSerailNumber(string serialNumber, int? id);
         Task<IList<PartDto>> GetListAsync(int customServiceId, int currentPage, int pageSize);
         Task<Part> Get(int id);
         Task DeleteAsync(int id);

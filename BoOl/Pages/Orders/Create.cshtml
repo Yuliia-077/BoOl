@@ -17,10 +17,13 @@
                 <div class="d-flex justify-content-end">
                     <input type="reset" class="btn btn-outline-warning" value="Очистити все" />
                 </div>
-                <input asp-for="Customer.Id" hidden />
+                <input asp-for="Order.CustomerId" hidden />
                 <input asp-for="Order.WorkerId" hidden />
+                <input asp-for="Order.Status" hidden />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                <div class="row d-center justify-content-center p-2">
+                    <span asp-validation-for="Order" class="text-danger"></span>
+                </div>
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Order.ProductId" class="control-label col-md-3">Техніка*</label>
                     <div class="input-group col-md-5">
@@ -28,15 +31,6 @@
                         <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="document.getElementById('ProductId').value = ''">X</button>
                     </div>
                     <div class="col-md-3"><span asp-validation-for="Order.ProductId" class="text-danger"></span></div>
-                </div>
-
-                <div class="form-group row d-flex justify-content-center">
-                    <label asp-for="Order.Status" class="control-label col-md-3">Статус*</label>
-                    <div class="input-group col-md-5">
-                        <input asp-for="Order.Status" class="form-control" id="Status" aria-describedby="button-addon2" />
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="document.getElementById('Status').value = ''">X</button>
-                    </div>
-                    <div class="col-md-3"><span asp-validation-for="Order.Status" class="text-danger"></span></div>
                 </div>
                 <div class="form-group row d-flex justify-content-center">
                     <label asp-for="Order.DateOfAdmission" class="control-label col-md-3">Дата прийому*</label>

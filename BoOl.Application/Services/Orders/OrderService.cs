@@ -1,5 +1,6 @@
 ﻿using BoOl.Application.Interfaces;
 using BoOl.Application.Models.Orders;
+using BoOl.Application.Shared;
 using BoOl.Domain;
 using System;
 using System.Collections.Generic;
@@ -64,9 +65,14 @@ namespace BoOl.Application.Services.Orders
                 throw new ArgumentNullException("Замовлення не знайдено.");
             }
 
+            if(item.Status == Status.Complete)
+            {
+                return;
+            }
+
             item.Payment = dto.Payment;
             item.Status = dto.Status;
-            item.Discount = dto.Discount;
+            item.Discount = item.Payment ? item.Discount : dto.Discount;
             item.ProductId = dto.ProductId;
             item.DateOfAdmission = dto.DateOfAdmission;
             item.DateOfIssue = dto.DateOfIssue;
@@ -85,7 +91,6 @@ namespace BoOl.Application.Services.Orders
             var item = new Order
             {
                 Payment = dto.Payment,
-                Status = dto.Status,
                 Discount = dto.Discount,
                 ProductId = dto.ProductId,
                 DateOfAdmission = dto.DateOfAdmission,

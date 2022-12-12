@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Customers;
+using BoOl.Application.Services.Orders;
+using BoOl.Application.Services.Products;
+using BoOl.Models.Customers;
+using BoOl.Models.Orders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Application.Services.Products;
-using BoOl.Application.Services.Orders;
-using BoOl.Application.Services.Customers;
-using BoOl.Models.Orders;
-using BoOl.Models.Customers;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Orders
 {

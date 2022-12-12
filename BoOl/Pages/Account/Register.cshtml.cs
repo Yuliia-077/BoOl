@@ -1,11 +1,9 @@
-using BoOl.Domain;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Repository;
+using BoOl.Application.Services.Users;
+using BoOl.Models.Account;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,45 +13,35 @@ namespace BoOl.Pages.Account
     [Authorize (Roles = "Owner, Administrator")]
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly WorkerRepository _repository;
-        [BindProperty]
-        public Models.RegisterViewModel RegisterUser { get; set; }
+        private readonly IUserService _userService;
 
-        public RegisterModel(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, BoOlContext context)
+        public RegisterModel(IUserService userService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
-            _repository = new WorkerRepository(context);
+            _userService = userService;
         }
-        public IActionResult OnGet(int? id)
+
+        [BindProperty]
+        public RegisterViewModel RegisterUser { get; set; }
+        public IList<string> AllRoles { get; set; }
+
+        public async Task<IActionResult> OnGet(int? id)
         {
-            if(id!=null)
+            if(id.HasValue)
             {
-                RegisterUser = new Models.RegisterViewModel();
-                RegisterUser.WorkerId = Convert.ToInt32(id);
-                RegisterUser.AllRoles = _roleManager.Roles.ToList();
+                RegisterUser = new RegisterViewModel();
+                RegisterUser.WorkerId = id.Value;
+                AllRoles = await _userService.GetAllRoleName();
                 return Page();
             }
             return NotFound();
         }
         
         public async Task<IActionResult> OnPostAsync()
-        {
-            if (ModelState.IsValid)
+        {   
+            if(RegisterUser.UserRoles != null)
             {
-                User user = new User { Email = RegisterUser.Email, UserName = RegisterUser.Email, WorkerId = RegisterUser.WorkerId };
-                var result = await _userManager.CreateAsync(user, RegisterUser.Password);
-                if (result.Succeeded)
-                {
-
-                    await _userManager.AddToRolesAsync(user, RegisterUser.UserRoles);
-                    return RedirectToPage("/Workers/Details", new { id = RegisterUser.WorkerId});
-                }
-                else
+                var result = await _userService.CreateUser(RegisterUser.AsDto());
+                if (!result.Succeeded)
                 {
                     foreach (var error in result.Errors)
                     {
@@ -61,7 +49,20 @@ namespace BoOl.Pages.Account
                     }
                 }
             }
-            return Page();
+            else
+            {
+                ModelState.AddModelError(string.Empty, "ќбер≥ть роль!");
+            }
+
+
+            if (!ModelState.IsValid)
+            {
+
+                AllRoles = await _userService.GetAllRoleName();
+                return Page();
+            }
+
+            return RedirectToPage("./Details", new { id = RegisterUser.WorkerId });
         }
     }
 }

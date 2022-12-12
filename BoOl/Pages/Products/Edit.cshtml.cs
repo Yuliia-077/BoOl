@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Models;
+using BoOl.Application.Services.Products;
+using BoOl.Application.Validations.Products;
+using BoOl.Models.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Repository;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Models.Products;
-using BoOl.Application.Services.Products;
-using BoOl.Application.Services.Models;
-using BoOl.Application.Validations.Products;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Products
 {

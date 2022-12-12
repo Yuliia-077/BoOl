@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BoOl.Application.Services.Storages;
+using BoOl.Application.Validations.Services;
+using BoOl.Models.Storages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BoOl.Domain;
-using Microsoft.AspNetCore.Authorization;
-using BoOl.Repository;
-using BoOl.Persistence.DatabaseContext;
-using BoOl.Models.Storages;
-using BoOl.Application.Services.Storages;
-using BoOl.Application.Validations.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace BoOl.Pages.Storages
 {

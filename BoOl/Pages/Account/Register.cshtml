@@ -10,7 +10,7 @@
     </div>
     <form method="post">
         <div class="card-body">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger d-flex justify-content-center"></div>
             <input asp-for="RegisterUser.WorkerId" type="hidden" />
             <div class="form-group row d-flex justify-content-center">
                 <label asp-for="RegisterUser.Email" class="control-label col-md-3">Електронна пошта*</label>
@@ -36,13 +36,13 @@
                 </div>
                 <div class="col-md-3"><span asp-validation-for="RegisterUser.PasswordConfirm" class="text-danger"></span></div>
             </div>
-            @foreach (var role in Model.RegisterUser.AllRoles)
+            @foreach (var role in Model.AllRoles)
             {
-                if (role.Name != "Owner")
+                if (role != "Owner")
                 {
                     <div class="form-group row d-flex justify-content-center">
                         <div class="col-md-3">
-                            <input type="checkbox" name="RegisterUser.UserRoles" value="@role.Name" />@role.Name <br />
+                            <input type="checkbox" name="RegisterUser.UserRoles" value="@role" /> @role <br />
                         </div>
                         <div class="col-md-8"></div>
                     </div>
@@ -56,4 +56,5 @@
             </div>
         </div>
     </form>
+</div>
 </div>

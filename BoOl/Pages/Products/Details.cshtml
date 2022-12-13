@@ -50,7 +50,7 @@
                 </div>
                 <div class="card-footer d-flex justify-content-end">
                     <a class="btn btn-outline-secondary m-2" asp-page="./Edit" asp-route-id="@Model.Product.Id" title="Редагувати"><i class="far fa-edit"></i></a>
-                    <a class="btn btn-outline-danger m-2" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Product.Id" onclick="return confirm('Ви дійсно хочете видалити дану техніку?');" title="Видалити"><i class="far fa-trash-alt"></i></a>
+                    <a class="btn btn-outline-danger m-2" asp-page="./Details" asp-page-handler="Delete" asp-route-id="@Model.Product.Id" asp-route-customerid="@Model.Product.CustomerId" onclick="return confirm('Ви дійсно хочете видалити дану техніку?');" title="Видалити"><i class="far fa-trash-alt"></i></a>
                 </div>
             </div>
         </div>

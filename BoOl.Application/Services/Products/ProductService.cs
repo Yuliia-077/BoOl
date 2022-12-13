@@ -49,7 +49,8 @@ namespace BoOl.Application.Services.Products
             {
                 SerialNumber = dto.SerialNumber,
                 ModelId = dto.ModelId,
-                AdditionalInf = dto.AdditionalInf
+                AdditionalInf = dto.AdditionalInf,
+                CustomerId = dto.CustomerId
             };
 
             await _productRepository.AddAsync(item);

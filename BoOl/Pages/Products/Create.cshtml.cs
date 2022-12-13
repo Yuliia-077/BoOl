@@ -44,6 +44,7 @@ namespace BoOl.Pages.Products
 
             Product = new Product();
             Product.CustomerName = await _customerService.GetName(id.Value);
+            Product.CustomerId = id.Value;
 
             ViewData["ModelId"] = new SelectList(await _modelService.SelectListOfModelsAsync(), "Value", "Text");
             return Page();

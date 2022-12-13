@@ -30,7 +30,7 @@ namespace BoOl.Application.Validations.Products
             {
                 _errors.Add($"Постачання з id = {dto.Id} не знайдено.");
             }
-            else
+            else if(dto.Id.HasValue)
             {
                 var item = await _productRepository.GetById(dto.Id.Value);
                 

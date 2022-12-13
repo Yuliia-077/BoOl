@@ -41,7 +41,7 @@ namespace BoOl.Pages.Products
             return Page();
         }
 
-        public async Task<IActionResult> OnGetDeleteAsync(int id)
+        public async Task<IActionResult> OnGetDeleteAsync(int id, int customerId)
         {
             var error = await _productValidation.ValidationForDelete(id);
 
@@ -58,7 +58,7 @@ namespace BoOl.Pages.Products
 
             await _productService.Delete(id);
 
-            return RedirectToPage("/Customers/Details", new { id = Product.CustomerId });
+            return RedirectToPage("/Customers/Details", new { id = customerId });
         }
 
         private async Task Get(int id)
